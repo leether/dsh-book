@@ -209,7 +209,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
   border-radius: 5px 18px 18px 5px;
   background:
     linear-gradient(180deg, rgba(8, 9, 9, .08) 0%, rgba(8, 9, 9, .04) 36%, rgba(8, 9, 9, .40) 58%, rgba(8, 9, 9, .93) 84%, #080909 100%),
-    url("cover.webp?v=1") center / cover no-repeat,
+    url("cover-v1.webp") center / cover no-repeat,
     #080909;
   color: #f8f1e7;
   border: 1px solid rgba(235, 184, 122, .18);

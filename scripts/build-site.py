@@ -23,8 +23,9 @@ import markdown
 ROOT = Path(__file__).resolve().parents[1]
 SITE_URL = "https://leether.github.io/dsh-book/"
 REPO_URL = "https://github.com/leether/dsh-book"
-STYLE_FILE = "style.css"
-STYLE_VERSION = hashlib.sha256((ROOT / "docs" / STYLE_FILE).read_bytes()).hexdigest()[:8]
+STYLE_SOURCE = ROOT / "docs" / "style.css"
+STYLE_VERSION = hashlib.sha256(STYLE_SOURCE.read_bytes()).hexdigest()[:8]
+STYLE_FILE = f"style-{STYLE_VERSION}.css"
 
 LANGUAGES = [
     {
@@ -257,14 +258,14 @@ def head(lang: dict, title: str, description: str, slug: str) -> str:
 <link rel="alternate" hreflang="en" href="{en_url}">
 <link rel="alternate" hreflang="x-default" href="{zh_url}">
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="https://leether.github.io/dsh-book/cover.jpg">
+<meta property="og:image" content="https://leether.github.io/dsh-book/cover-v1.jpg">
 <meta property="og:image:width" content="900">
 <meta property="og:image:height" content="1200">
 <meta property="og:image:alt" content="A brass armillary sphere holding a glowing amber orb on a dark field.">
-<meta name="twitter:image" content="https://leether.github.io/dsh-book/cover.jpg">
+<meta name="twitter:image" content="https://leether.github.io/dsh-book/cover-v1.jpg">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
 <link rel="icon" href="{lang['asset_prefix']}favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="{lang['asset_prefix']}{STYLE_FILE}?v={STYLE_VERSION}">
+<link rel="stylesheet" href="{lang['asset_prefix']}{STYLE_FILE}">
 </head>
 <body id="top">
 <div class="progress" aria-hidden="true"></div>
@@ -537,6 +538,9 @@ def build_language(lang: dict) -> None:
 
 
 def main() -> None:
+    # The hashed filename is a cache-busting build artifact. Keep the readable
+    # source as docs/style.css; browsers only request the hashed copy.
+    (ROOT / "docs" / STYLE_FILE).write_text(STYLE_SOURCE.read_text(encoding="utf-8"), encoding="utf-8")
     for lang in LANGUAGES:
         build_language(lang)
 
