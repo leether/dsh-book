@@ -51,7 +51,7 @@ LANGUAGES = [
         "book_title": "DeepSeek Harness 入门",
         "book_short": "DSH 入门",
         "subtitle": "从第一次对话到自己的插件",
-        "badge": "非官方指南 · 无 Cookie · 无统计",
+        "badge": "非官方指南",
         "lede": "给 0 基础用户的实用指南。先学会用，再理解原理，最后扩展它。",
         "start": "开始阅读",
         "github": "GitHub 仓库",
@@ -98,7 +98,7 @@ LANGUAGES = [
         "cover_sub": "从第一次对话<br>到自己的插件",
         "footer": [
             "非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。",
-            "基于 DeepSeek Harness Desktop 0.2.1-rc.2 · 正文 CC BY-NC-ND 4.0 · 代码 MIT · 无 JavaScript / 无 Cookie / 无第三方请求",
+            "基于 DeepSeek Harness Desktop 0.2.1-rc.2 · 正文 CC BY-NC-ND 4.0 · 代码 MIT",
         ],
     },
     {
@@ -124,7 +124,7 @@ LANGUAGES = [
         "book_title": "DeepSeek Harness",
         "book_short": "DSH Guide",
         "subtitle": "A Beginner's Guide",
-        "badge": "Unofficial guide · No cookies · No tracking",
+        "badge": "Unofficial guide",
         "lede": "A practical guide for complete beginners. Learn to use it, understand it, then extend it.",
         "start": "Start reading",
         "github": "GitHub repository",
@@ -171,7 +171,7 @@ LANGUAGES = [
         "cover_sub": "From your first conversation<br>to your own plugin",
         "footer": [
             "An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.",
-            "Based on DeepSeek Harness Desktop 0.2.1-rc.2 · Text CC BY-NC-ND 4.0 · Code MIT · No JavaScript / cookies / third-party requests",
+            "Based on DeepSeek Harness Desktop 0.2.1-rc.2 · Text CC BY-NC-ND 4.0 · Code MIT",
         ],
     },
 ]
