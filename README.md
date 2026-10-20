@@ -174,6 +174,19 @@ git push
 
 Pages 会在一两分钟内自动更新。
 
+## 站点版式
+
+- **封面式 Hero**：标题、副标题、阅读量、封面卡片和“开始阅读”入口；
+- **桌面侧边目录**：章节导航随页面滚动保持可见；
+- **移动端单列**：目录、正文、章节导航自动堆叠；
+- **阅读节奏**：每章显示预计阅读时间、字数和小节数；
+- **章节导航**：每章末尾有上一章/下一章；
+- **纯 CSS 阅读进度条**：支持的浏览器顶部显示进度，不支持时自动隐藏；
+- **明暗主题**：跟随系统 `prefers-color-scheme`；
+- **打印样式**：隐藏导航，按章分页。
+
+这些效果不依赖 JavaScript、Cookie、统计或外部字体/图片。
+
 ---
 
 ## 仓库结构
@@ -187,6 +200,7 @@ Pages 会在一两分钟内自动更新。
 ├── scripts/build-site.py # Markdown → 静态站点
 ├── docs/                # GitHub Pages 站点（main /docs）
 │   ├── index.html
+│   ├── favicon.svg
 │   └── .nojekyll
 ├── PUBLISHING.md        # 发布与 Pages 设置记录
 ├── CONTRIBUTING.md      # 纠错与贡献
