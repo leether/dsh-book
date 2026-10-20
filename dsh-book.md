@@ -2199,6 +2199,8 @@ Preset（standard / creator）
 
 ---
 
+> 延伸阅读：认知篇《从 CLI 到 DSH 插件：一套让 Agent 少走弯路的判断顺序》已经发布，见 [cognition.html](cognition.html)。
+
 ## 9.8 常见误区
 
 - **“创造模式是高级版标准模式”**：不是。它是扩展模式。

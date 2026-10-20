@@ -36,6 +36,12 @@ LANGUAGES = [
         "locale": "zh_CN",
         "asset_prefix": "",
         "source_start": "# 第 1 章",
+        "cognition_source": "cognition.zh.md",
+        "cognition_label": "认知篇",
+        "cognition_nav": "认知",
+        "cognition_title": "从 CLI 到 DSH 插件：一套让 Agent 少走弯路的判断顺序",
+        "cognition_lede": "这不是 API 清单，而是一套在让 Agent 设计、实现、测试和发布插件时，减少返工和错误的判断顺序。",
+        "cognition_blurb": "把真实项目里的取舍，整理成可以直接交给 Agent 执行的判断清单。",
         "strip_title": re.compile(r"^第\s*\d+\s*章\s*[　\s]*"),
         "appendix_prefix": "附录",
         "appendix_number": "附",
@@ -103,6 +109,12 @@ LANGUAGES = [
         "locale": "en_US",
         "asset_prefix": "../",
         "source_start": "# Chapter 1",
+        "cognition_source": "cognition.en.md",
+        "cognition_label": "Cognition",
+        "cognition_nav": "Cognition",
+        "cognition_title": "From CLI to DSH Plugin: A Decision Guide for Better Agent Work",
+        "cognition_lede": "Not an API catalogue, but a sequence of decisions that helps an Agent design, implement, test, and publish a plugin with less rework and fewer errors.",
+        "cognition_blurb": "A practical decision checklist distilled from a real project, ready to hand to an Agent.",
         "strip_title": re.compile(r"^Chapter\s+\d+\s*[—–-]\s*", re.IGNORECASE),
         "appendix_prefix": "appendix",
         "appendix_number": "A",
@@ -280,6 +292,7 @@ def topbar(lang: dict, slug: str, contents_href: str, start_href: str) -> str:
     <nav class="topbar-links" aria-label="{html.escape(lang['nav_quick'])}">
       <a href="{contents_href}">{html.escape(lang['contents'])}</a>
       <a href="{start_href}">{html.escape(lang['start'])}</a>
+      <a href="cognition.html">{html.escape(lang['cognition_nav'])}</a>
       <a href="{REPO_URL}">GitHub</a>
       <a class="lang-switch" href="{switch}" hreflang="{lang['switch_lang']}" lang="{lang['switch_lang']}">{html.escape(lang['switch_label'])}</a>
     </nav>
@@ -388,6 +401,7 @@ def landing_page(lang: dict, chapters: list[dict], total_value: int, total_minut
     </ul>
     <div class="actions">
       <a class="button primary" href="ch01.html">{html.escape(lang['start'])}</a>
+      <a class="button" href="cognition.html">{html.escape(lang['cognition_nav'])}</a>
       <a class="button" href="{REPO_URL}">{html.escape(lang['github'])}</a>
     </div>
   </div>
@@ -409,6 +423,19 @@ def landing_page(lang: dict, chapters: list[dict], total_value: int, total_minut
     <div class="book-map">
 {chr(10).join(cards)}
     </div>
+  </section>
+
+  <section class="landing-section" id="cognition">
+    <div class="section-heading">
+      <h2>{html.escape(lang['cognition_label'])}</h2>
+      <p>{html.escape(lang['cognition_blurb'])}</p>
+    </div>
+    <a class="chapter-card cognition-card" href="cognition.html">
+      <span class="num">{html.escape(lang['cognition_label'])}</span>
+      <h3>{html.escape(lang['cognition_title'])}</h3>
+      <p>{html.escape(lang['cognition_lede'])}</p>
+      <span class="meta">{'独立文章' if lang['key'] == 'zh' else 'Standalone article'}</span>
+    </a>
   </section>
 
   <section class="landing-section">
@@ -503,6 +530,36 @@ def chapter_page(lang: dict, chapters: list[dict], index: int) -> str:
     return page
 
 
+
+def cognition_page(lang: dict) -> str:
+    source = (ROOT / lang["cognition_source"]).read_text(encoding="utf-8")
+    parser = markdown.Markdown(
+        extensions=["extra", "toc", "sane_lists"],
+        extension_configs={"toc": {"permalink": False}},
+    )
+    body_html = parser.convert(source)
+    title = f"{lang['cognition_title']} · {lang['cognition_label']} · {lang['book_title']}"
+    description = lang["cognition_lede"]
+    body = f"""<main class="landing cognition-page">
+  <header class="page-head">
+    <p class="series-kicker">{html.escape(lang['cognition_label'])}</p>
+    <h1>{html.escape(lang['cognition_title'])}</h1>
+    <p class="lede">{html.escape(lang['cognition_lede'])}</p>
+  </header>
+  <article class="book cognition-body">
+{body_html}
+  </article>
+</main>
+"""
+    page = (
+        head(lang, title, description, "cognition.html")
+        + topbar(lang, "cognition.html", "index.html#contents", "ch01.html")
+        + body
+        + footer(lang, "cognition.html")
+    )
+    return page
+
+
 def build_language(lang: dict) -> None:
     chapters = parse_chapters(lang)
     total_value = sum(chapter["value"] for chapter in chapters)
@@ -512,13 +569,14 @@ def build_language(lang: dict) -> None:
 
     landing = landing_page(lang, chapters, total_value, total_minutes)
     (out_dir / "index.html").write_text(landing, encoding="utf-8")
+    (out_dir / "cognition.html").write_text(cognition_page(lang), encoding="utf-8")
 
     for index, chapter in enumerate(chapters):
         page = chapter_page(lang, chapters, index)
         (out_dir / chapter["slug"]).write_text(page, encoding="utf-8")
 
     # Privacy guard: every page must stay static and self-contained.
-    pages = [out_dir / "index.html", *[out_dir / chapter["slug"] for chapter in chapters]]
+    pages = [out_dir / "index.html", out_dir / "cognition.html", *[out_dir / chapter["slug"] for chapter in chapters]]
     for path in pages:
         text = path.read_text(encoding="utf-8")
         lowered = text.lower()
@@ -532,7 +590,7 @@ def build_language(lang: dict) -> None:
                 raise SystemExit(f"untranslated Chinese in {path}: {found[:8]}")
 
     print(
-        f"wrote {lang['out_dir']}/index.html + {len(chapters)} chapter pages "
+        f"wrote {lang['out_dir']}/index.html + cognition.html + {len(chapters)} chapter pages "
         f"({total_value:,} {lang['count_mode']})"
     )
 

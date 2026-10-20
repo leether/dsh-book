@@ -2148,6 +2148,8 @@ What is reusable here is not the number 15. It is the four-step loop: **audit ca
 
 ---
 
+> Further reading: the Cognition article “From CLI to DSH Plugin: A Decision Guide for Better Agent Work” is published at [cognition.html](cognition.html).
+
 ## 9.8 Common Misconceptions
 
 - **"Creator is an advanced Standard."** No; it is an extension mode.

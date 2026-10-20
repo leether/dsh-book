@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>从 CLI 到 DSH 插件：一套让 Agent 少走弯路的判断顺序 · 认知篇 · DeepSeek Harness 入门</title>
+<meta name="description" content="这不是 API 清单，而是一套在让 Agent 设计、实现、测试和发布插件时，减少返工和错误的判断顺序。">
+<meta property="og:title" content="从 CLI 到 DSH 插件：一套让 Agent 少走弯路的判断顺序 · 认知篇 · DeepSeek Harness 入门">
+<meta property="og:description" content="这不是 API 清单，而是一套在让 Agent 设计、实现、测试和发布插件时，减少返工和错误的判断顺序。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/cognition.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://leether.github.io/dsh-book/cognition.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/cognition.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/cognition.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/cognition.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://leether.github.io/dsh-book/cover-v1.jpg">
+<meta property="og:image:width" content="900">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:alt" content="A brass armillary sphere holding a glowing amber orb on a dark field.">
+<meta name="twitter:image" content="https://leether.github.io/dsh-book/cover-v1.jpg">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style-562eb5e3.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="index.html#contents">目录</a>
+      <a href="ch01.html">开始阅读</a>
+      <a href="cognition.html">认知</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="en/cognition.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main class="landing cognition-page">
+  <header class="page-head">
+    <p class="series-kicker">认知篇</p>
+    <h1>从 CLI 到 DSH 插件：一套让 Agent 少走弯路的判断顺序</h1>
+    <p class="lede">这不是 API 清单，而是一套在让 Agent 设计、实现、测试和发布插件时，减少返工和错误的判断顺序。</p>
+  </header>
+  <article class="book cognition-body">
+<h2 id="_1">为什么先谈判断顺序</h2>
+<p>Agent 做插件时最贵的错误，通常不是写错一行代码，而是：</p>
+<ul>
+<li>在不该做插件的地方做了插件；</li>
+<li>先写实现，后补契约；</li>
+<li>把 CLI 的命令原样翻译成 Tool；</li>
+<li>写操作没有确认和回滚；</li>
+<li>只测“顺利路径”，不测错误和版本差异；</li>
+<li>代码能跑，却把不该公开的内容一起公开了。</li>
+</ul>
+<p>这篇文章来自 GetNote Toolbox 的真实实践<a href="#ref3">[3]</a>，但重点不是“我们做了什么”，而是一套可以迁移到其他 Agent 任务上的判断顺序：</p>
+<blockquote>
+<p><strong>先判断该不该做，再画契约；先只读，后写入；先验证，后发布。</strong></p>
+</blockquote>
+<h2 id="1">1. 先判断：该不该做插件</h2>
+<p>不是所有 CLI 都值得包成插件，也不是所有工作流都值得做成 Tool。</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>更合适的选择</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高频、参数结构化、需要安全护栏</td>
+<td>Tool</td>
+</tr>
+<tr>
+<td>低频、复杂、需要领域判断</td>
+<td>CLI 或 Skill</td>
+</tr>
+<tr>
+<td>一次性任务、固定脚本</td>
+<td>直接跑脚本</td>
+</tr>
+<tr>
+<td>只读诊断、环境管理</td>
+<td>CLI 或 Skill</td>
+</tr>
+<tr>
+<td>需要跨应用连接外部系统</td>
+<td>先评估 MCP 等协议，不要为了“统一”而重写</td>
+</tr>
+</tbody>
+</table>
+<p>一个简单的判断是：<strong>这个能力变成 Tool 之后，替模型承担了什么？</strong></p>
+<p>如果答案只是“把命令换了一个名字”，它不值得成为 Tool。真正值得的，是下面至少一项：</p>
+<ul>
+<li>结构化参数和校验；</li>
+<li>安全边界，例如确认、超时、输出上限；</li>
+<li>结果归一，例如 ID、limit、错误语义；</li>
+<li>版本兼容；</li>
+<li>可发现性和路由。</li>
+</ul>
+<p><strong>让 Agent 先做的第一件事</strong>：</p>
+<pre><code class="language-text">先不要写代码。
+请输出一份能力审计：
+1. 这个 CLI 有哪些命令、输入、输出和副作用？
+2. 哪些是高频、结构化、需要护栏的？
+3. 哪些应该留给 CLI 或 Skill？
+4. 哪些能力互相是逆操作？
+5. 哪些地方需要版本兼容？
+</code></pre>
+<h2 id="2">2. 先画契约，再写代码</h2>
+<p>Tool 不是函数名的集合，而是模型和外部能力之间的契约。<a href="#ref1">[1]</a><a href="#ref2">[2]</a></p>
+<p>每个 Tool 至少要写清：</p>
+<ul>
+<li>名字和适用场景；</li>
+<li>参数类型、必填/可选、范围；</li>
+<li>返回什么高信号信息；</li>
+<li>可能有哪些错误；</li>
+<li>有没有副作用；</li>
+<li>失败时模型应该怎么下一步。</li>
+</ul>
+<p>以 GetNote Toolbox 为例，我们最终得到 15 个工具，覆盖搜索、保存、读取、更新、删除、标签、知识库和配额。<strong>15 不是目标</strong>，它是按工作流和契约边界推出来的结果。</p>
+<p>几个具体原则：</p>
+<ul>
+<li>Tool 名带领域前缀，例如 <code>getnote_search</code>，不要用全局的 <code>search</code>；</li>
+<li>同一个领域的动作可以合并成一个带 <code>action</code> 的工具；</li>
+<li>互逆操作要成对出现，例如 add / remove；</li>
+<li>低频、复杂、变化快的能力先不要做；</li>
+<li>不提供通用 <code>run_command</code> 或任意 HTTP 透传。</li>
+</ul>
+<p><strong>让 Agent 先做的第二件事</strong>：</p>
+<pre><code class="language-text">先不要实现。
+请为每个候选 Tool 写出契约：
+- 参数 schema
+- 返回字段
+- 错误类型
+- 副作用
+- 权限/确认要求
+- 验证方式
+</code></pre>
+<h2 id="3-idlimit">3. ID、limit 和错误：模型看到的必须可靠</h2>
+<h3 id="id">雪花 ID 为什么不能直接当数字</h3>
+<p>GetNote 的笔记 ID 是 19 位雪花 ID。<a href="#ref4">[4]</a>雪花 ID 是一种由多台机器生成、按时间大致有序的 64 位整数：</p>
+<pre><code class="language-text">0 | 41 位毫秒时间戳 | 10 位机器 ID | 12 位序列号
+</code></pre>
+<p>时间戳让 ID 大致递增，机器位和序列号让同一毫秒内也能生成不同 ID。64 位整数在十进制下通常落在 19 位。</p>
+<p>JavaScript 的 <code>Number</code> 是 IEEE 754 双精度浮点数，只有 53 位有效精度。它能精确表示的最大安全整数是：</p>
+<pre><code class="language-text">2^53 - 1 = 9,007,199,254,740,991
+</code></pre>
+<p>19 位 ID 已经超出这个范围。<a href="#ref5">[5]</a>在 <code>1.9 × 10^18</code> 附近，相邻可表示整数的间隔约为 256；雪花 ID 的低位又恰好携带机器和序列信息。</p>
+<p>所以：</p>
+<pre><code class="language-js">JSON.parse('{&quot;note_id&quot;:1900000000000000001}')
+// { note_id: 1900000000000000000 }
+</code></pre>
+<p>这不是简单的“截断”，而是十进制整数转换成 binary64 时的精度丢失和舍入。更危险的是，<code>reviver</code> 拿到的已经是舍入后的 Number，再转 <code>BigInt</code> 也救不回来。</p>
+<p>正确处理是：<strong>API 和工具契约统一把 ID 当字符串</strong>。</p>
+<pre><code class="language-json">{ &quot;note_id&quot;: &quot;1900000000000000001&quot; }
+</code></pre>
+<p>如果必须解析数字 JSON，可以使用无损解析器，或在 <code>JSON.parse</code> 之前把超出安全范围的整数字面量先转成字符串。GetNote 插件里的兼容层做的就是后者；它只是补丁，不是通用方案。</p>
+<h3 id="limit">limit 和错误也要归一</h3>
+<p>旧版 CLI 可能忽略 <code>--limit</code>，插件如果原样返回，模型会误以为限制生效了。更可靠的做法是解析后自行截断，并让返回条数与请求一致。</p>
+<p>错误也应可操作，而不是只给一个 <code>exit code 1</code>：</p>
+<ul>
+<li>未登录：提示 <code>getnote auth login</code>；</li>
+<li>版本不兼容：说明最低版本和升级方式；</li>
+<li>参数错误：指出哪个参数、允许范围；</li>
+<li>超时：给出超时值和调整方法；</li>
+<li>输出超限：说明上限和缩小请求的方法；</li>
+<li>业务失败：保留 CLI 的 message 和上下文。</li>
+</ul>
+<blockquote>
+<p>模型看到的 ID、数量和错误，必须能直接用于下一步行动。</p>
+</blockquote>
+<h2 id="4-cli-11">4. 工具面不是 CLI 的 1:1 映射</h2>
+<p>一个常见的邪路是：CLI 有 50 个命令，就做 50 个 Tool。</p>
+<p>工具越多，模型的选择空间越大，误选和上下文成本也越高。更合理的是按工作流组织工具面：</p>
+<ul>
+<li>高频读写优先；</li>
+<li>安全敏感操作单独设计；</li>
+<li>互逆操作成对；</li>
+<li>低频能力先留给 CLI 或 Skill；</li>
+<li>相近动作合并，而不是拆成一堆近义工具。</li>
+</ul>
+<p>GetNote Toolbox 做到 15 个工具后就停下来了。不是不能再加，而是新增一个工具必须有明确收益。</p>
+<p><strong>让 Agent 先做的第三件事</strong>：</p>
+<pre><code class="language-text">请先画出工具面，不要写代码：
+- 哪些操作合并？
+- 哪些是互逆操作？
+- 哪些暂时不做？
+- 每新增一个 Tool，模型少做了哪一步判断？
+</code></pre>
+<h2 id="5">5. 写操作先设计失败</h2>
+<p>读操作出错，最多是结果不对；写操作出错，可能真的改坏用户的数据。</p>
+<p>写操作设计要回答：</p>
+<ul>
+<li>最坏会发生什么？</li>
+<li>是否需要显式确认？</li>
+<li>能不能先预览影响面？</li>
+<li>失败后怎么回滚？</li>
+<li>有没有幂等或可重试的设计？</li>
+<li>返回信息是否足以让模型判断“真的成功了”？</li>
+</ul>
+<p>GetNote Toolbox 的选择：</p>
+<ul>
+<li>删除笔记必须显式 <code>confirm: true</code>；</li>
+<li>标签删除必须用标签 ID，不能用标签名猜；</li>
+<li>更新标签是覆盖式语义，必须在描述里说明；</li>
+<li>知识库 remove 只解除关联，不删除笔记；</li>
+<li>涉及写入时，先建测试数据，结束后清理。</li>
+</ul>
+<p><strong>让 Agent 先做的第四件事</strong>：</p>
+<pre><code class="language-text">在执行任何写操作前，先输出：
+1. 会修改哪些对象；
+2. 最坏影响是什么；
+3. 如何确认；
+4. 如何回滚；
+5. 如果没有确认，停止执行。
+</code></pre>
+<h2 id="6">6. 认证、权限与信任边界</h2>
+<p>GetNote Toolbox 不读取、不缓存、不回显 API Key，只调用已经登录的本机 CLI。</p>
+<p>这是一个有意的设计：</p>
+<ul>
+<li>插件不保存凭证；</li>
+<li>认证由 CLI 统一管理；</li>
+<li>用户可以用 <code>getnote auth status</code> 诊断；</li>
+<li>密钥不进入模型上下文。</li>
+</ul>
+<p>但“不碰密钥”不等于“没有信任边界”：</p>
+<ul>
+<li>子进程会继承 Host 环境变量；<a href="#ref6">[6]</a></li>
+<li><code>npx</code> 兜底可能下载最新 CLI，带来版本漂移和供应链风险；</li>
+<li>插件调用的本地 CLI 本身必须是受信任的；</li>
+<li>权限、沙箱和确认仍然要独立设计。</li>
+</ul>
+<p>在意稳定性时，应该用 <code>binaryPath</code> 固定本地 CLI 版本，而不是默默依赖 <code>latest</code>。</p>
+<h2 id="7">7. 测试分两层</h2>
+<h3 id="cli">假 CLI 保证契约</h3>
+<p>单元测试不碰真实账号，用 fake CLI 覆盖：</p>
+<ul>
+<li>19 位 ID；</li>
+<li>嵌套响应；</li>
+<li>旧版 flag 回退；</li>
+<li>标签 add/remove 后回读；</li>
+<li>知识库 add/remove；</li>
+<li>删除确认。</li>
+</ul>
+<p>这层测试快、稳定、可重复，也不会泄露真实笔记。</p>
+<h3 id="cli_1">真实 CLI 保证环境</h3>
+<p>再用真实 CLI 做只读冒烟测试，确认：</p>
+<ul>
+<li>CLI 已登录；</li>
+<li>真实输出形态；</li>
+<li>工具调用能跑通；</li>
+<li>错误提示可操作。</li>
+</ul>
+<p>真实输出可能包含笔记片段，所以不能直接贴进 issue、聊天或提交。测试数据应尽量合成；必须使用真实账号时，先建测试笔记，结束后清理，报告本地生成并加入 gitignore。</p>
+<p><strong>让 Agent 先做的第五件事</strong>：</p>
+<pre><code class="language-text">不要只说“完成了”。
+请给出：
+- 测了哪些路径；
+- 哪些是假 CLI，哪些是真实 CLI；
+- 失败路径覆盖了什么；
+- 证据在哪里；
+- 哪些还没有验证。
+</code></pre>
+<h2 id="8">8. 版本兼容要可诊断</h2>
+<p>CLI 版本差异不是边缘情况，而是插件设计的一部分。</p>
+<p>真实遇到的差异包括：</p>
+<ul>
+<li>19 位 ID 有时是 number，有时是 string；</li>
+<li>旧版忽略 <code>limit</code>；</li>
+<li><code>note update</code> 和 <code>kb remove</code> 在新版需要 <code>-y</code>，旧版不认识这个 flag；</li>
+<li>保存链接时可能返回嵌套的 <code>data.note</code>。</li>
+</ul>
+<p>可以选择兼容，也可以选择只支持新版本，但必须明确：</p>
+<ul>
+<li>支持哪些版本；</li>
+<li>推荐哪个最低版本；</li>
+<li>版本不满足时给什么错误；</li>
+<li>是否有回退路径；</li>
+<li>在哪里固定 CLI 路径。</li>
+</ul>
+<p>兼容不是“支持越多越好”，而是让失败可解释、可行动。</p>
+<h2 id="9">9. 发布前做反向审查</h2>
+<p>代码能跑，不等于可以公开。</p>
+<p>发布前要问的不是“还缺什么功能”，而是“哪些东西不该带出去”：</p>
+<ul>
+<li>评测报告里有没有真实笔记 ID、标题、片段？</li>
+<li>内部草稿有没有本机路径、账号信息、操作计划？</li>
+<li>Git 历史有没有个人邮箱？<a href="#ref8">[8]</a></li>
+<li>包名 scope 有没有带出本机用户名？</li>
+<li>npm 包里有没有测试、<code>.env</code>、内部文档？<a href="#ref7">[7]</a></li>
+<li>公开 README 有没有“待写/规划中/占位”？</li>
+<li>当前仓库到底是交付物，还是工作台？</li>
+</ul>
+<p>GetNote Toolbox 公开前逐项处理了这些问题：删除评测结果和内部草稿，使用新的 Git 历史，替换本机 scope，移除本机环境描述，只保留受审源码、测试、许可证和公开文档。</p>
+<p><strong>让 Agent 先做的第六件事</strong>：</p>
+<pre><code class="language-text">在公开发布前，请做一次反向审查：
+1. 扫描密钥、Token、邮箱、绝对路径、`.env`；
+2. 检查评测结果和真实笔记数据；
+3. 检查 package 内容，而不是只看工作区；
+4. 检查 README/站点有没有内部规划；
+5. 给出“可以公开 / 不可以公开”的结论和证据。
+</code></pre>
+<h2 id="10">10. 一张决策表</h2>
+<table>
+<thead>
+<tr>
+<th>岔路</th>
+<th>更稳的选择</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>该不该做插件</td>
+<td>先做能力审计</td>
+<td>多花一点前期时间</td>
+</tr>
+<tr>
+<td>包装 CLI vs 直连 API</td>
+<td>优先复用已有 CLI 的认证</td>
+<td>要适配 CLI 版本</td>
+</tr>
+<tr>
+<td>1:1 映射 vs 工作流工具面</td>
+<td>按工作流设计</td>
+<td>需要删减和判断</td>
+</tr>
+<tr>
+<td>工具越多越好 vs 最小够用</td>
+<td>够用就好</td>
+<td>可能暂时少一些低频能力</td>
+</tr>
+<tr>
+<td>直接返回 JSON vs 归一化</td>
+<td>只返回高信号字段</td>
+<td>适配成本</td>
+</tr>
+<tr>
+<td>删除随便做 vs 必须确认</td>
+<td>显式确认</td>
+<td>多一步操作</td>
+</tr>
+<tr>
+<td>插件管密钥 vs 交给 CLI</td>
+<td>交给 CLI</td>
+<td>依赖 CLI 登录</td>
+</tr>
+<tr>
+<td>只测单测 vs 双层测试</td>
+<td>假 CLI + 真实验收</td>
+<td>测试成本更高</td>
+</tr>
+<tr>
+<td>只支持最新版 vs 兼容旧版</td>
+<td>明确支持矩阵</td>
+<td>代码分支更多</td>
+</tr>
+<tr>
+<td>先公开 vs 先审查</td>
+<td>审查后公开</td>
+<td>发布更慢</td>
+</tr>
+</tbody>
+</table>
+<h2 id="11-agent">11. 给 Agent 的执行清单</h2>
+<p>在让 Agent 做一个插件、工具或自动化之前，先让它回答：</p>
+<ol>
+<li>这个能力真的需要成为 Tool 吗？</li>
+<li>它替模型承担了哪项契约、护栏或归一化？</li>
+<li>ID、数量、错误和返回是否可靠？</li>
+<li>写操作最坏会发生什么，怎么确认和回滚？</li>
+<li>认证和密钥在哪一层，信任边界是什么？</li>
+<li>假 CLI 和真实 CLI 分别验证了什么？</li>
+<li>CLI 版本变化时，失败信息是否可操作？</li>
+<li>公开之前，哪些数据绝对不能带出去？</li>
+</ol>
+<p>如果 Agent 回答不了，不要让它继续写代码。</p>
+<h2 id="12">12. 结论</h2>
+<p>让 Agent 少走弯路的关键，不是给它更多工具，而是给它更清楚的边界：</p>
+<ul>
+<li>先判断该不该做；</li>
+<li>先画契约，再写实现；</li>
+<li>先只读，后写入；</li>
+<li>先测试，后发布；</li>
+<li>先审查，后公开。</li>
+</ul>
+<p>工具是能力的接口，Skill 是使用的知识，权限是行动的边界。三者都清楚，Agent 才是在工作，而不是在碰运气。</p>
+<h2 id="_2">参考</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://deepseek-harness.github.io/deepseek-harness/develop/basic/">DeepSeek Harness 插件开发</a></li>
+<li><a id="ref2"></a><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness GitHub 仓库</a></li>
+<li><a id="ref3"></a><a href="https://github.com/leether/getnote-toolbox">GetNote Toolbox</a></li>
+<li><a id="ref4"></a><a href="https://github.com/twitter-archive/snowflake">Twitter Snowflake（归档仓库）</a></li>
+<li><a id="ref5"></a><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER">MDN: Number.MAX_SAFE_INTEGER</a></li>
+<li><a id="ref6"></a><a href="https://nodejs.org/api/child_process.html">Node.js: child_process</a></li>
+<li><a id="ref7"></a><a href="https://docs.npmjs.com/cli/v11/commands/npm-publish">npm publish 文档</a></li>
+<li><a id="ref8"></a><a href="https://git-scm.com/docs">Git 文档</a></li>
+</ol>
+<blockquote>
+<p>链接均为公开来源；产品行为可能随版本变化。</p>
+</blockquote>
+  </article>
+</main>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · 正文 CC BY-NC-ND 4.0 · 代码 MIT · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/cognition.html">GitHub Pages</a> · <a href="https://github.com/leether/dsh-book/blob/main/LICENSE">License</a> · <a href="https://github.com/leether/dsh-book/blob/main/LICENSE-CODE">Code license</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>

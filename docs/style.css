@@ -668,3 +668,37 @@ footer a:hover { color: var(--accent); }
   .book-map { grid-template-columns: 1fr; }
   .chapter-card { min-height: 0; }
 }
+
+/* --- Cognition article --- */
+.series-kicker {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.page-head {
+  max-width: 820px;
+  margin: 46px auto 0;
+  padding: 0 24px;
+}
+.page-head h1 {
+  margin: 0;
+  font-size: clamp(36px, 5.5vw, 62px);
+  line-height: 1.06;
+  letter-spacing: -.045em;
+}
+.page-head .lede { max-width: 720px; }
+.cognition-body {
+  max-width: 820px;
+  margin: 24px auto 0;
+  padding: 0 24px;
+}
+.cognition-body h2 { margin-top: 2.4em; }
+.cognition-body h2:first-child { margin-top: 1em; }
+.cognition-card { max-width: 760px; }
+@media (max-width: 620px) {
+  .page-head { margin-top: 26px; padding: 0 16px; }
+  .cognition-body { padding: 0 16px; }
+}

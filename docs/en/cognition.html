@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>From CLI to DSH Plugin: A Decision Guide for Better Agent Work · Cognition · DeepSeek Harness</title>
+<meta name="description" content="Not an API catalogue, but a sequence of decisions that helps an Agent design, implement, test, and publish a plugin with less rework and fewer errors.">
+<meta property="og:title" content="From CLI to DSH Plugin: A Decision Guide for Better Agent Work · Cognition · DeepSeek Harness">
+<meta property="og:description" content="Not an API catalogue, but a sequence of decisions that helps an Agent design, implement, test, and publish a plugin with less rework and fewer errors.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/cognition.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/cognition.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/cognition.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/cognition.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/cognition.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://leether.github.io/dsh-book/cover-v1.jpg">
+<meta property="og:image:width" content="900">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:alt" content="A brass armillary sphere holding a glowing amber orb on a dark field.">
+<meta name="twitter:image" content="https://leether.github.io/dsh-book/cover-v1.jpg">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style-562eb5e3.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="cognition.html">Cognition</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../cognition.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="landing cognition-page">
+  <header class="page-head">
+    <p class="series-kicker">Cognition</p>
+    <h1>From CLI to DSH Plugin: A Decision Guide for Better Agent Work</h1>
+    <p class="lede">Not an API catalogue, but a sequence of decisions that helps an Agent design, implement, test, and publish a plugin with less rework and fewer errors.</p>
+  </header>
+  <article class="book cognition-body">
+<h2 id="start-with-the-decision-sequence">Start with the decision sequence</h2>
+<p>The most expensive Agent mistakes are rarely a bad line of code. They are:</p>
+<ul>
+<li>building a plugin where a CLI or Skill would do;</li>
+<li>writing implementation before defining the contract;</li>
+<li>translating every CLI command into a tool;</li>
+<li>shipping write operations without confirmation or rollback;</li>
+<li>testing only the happy path;</li>
+<li>publishing code that works but also publishes things that should never leave the workbench.</li>
+</ul>
+<p>This article draws on the GetNote Toolbox project,<a href="#ref3">[3]</a> but the subject is a transferable sequence:</p>
+<blockquote>
+<p><strong>Decide whether to build; define the contract; start read-only; verify before publishing.</strong></p>
+</blockquote>
+<h2 id="1-decide-whether-a-plugin-should-exist">1. Decide whether a plugin should exist</h2>
+<p>Not every CLI deserves a plugin, and not every workflow deserves a tool.</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Better fit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frequent, structured, safety-sensitive</td>
+<td>Tool</td>
+</tr>
+<tr>
+<td>Infrequent, complex, judgement-heavy</td>
+<td>CLI or Skill</td>
+</tr>
+<tr>
+<td>One-off task or fixed script</td>
+<td>Script</td>
+</tr>
+<tr>
+<td>Read-only diagnostics or environment management</td>
+<td>CLI or Skill</td>
+</tr>
+<tr>
+<td>Cross-application integration</td>
+<td>Evaluate MCP or another protocol before rewriting</td>
+</tr>
+</tbody>
+</table>
+<p>A useful question: <strong>what does this Tool take off the model's plate?</strong></p>
+<p>If the answer is only "it renames a command", it probably should not be a Tool. A Tool earns its place by providing at least one of:</p>
+<ul>
+<li>structured arguments and validation;</li>
+<li>a safety boundary such as confirmation, timeouts, or output limits;</li>
+<li>normalization of IDs, limits, or errors;</li>
+<li>version compatibility;</li>
+<li>discoverability and routing.</li>
+</ul>
+<p><strong>Ask the Agent to do this first</strong>:</p>
+<pre><code class="language-text">Do not write code yet.
+Produce a capability audit:
+1. What commands, inputs, outputs, and side effects does the CLI have?
+2. Which are frequent, structured, or safety-sensitive?
+3. Which should stay in the CLI or a Skill?
+4. Which operations are inverses of each other?
+5. Where do versions and output formats differ?
+</code></pre>
+<h2 id="2-define-the-contract-before-the-implementation">2. Define the contract before the implementation</h2>
+<p>A Tool is not a collection of function names. It is a contract between the model and an external capability.<a href="#ref1">[1]</a><a href="#ref2">[2]</a></p>
+<p>Every Tool should state:</p>
+<ul>
+<li>its name and when to use it;</li>
+<li>argument types, required/optional fields, and limits;</li>
+<li>the high-signal result;</li>
+<li>the errors it can return;</li>
+<li>its side effects;</li>
+<li>what the model should do next after a failure.</li>
+</ul>
+<p>GetNote Toolbox ended up with 15 tools covering search, save, read, update, delete, tags, knowledge bases, and quotas. <strong>Fifteen was not the goal.</strong> It was the result of following workflows and contract boundaries.</p>
+<p>Principles that survived:</p>
+<ul>
+<li>Prefix tool names with a domain name, such as <code>getnote_search</code>, not a global <code>search</code>;</li>
+<li>Group related actions under one tool when that reduces ambiguity;</li>
+<li>Pair inverse operations such as add and remove;</li>
+<li>Leave low-frequency, fast-changing operations in the CLI or a Skill;</li>
+<li>Never add a generic <code>run_command</code> or arbitrary HTTP passthrough.</li>
+</ul>
+<p><strong>Ask the Agent for this next</strong>:</p>
+<pre><code class="language-text">Do not implement yet.
+For each candidate Tool, write the contract:
+- argument schema
+- result fields
+- error types
+- side effects
+- permission/confirmation requirements
+- verification method
+</code></pre>
+<h2 id="3-ids-limits-and-errors-must-be-reliable">3. IDs, limits, and errors must be reliable</h2>
+<h3 id="why-a-snowflake-id-cannot-be-treated-as-a-javascript-number">Why a snowflake ID cannot be treated as a JavaScript number</h3>
+<p>GetNote note IDs are 19-digit snowflake IDs.<a href="#ref4">[4]</a> A snowflake ID is a 64-bit integer generated across machines, usually with a layout like:</p>
+<pre><code class="language-text">0 | 41-bit millisecond timestamp | 10-bit machine ID | 12-bit sequence
+</code></pre>
+<p>The timestamp makes IDs roughly time-ordered; the machine and sequence bits let multiple IDs be generated within the same millisecond. A 64-bit integer usually has 19 decimal digits.</p>
+<p>JavaScript <code>Number</code> is IEEE 754 binary64: it has only 53 bits of precision. The largest safe integer is:</p>
+<pre><code class="language-text">2^53 - 1 = 9,007,199,254,740,991
+</code></pre>
+<p>A 19-digit ID is already outside that range.<a href="#ref5">[5]</a> Around <code>1.9 × 10^18</code>, representable integers are about 256 apart, and the low bits of a snowflake carry machine and sequence information.</p>
+<p>So:</p>
+<pre><code class="language-js">JSON.parse('{&quot;note_id&quot;:1900000000000000001}')
+// { note_id: 1900000000000000000 }
+</code></pre>
+<p>This is not simple string truncation. It is precision loss and rounding when a decimal integer is converted to binary64. A reviver receives the already-rounded Number; converting it to <code>BigInt</code> afterwards cannot recover the lost bits.</p>
+<p>The correct contract is: <strong>IDs are strings.</strong></p>
+<pre><code class="language-json">{ &quot;note_id&quot;: &quot;1900000000000000001&quot; }
+</code></pre>
+<p>If you must parse numeric JSON, use a lossless parser, or quote integer literals above the safe range before <code>JSON.parse</code>. The compatibility layer in GetNote Toolbox does the latter; it is a patch, not a universal parser.</p>
+<h3 id="normalize-limits-and-errors-too">Normalize limits and errors too</h3>
+<p>Older CLIs may ignore <code>--limit</code>. Returning the raw page makes the model believe the limit applied. A safer plugin truncates the parsed result and reports the count it actually returned.</p>
+<p>Errors should be actionable, not just <code>exit code 1</code>:</p>
+<ul>
+<li>not logged in: suggest the login command;</li>
+<li>unsupported version: state the minimum version and upgrade path;</li>
+<li>invalid argument: name the argument and valid range;</li>
+<li>timeout: show the timeout and how to change it;</li>
+<li>output cap: explain the limit and how to narrow the request;</li>
+<li>business failure: keep the CLI message and relevant context.</li>
+</ul>
+<blockquote>
+<p>IDs, counts, and errors must be usable by the model's next action.</p>
+</blockquote>
+<h2 id="4-the-tool-surface-is-not-a-11-cli-mirror">4. The tool surface is not a 1:1 CLI mirror</h2>
+<p>A common mistake is to expose 50 CLI commands as 50 tools.</p>
+<p>More tools mean more choices, more context, and more chances to pick the wrong one. Organize the tool surface around workflows:</p>
+<ul>
+<li>prioritize frequent reads and writes;</li>
+<li>isolate destructive operations;</li>
+<li>pair inverse operations;</li>
+<li>leave low-frequency capabilities to the CLI or a Skill;</li>
+<li>merge related actions instead of creating near-duplicates.</li>
+</ul>
+<p>GetNote Toolbox stopped at 15 tools. Not because more were impossible, but because every new tool had to justify itself.</p>
+<p><strong>Ask the Agent to draw the surface first</strong>:</p>
+<pre><code class="language-text">Draw the tool surface before writing code:
+- Which operations should be merged?
+- Which are inverses?
+- Which are out of scope for now?
+- Which model decision does each new Tool remove?
+</code></pre>
+<h2 id="5-design-write-operations-for-failure">5. Design write operations for failure</h2>
+<p>A read failure may produce a wrong answer. A write failure can damage a user's data.</p>
+<p>For every write operation, answer:</p>
+<ul>
+<li>What is the worst thing that can happen?</li>
+<li>Does it need explicit confirmation?</li>
+<li>Can the impact be previewed?</li>
+<li>How can it be rolled back?</li>
+<li>Is it idempotent or retry-safe?</li>
+<li>Does the result make it clear that it actually succeeded?</li>
+</ul>
+<p>GetNote Toolbox chose:</p>
+<ul>
+<li>deleting a note requires <code>confirm: true</code>;</li>
+<li>deleting a tag requires a tag ID, not a guessed tag name;</li>
+<li>tag updates are documented as replacement semantics;</li>
+<li>removing notes from a knowledge base does not delete the notes;</li>
+<li>write tests create test data and clean it up.</li>
+</ul>
+<p><strong>Ask the Agent before any write</strong>:</p>
+<pre><code class="language-text">Before executing a write:
+1. What will be changed?
+2. What is the worst-case impact?
+3. How will we confirm success?
+4. How do we roll back?
+5. If confirmation is missing, stop.
+</code></pre>
+<h2 id="6-authentication-permissions-and-trust-boundaries">6. Authentication, permissions, and trust boundaries</h2>
+<p>GetNote Toolbox never reads, caches, or echoes an API key. It calls a logged-in local CLI.</p>
+<p>That is intentional:</p>
+<ul>
+<li>the plugin does not store credentials;</li>
+<li>the CLI owns login and expiry;</li>
+<li>users can diagnose with <code>getnote auth status</code>;</li>
+<li>keys never enter the model context.</li>
+</ul>
+<p>But "does not touch keys" is not the same as "has no trust boundary":</p>
+<ul>
+<li>the child process inherits the Host environment;<a href="#ref6">[6]</a></li>
+<li>an <code>npx</code> fallback may download the latest CLI, creating version drift and supply-chain risk;</li>
+<li>the local CLI must itself be trusted;</li>
+<li>permissions, sandboxing, and confirmation still need separate design.</li>
+</ul>
+<p>When reproducibility matters, pin the local CLI with <code>binaryPath</code> instead of silently depending on <code>latest</code>.</p>
+<h2 id="7-test-in-two-layers">7. Test in two layers</h2>
+<h3 id="a-fake-cli-protects-the-contract">A fake CLI protects the contract</h3>
+<p>Unit tests use a fake CLI and never touch a real account:</p>
+<ul>
+<li>19-digit IDs;</li>
+<li>nested responses;</li>
+<li>old-version flag fallback;</li>
+<li>tag add/remove followed by a re-read;</li>
+<li>knowledge-base add/remove;</li>
+<li>delete confirmation.</li>
+</ul>
+<p>These tests are fast, stable, repeatable, and cannot leak real notes.</p>
+<h3 id="the-real-cli-protects-the-environment">The real CLI protects the environment</h3>
+<p>Then run a read-only smoke test with the real CLI:</p>
+<ul>
+<li>is it logged in?</li>
+<li>what does the real output look like?</li>
+<li>do the tool calls work end to end?</li>
+<li>are the errors actionable?</li>
+</ul>
+<p>Real output can contain note titles and excerpts, so it must not be pasted into an issue, chat, or commit. Prefer synthetic fixtures; when real data is unavoidable, create test notes, clean them up, and keep reports local and gitignored.</p>
+<p><strong>Ask the Agent for evidence</strong>:</p>
+<pre><code class="language-text">Do not just say &quot;done&quot;.
+Show:
+- which paths were tested;
+- what used a fake CLI and what used the real one;
+- which failure paths were covered;
+- where the evidence is;
+- what remains unverified.
+</code></pre>
+<h2 id="8-version-compatibility-must-be-diagnosable">8. Version compatibility must be diagnosable</h2>
+<p>CLI differences are part of plugin design, not an edge case.</p>
+<p>Real examples:</p>
+<ul>
+<li>19-digit IDs are sometimes numbers and sometimes strings;</li>
+<li>older CLIs ignore <code>limit</code>;</li>
+<li><code>note update</code> and <code>kb remove</code> need <code>-y</code> in newer versions, while older versions reject the flag;</li>
+<li>saving a URL may return a nested <code>data.note</code>.</li>
+</ul>
+<p>You can support old versions or require a new one, but make it explicit:</p>
+<ul>
+<li>which versions are supported;</li>
+<li>the recommended minimum;</li>
+<li>what error appears when the version is unsupported;</li>
+<li>whether there is a fallback path;</li>
+<li>where the CLI path is pinned.</li>
+</ul>
+<p>Compatibility is not "support everything". It is making failure explainable and actionable.</p>
+<h2 id="9-run-a-reverse-review-before-publishing">9. Run a reverse review before publishing</h2>
+<p>Code that runs is not the same as code that is safe to publish.</p>
+<p>Before release, ask what should <strong>not</strong> leave the workbench:</p>
+<ul>
+<li>Do eval reports contain real note IDs, titles, or excerpts?</li>
+<li>Do internal drafts contain local paths, account details, or plans?</li>
+<li>Does Git history contain a personal email?<a href="#ref8">[8]</a></li>
+<li>Does the package scope expose a local username?</li>
+<li>Does the npm package include tests, <code>.env</code> files, or internal documents?<a href="#ref7">[7]</a></li>
+<li>Does the public README contain "planned", "placeholder", or TODO language?</li>
+<li>Is the repository a deliverable, or is it still a workbench?</li>
+</ul>
+<p>GetNote Toolbox handled these before publication: removed eval outputs and internal drafts, started a clean Git history, replaced the local package scope, removed local environment details, and kept only reviewed source, tests, licenses, and public documentation.</p>
+<p><strong>Ask the Agent for a reverse review</strong>:</p>
+<pre><code class="language-text">Before publishing:
+1. Scan for keys, tokens, emails, absolute paths, and .env files.
+2. Check eval output and real-note data.
+3. Inspect the package contents, not just the working tree.
+4. Check README/site for internal planning language.
+5. Give a &quot;safe to publish / not safe&quot; conclusion with evidence.
+</code></pre>
+<h2 id="10-a-decision-table">10. A decision table</h2>
+<table>
+<thead>
+<tr>
+<th>Fork</th>
+<th>Safer choice</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Should this be a plugin?</td>
+<td>Audit capabilities first</td>
+<td>More upfront time</td>
+</tr>
+<tr>
+<td>Wrap a CLI or call the API?</td>
+<td>Reuse the CLI's auth when it fits</td>
+<td>Must adapt to CLI versions</td>
+</tr>
+<tr>
+<td>Mirror the CLI or design a tool surface?</td>
+<td>Design around workflows</td>
+<td>Requires judgment and deletion</td>
+</tr>
+<tr>
+<td>More tools or the minimum useful set?</td>
+<td>Minimum useful set</td>
+<td>Some low-frequency gaps</td>
+</tr>
+<tr>
+<td>Return raw JSON or normalize?</td>
+<td>Return high-signal fields</td>
+<td>Adaptation work</td>
+</tr>
+<tr>
+<td>Casual deletes or explicit confirmation?</td>
+<td>Explicit confirmation</td>
+<td>One more step</td>
+</tr>
+<tr>
+<td>Plugin manages keys or delegates to CLI?</td>
+<td>Delegate to CLI</td>
+<td>Depends on CLI login</td>
+</tr>
+<tr>
+<td>Unit tests only or two layers?</td>
+<td>Fake CLI plus real acceptance</td>
+<td>More test cost</td>
+</tr>
+<tr>
+<td>Newest CLI only or compatibility?</td>
+<td>Explicit support matrix</td>
+<td>More branches</td>
+</tr>
+<tr>
+<td>Publish first or review first?</td>
+<td>Review first</td>
+<td>Slower release</td>
+</tr>
+</tbody>
+</table>
+<h2 id="11-an-execution-checklist-for-the-agent">11. An execution checklist for the Agent</h2>
+<p>Before asking an Agent to build a plugin, tool, or automation, make it answer:</p>
+<ol>
+<li>Does this capability really need to be a Tool?</li>
+<li>Which contract, guard, or normalization does it add?</li>
+<li>Are IDs, counts, errors, and results reliable?</li>
+<li>What is the worst-case write, and how is it confirmed and rolled back?</li>
+<li>Where do authentication and secrets live, and what is the trust boundary?</li>
+<li>What did the fake CLI test, and what did the real CLI verify?</li>
+<li>When the CLI version changes, is the failure actionable?</li>
+<li>What data must never leave the workbench before publication?</li>
+</ol>
+<p>If the Agent cannot answer, do not let it write code yet.</p>
+<h2 id="12-conclusion">12. Conclusion</h2>
+<p>The key to better Agent work is not more tools. It is clearer boundaries:</p>
+<ul>
+<li>decide whether to build;</li>
+<li>define the contract before the implementation;</li>
+<li>read-only before writes;</li>
+<li>test before release;</li>
+<li>review before publishing.</li>
+</ul>
+<p>Tools are capability interfaces. Skills are operating knowledge. Permissions are action boundaries. When all three are clear, the Agent is doing work rather than guessing.</p>
+<h2 id="references">References</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/">DeepSeek Harness plugin development</a></li>
+<li><a id="ref2"></a><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness GitHub repository</a></li>
+<li><a id="ref3"></a><a href="https://github.com/leether/getnote-toolbox">GetNote Toolbox</a></li>
+<li><a id="ref4"></a><a href="https://github.com/twitter-archive/snowflake">Twitter Snowflake (archived repository)</a></li>
+<li><a id="ref5"></a><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER">MDN: Number.MAX_SAFE_INTEGER</a></li>
+<li><a id="ref6"></a><a href="https://nodejs.org/api/child_process.html">Node.js: child_process</a></li>
+<li><a id="ref7"></a><a href="https://docs.npmjs.com/cli/v11/commands/npm-publish">npm publish documentation</a></li>
+<li><a id="ref8"></a><a href="https://git-scm.com/docs">Git documentation</a></li>
+</ol>
+<blockquote>
+<p>All links are public sources; product behavior may change between versions.</p>
+</blockquote>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · Text CC BY-NC-ND 4.0 · Code MIT · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/cognition.html">GitHub Pages</a> · <a href="https://github.com/leether/dsh-book/blob/main/LICENSE">License</a> · <a href="https://github.com/leether/dsh-book/blob/main/LICENSE-CODE">Code license</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

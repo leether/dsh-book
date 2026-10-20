@@ -15,6 +15,7 @@
 Version: 2026-10  
 Reference environment: DeepSeek Harness Desktop 0.2.1-rc.2  
 Full text: [English edition](en/dsh-book.md) · [Chinese edition](dsh-book.md) · Site builder: [scripts/build-site.py](scripts/build-site.py)  
+Cognition article: [From CLI to DSH Plugin](https://leether.github.io/dsh-book/en/cognition.html)  
 Case-study plugin: [GetNote Toolbox](https://github.com/leether/getnote-toolbox)  
 Cover artwork: generated with Dreamina (即梦), stored locally in `docs/cover.webp`.
 
@@ -141,6 +142,11 @@ The first seven chapters assume no programming background. Chapter 8 introduces 
 - Task-completion checklist
 - One-page cheat sheet
 
+### Cognition (standalone article)
+
+- From CLI to DSH Plugin: A Decision Guide for Better Agent Work
+- Read: [cognition.html](https://leether.github.io/dsh-book/en/cognition.html)
+
 ---
 
 ## Reading Paths
@@ -151,6 +157,7 @@ The first seven chapters assume no programming background. Chapter 8 introduces 
 | Installing plugins and skills | Chapters 1–8 |
 | Building a plugin | Chapters 1–9 |
 | Troubleshooting | Chapter 10, then the relevant chapter |
+| Better Agent decisions | Cognition |
 
 ---
 
@@ -158,6 +165,7 @@ The first seven chapters assume no programming background. Chapter 8 introduces 
 
 - **English site**: <https://leether.github.io/dsh-book/en/>
 - **Chinese site**: <https://leether.github.io/dsh-book/>
+- **Cognition article**: <https://leether.github.io/dsh-book/en/cognition.html>
 - **Repository**: <https://github.com/leether/dsh-book>
 - **Issues**: <https://github.com/leether/dsh-book/issues>
 
@@ -165,9 +173,11 @@ The site is split into per-chapter pages:
 
 ```text
 /                     cover + contents
+/cognition.html
 /ch01.html … /ch10.html
 /appendix.html
 /en/                  English cover + contents
+/en/cognition.html
 /en/ch01.html … /en/ch10.html
 /en/appendix.html
 ```
@@ -192,6 +202,7 @@ Pages updates within a minute or two.
 
 ## Site Design
 
+- **Cognition article**: a standalone decision guide for Agent work;
 - **Per-chapter pages**: shorter pages, clearer navigation, and a chapter-specific URL;
 - **Bilingual switch**: `English / 中文` in the top-right corner; the current chapter is preserved;
 - **Cover page**: hero, book cover, chapter cards, and reading paths;
@@ -214,18 +225,22 @@ No JavaScript, cookies, analytics, external fonts, or third-party asset requests
 ├── README.md              # this English README (default)
 ├── README.zh.md           # Chinese README
 ├── dsh-book.md            # Chinese full text
+├── cognition.zh.md        # Chinese cognition article source
 ├── 00-front.md            # Chinese title page
 ├── part1.md … part4.md    # Chinese chapter sources
 ├── en/
 │   ├── 00-front.md        # English title page
+│   ├── cognition.en.md    # English cognition article source
 │   ├── part1.md … part4.md
 │   └── dsh-book.md        # English full text
 ├── scripts/build-site.py  # Markdown → bilingual static site
 ├── docs/                  # GitHub Pages (main /docs)
 │   ├── index.html         # Chinese cover
+│   ├── cognition.html     # Chinese cognition article
 │   ├── ch01.html … ch10.html
 │   ├── appendix.html
 │   ├── en/index.html      # English cover
+│   ├── en/cognition.html  # English cognition article
 │   ├── en/ch01.html … en/appendix.html
 │   ├── style.css
 │   ├── favicon.svg
