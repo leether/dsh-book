@@ -36,22 +36,6 @@ LANGUAGES = [
         "locale": "zh_CN",
         "asset_prefix": "",
         "source_start": "# 第 1 章",
-        "structure_source": "structure.zh.md",
-        "series_title": "DeepSeek Harness 实战手册",
-        "series_kicker": "DSH 实战手册 · 四篇",
-        "structure": "结构",
-        "structure_title": "全书结构",
-        "structure_lede": "这套书按研究对象分为四个部分：使用 DSH、设计插件、设计 DSH，以及我们如何做决定。未写的内容只做路线图和占位，不生成空白章节。",
-        "volumes_title": "四篇结构",
-        "volumes_intro": "入门篇已发布；进阶、深入、认知先以路线图和占位生长。",
-        "structure_button": "全书结构",
-        "chapter_part": "入门篇",
-        "volumes": [
-            {"id": "intro", "title": "入门篇", "subtitle": "把 DSH 用起来", "status": "已发布", "status_class": "live", "href": "index.html#contents"},
-            {"id": "advanced", "title": "进阶篇", "subtitle": "插件设计", "status": "规划中", "status_class": "planned", "href": "structure.html#advanced"},
-            {"id": "internals", "title": "深入篇", "subtitle": "DSH 是怎么设计的", "status": "研究中", "status_class": "research", "href": "structure.html#internals"},
-            {"id": "decisions", "title": "认知篇", "subtitle": "权衡与决策", "status": "伴读", "status_class": "companion", "href": "structure.html#decisions"},
-        ],
         "strip_title": re.compile(r"^第\s*\d+\s*章\s*[　\s]*"),
         "appendix_prefix": "附录",
         "appendix_number": "附",
@@ -67,8 +51,8 @@ LANGUAGES = [
         "github": "GitHub 仓库",
         "contents": "目录",
         "contents_kicker": "Contents",
-        "book_map": "入门篇 · 本书地图",
-        "contents_intro": "入门篇的 10 章 + 附录。可以按顺序读，也可以直接跳到需要的一章。",
+        "book_map": "本书地图",
+        "contents_intro": "10 章 + 附录。可以按顺序读，也可以直接跳到需要的一章。",
         "chapter_label": "第 {n} 章",
         "appendix_label": "附录",
         "appendix_short": "附",
@@ -119,22 +103,6 @@ LANGUAGES = [
         "locale": "en_US",
         "asset_prefix": "../",
         "source_start": "# Chapter 1",
-        "structure_source": "structure.en.md",
-        "series_title": "DeepSeek Harness: A Practical Handbook",
-        "series_kicker": "DSH HANDBOOK · FOUR PARTS",
-        "structure": "Structure",
-        "structure_title": "Book Structure",
-        "structure_lede": "The book is organized by object of study: using DSH, designing plugins, designing DSH, and explaining our decisions. Unwritten material appears only as a roadmap or placeholder, never as a blank chapter.",
-        "volumes_title": "Four parts",
-        "volumes_intro": "Part I is published; Parts II–IV grow as roadmaps and placeholders for now.",
-        "structure_button": "Book structure",
-        "chapter_part": "Part I",
-        "volumes": [
-            {"id": "intro", "title": "Part I", "subtitle": "Getting Started", "status": "Published", "status_class": "live", "href": "index.html#contents"},
-            {"id": "advanced", "title": "Part II", "subtitle": "Plugin Design", "status": "Planned", "status_class": "planned", "href": "structure.html#advanced"},
-            {"id": "internals", "title": "Part III", "subtitle": "DSH Internals", "status": "Researching", "status_class": "research", "href": "structure.html#internals"},
-            {"id": "decisions", "title": "Part IV", "subtitle": "Decisions", "status": "Companion", "status_class": "companion", "href": "structure.html#decisions"},
-        ],
         "strip_title": re.compile(r"^Chapter\s+\d+\s*[—–-]\s*", re.IGNORECASE),
         "appendix_prefix": "appendix",
         "appendix_number": "A",
@@ -150,8 +118,8 @@ LANGUAGES = [
         "github": "GitHub repository",
         "contents": "Contents",
         "contents_kicker": "Contents",
-        "book_map": "Part I · Book map",
-        "contents_intro": "Part I: 10 chapters + appendix. Read in order, or jump straight to the chapter you need.",
+        "book_map": "Book map",
+        "contents_intro": "10 chapters + appendix. Read in order, or jump straight to the chapter you need.",
         "chapter_label": "Chapter {n}",
         "appendix_label": "Appendix",
         "appendix_short": "A",
@@ -312,7 +280,6 @@ def topbar(lang: dict, slug: str, contents_href: str, start_href: str) -> str:
     <nav class="topbar-links" aria-label="{html.escape(lang['nav_quick'])}">
       <a href="{contents_href}">{html.escape(lang['contents'])}</a>
       <a href="{start_href}">{html.escape(lang['start'])}</a>
-      <a href="structure.html">{html.escape(lang['structure'])}</a>
       <a href="{REPO_URL}">GitHub</a>
       <a class="lang-switch" href="{switch}" hreflang="{lang['switch_lang']}" lang="{lang['switch_lang']}">{html.escape(lang['switch_label'])}</a>
     </nav>
@@ -352,20 +319,6 @@ def chapter_meta(lang: dict, chapter: dict) -> str:
         value=chapter["value"],
         sections=chapter["sections"],
     )
-
-
-def volume_cards(lang: dict) -> str:
-    cards = []
-    for volume in lang["volumes"]:
-        cards.append(
-            '<a class="volume-card ' + volume["status_class"] + '" href="' + volume["href"] + '">\n'
-            + '  <span class="volume-status">' + html.escape(volume["status"]) + '</span>\n'
-            + '  <h3>' + html.escape(volume["title"]) + '</h3>\n'
-            + '  <p>' + html.escape(volume["subtitle"]) + '</p>\n'
-            + '  <span class="volume-arrow">→</span>\n'
-            + '</a>'
-        )
-    return "\n".join(cards)
 
 
 def landing_page(lang: dict, chapters: list[dict], total_value: int, total_minutes: int) -> str:
@@ -423,7 +376,6 @@ def landing_page(lang: dict, chapters: list[dict], total_value: int, total_minut
 
     body = f"""<header class="hero">
   <div class="hero-copy">
-    <p class="series-kicker">{html.escape(lang['series_kicker'])}</p>
     <p class="badge">{html.escape(lang['badge'])}</p>
     <h1>{html.escape(lang['book_title'])}</h1>
     <p class="subtitle">{html.escape(lang['subtitle'])}</p>
@@ -436,7 +388,6 @@ def landing_page(lang: dict, chapters: list[dict], total_value: int, total_minut
     </ul>
     <div class="actions">
       <a class="button primary" href="ch01.html">{html.escape(lang['start'])}</a>
-      <a class="button" href="structure.html">{html.escape(lang['structure_button'])}</a>
       <a class="button" href="{REPO_URL}">{html.escape(lang['github'])}</a>
     </div>
   </div>
@@ -450,15 +401,6 @@ def landing_page(lang: dict, chapters: list[dict], total_value: int, total_minut
   </div>
 </header>
 <main class="landing">
-  <section class="landing-section" id="structure-preview">
-    <div class="section-heading">
-      <h2>{html.escape(lang['volumes_title'])}</h2>
-      <p>{html.escape(lang['volumes_intro'])}</p>
-    </div>
-    <div class="volume-grid">
-{volume_cards(lang)}</div>
-  </section>
-
   <section class="landing-section" id="contents">
     <div class="section-heading">
       <h2>{html.escape(lang['book_map'])}</h2>
@@ -536,12 +478,11 @@ def chapter_page(lang: dict, chapters: list[dict], index: int) -> str:
       <ol class="chapter-list">
 {toc}
       </ol>
-      <p class="sidebar-more"><a href="structure.html">{html.escape(lang['structure_button'])} →</a></p>
       <p class="sidebar-note">{html.escape(lang['footer'][0])}<br>{html.escape(lang['footer'][1])}</p>
     </div>
   </aside>
   <article class="book">
-    <p class="breadcrumb"><a href="structure.html">{html.escape(lang['structure'])}</a> / <a href="index.html#contents">{html.escape(lang['chapter_part'])}</a> / {html.escape(chapter['label'])}</p>
+    <p class="breadcrumb"><a href="index.html#contents">{html.escape(lang['contents'])}</a> / {html.escape(chapter['label'])}</p>
     <section class="chapter">
 {content}
 {pager}
@@ -562,39 +503,6 @@ def chapter_page(lang: dict, chapters: list[dict], index: int) -> str:
     return page
 
 
-
-def structure_page(lang: dict, chapters: list[dict]) -> str:
-    source = (ROOT / lang["structure_source"]).read_text(encoding="utf-8")
-    parser = markdown.Markdown(
-        extensions=["extra", "toc", "sane_lists"],
-        extension_configs={"toc": {"permalink": False}},
-    )
-    body_html = parser.convert(source)
-    title = f"{lang['structure_title']} · {lang['series_title']}"
-    description = lang["structure_lede"]
-    body = f"""<main class="landing structure-page">
-  <header class="structure-head">
-    <p class="series-kicker">{html.escape(lang['series_kicker'])}</p>
-    <h1>{html.escape(lang['structure_title'])}</h1>
-    <p class="lede">{html.escape(lang['structure_lede'])}</p>
-  </header>
-  <div class="volume-grid">
-{volume_cards(lang)}
-  </div>
-  <article class="book structure-body">
-{body_html}
-  </article>
-</main>
-"""
-    page = (
-        head(lang, title, description, "structure.html")
-        + topbar(lang, "structure.html", "index.html#contents", "ch01.html")
-        + body
-        + footer(lang, "structure.html")
-    )
-    return page
-
-
 def build_language(lang: dict) -> None:
     chapters = parse_chapters(lang)
     total_value = sum(chapter["value"] for chapter in chapters)
@@ -604,14 +512,13 @@ def build_language(lang: dict) -> None:
 
     landing = landing_page(lang, chapters, total_value, total_minutes)
     (out_dir / "index.html").write_text(landing, encoding="utf-8")
-    (out_dir / "structure.html").write_text(structure_page(lang, chapters), encoding="utf-8")
 
     for index, chapter in enumerate(chapters):
         page = chapter_page(lang, chapters, index)
         (out_dir / chapter["slug"]).write_text(page, encoding="utf-8")
 
     # Privacy guard: every page must stay static and self-contained.
-    pages = [out_dir / "index.html", out_dir / "structure.html", *[out_dir / chapter["slug"] for chapter in chapters]]
+    pages = [out_dir / "index.html", *[out_dir / chapter["slug"] for chapter in chapters]]
     for path in pages:
         text = path.read_text(encoding="utf-8")
         lowered = text.lower()
@@ -625,7 +532,7 @@ def build_language(lang: dict) -> None:
                 raise SystemExit(f"untranslated Chinese in {path}: {found[:8]}")
 
     print(
-        f"wrote {lang['out_dir']}/index.html + structure.html + {len(chapters)} chapter pages "
+        f"wrote {lang['out_dir']}/index.html + {len(chapters)} chapter pages "
         f"({total_value:,} {lang['count_mode']})"
     )
 

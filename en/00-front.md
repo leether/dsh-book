@@ -7,8 +7,6 @@
 Version: 2026-10  
 Reference environment: DeepSeek Harness Desktop 0.2.1-rc.2
 
-> This is Part I of *DeepSeek Harness: A Practical Handbook*. See [Book Structure](https://leether.github.io/dsh-book/en/structure.html).
-
 ---
 
 ## Before You Start

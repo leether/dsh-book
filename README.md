@@ -8,9 +8,6 @@
 
 **A practical guide for complete beginners**
 
-> This is **Part I** of *DeepSeek Harness: A Practical Handbook*.  
-> Book structure: <https://leether.github.io/dsh-book/en/structure.html>
-
 > **Read online (English)**: <https://leether.github.io/dsh-book/en/>  
 > **Chinese edition**: <https://leether.github.io/dsh-book/>  
 > **Unofficial guide**: not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.
@@ -20,23 +17,6 @@ Reference environment: DeepSeek Harness Desktop 0.2.1-rc.2
 Full text: [English edition](en/dsh-book.md) · [Chinese edition](dsh-book.md) · Site builder: [scripts/build-site.py](scripts/build-site.py)  
 Case-study plugin: [GetNote Toolbox](https://github.com/leether/getnote-toolbox)  
 Cover artwork: generated with Dreamina (即梦), stored locally in `docs/cover.webp`.
-
----
-
-## Book Structure
-
-The handbook is organized by **object of study**, not difficulty:
-
-| Part | Focus | Status |
-| --- | --- | --- |
-| Part I | Getting started with DSH | Published |
-| Part II | Plugin design | Planned |
-| Part III | How DSH is designed | Researching |
-| Part IV | Tradeoffs and decisions | Companion / ongoing |
-
-The current 10 chapters + appendix are all **Part I**. Parts II–IV currently exist as a roadmap, chapter matrix, and placeholders; they do not create blank chapter pages.
-
-See [Book Structure](https://leether.github.io/dsh-book/en/structure.html).
 
 ---
 
@@ -212,7 +192,6 @@ Pages updates within a minute or two.
 
 ## Site Design
 
-- **Book structure page**: a four-part roadmap with statuses and placeholders;
 - **Per-chapter pages**: shorter pages, clearer navigation, and a chapter-specific URL;
 - **Bilingual switch**: `English / 中文` in the top-right corner; the current chapter is preserved;
 - **Cover page**: hero, book cover, chapter cards, and reading paths;
@@ -244,7 +223,6 @@ No JavaScript, cookies, analytics, external fonts, or third-party asset requests
 ├── scripts/build-site.py  # Markdown → bilingual static site
 ├── docs/                  # GitHub Pages (main /docs)
 │   ├── index.html         # Chinese cover
-│   ├── structure.html     # four-part roadmap
 │   ├── ch01.html … ch10.html
 │   ├── appendix.html
 │   ├── en/index.html      # English cover
