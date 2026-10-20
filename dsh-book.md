@@ -2061,6 +2061,10 @@ Preset（standard / creator）
 
 前面几节讲的是方法。这一节用一个真实项目走一遍：**GetNote（得到大脑）工具箱**。
 
+做这个插件的直接动机是：**在我们开始的时候，官方 `@getnote/dsh-plugin` 还不支持 DSH Desktop**。Desktop 是大多数人日常使用的入口，所以我们需要一个能在本机 Desktop profile 里真正跑起来的版本。
+
+这不是要替代官方插件，而是补上 Desktop 这个入口。也正因为如此，项目优先处理 Desktop 的本地 bundle、locale/icon 展示、CLI 发现和 Plugin Manager 可见性。
+
 它的目标不是“照着某个插件抄几个工具”，而是把本机 `getnote` CLI 变成一组 Agent 能稳定使用的 Host 工具。代码已经公开：
 
 <https://github.com/leether/getnote-toolbox>

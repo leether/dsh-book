@@ -2010,6 +2010,10 @@ Give me:
 
 The previous sections described the method. This section walks through a real project: the **GetNote Toolbox**.
 
+The direct motivation was simple: **when we started, the official `@getnote/dsh-plugin` did not support DSH Desktop**. Desktop is the entry point most people use every day, so we needed a version that actually worked in a local Desktop profile.
+
+This was not an attempt to replace the official plugin. It was meant to fill the Desktop gap. That is also why the project focuses on the Desktop local bundle, locale/icon display, CLI discovery, and visibility in Plugin Manager.
+
 The goal was not to copy another plugin's tool list. It was to turn the local `getnote` CLI into a set of Host tools that an Agent can use reliably. The source is public:
 
 <https://github.com/leether/getnote-toolbox>
