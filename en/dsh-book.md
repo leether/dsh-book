@@ -2006,7 +2006,83 @@ Give me:
 
 ---
 
-## 9.7 Common Misconceptions
+## 9.7 Case Study: Turning the GetNote CLI into a DSH Plugin
+
+The previous sections described the method. This section walks through a real project: the **GetNote Toolbox**.
+
+The goal was not to copy another plugin's tool list. It was to turn the local `getnote` CLI into a set of Host tools that an Agent can use reliably. The source is public:
+
+<https://github.com/leether/getnote-toolbox>
+
+The source is public, but the package is not published to npm; install it as a local bundle.
+
+### Step 1: Audit capabilities before writing tools
+
+Start with the CLI's `--help`, inputs and outputs, side effects, authentication, and version differences. Then decide which capabilities deserve to become tools:
+
+- High-frequency operations that need structured arguments or safety guards become Tools;
+- Low-frequency, complex, fast-changing, or judgement-heavy operations stay with the CLI or a Skill;
+- Reversible operations should exist in pairs, such as add and remove;
+- Never add a generic `run_command` or arbitrary HTTP passthrough.
+
+The project ended up with 15 tools covering search, save, read, update, delete, tags, knowledge bases, and quotas. **Fifteen was not the goal.** Every tool had to answer a concrete question: which contract, guard, or normalization does it add?
+
+### Step 2: Turn "it runs" into a contract
+
+The difficult part was not the `spawn` call. It was the details:
+
+- Treat 19-digit note IDs as strings so JSON numbers cannot silently lose precision;
+- Some older CLIs ignore `limit`, so the plugin truncates the parsed result itself;
+- Deleting a note requires an explicit `confirm: true`; tag deletion requires a tag ID;
+- Arguments go to `spawn` as an array, never through a shell;
+- Timeouts, output-size limits, and expired logins produce actionable errors;
+- A Config schema exposes `binaryPath`, `timeoutMs`, and related fields;
+- A bundled Skill tells the Agent when to use which tool.
+
+Only at that point does the plugin stop being a command wrapper and become a usable interface for a model.
+
+### Step 3: Unit-test with a fake CLI, accept with the real one
+
+The test suite does not touch a real account. A fake CLI covers ID precision, nested responses, the old-CLI `-y` fallback, tag re-reads, and knowledge-base add/remove across 28 tests.
+
+Then run a read-only smoke test against the real CLI. Real output can contain note excerpts, so:
+
+- Never paste that output into an issue, chat, or commit;
+- Use synthetic IDs in tests;
+- For write tests, create a test note first and clean it up afterwards.
+
+### Step 4: Do the privacy and publication review before going public
+
+This is the most important part of the case study. Working code is not the same as code that is safe to publish.
+
+Before publication, we handled:
+
+- **Eval reports**: `evals/results/` contained account-specific note IDs, titles, and comparisons; it must not enter the public repository;
+- **Internal drafts**: upstream issue/PR notes under `contrib/` contained local paths and operating plans; they were excluded;
+- **Git history**: the old history used a personal email; the public repository starts a fresh history with a noreply author;
+- **Package name**: a local username scope was replaced with a public identity scope;
+- **Environment details**: lines such as "this machine is already linked to a profile" were removed;
+- **Sensitive-data scan**: check for keys, tokens, emails, absolute paths, `.env` files, long numeric IDs, and eval output;
+- **File inventory**: keep only reviewed source, tests, licenses, and public documentation.
+
+The rule is simple:
+
+> **Review first, publish second. Do not publish and delete afterwards.**
+
+### Result and boundaries
+
+The plugin is now a public source project with 15 tools and 28 tests, licensed under MIT. It also has clear boundaries:
+
+- It uses the same `getnote_*` tool names as the official `@getnote/dsh-plugin`, so the two cannot be installed together;
+- CLI version affects IDs, `limit`, and confirmation flags; pin `binaryPath` and verify the version;
+- The `npx` fallback downloads the latest CLI; use a pinned local binary if supply-chain risk matters;
+- It is not a universal GetNote plugin; many low-frequency capabilities still belong to the CLI or a domain Skill.
+
+What is reusable here is not the number 15. It is the four-step loop: **audit capabilities, design contracts, test with a fake CLI, and review privacy before publishing.**
+
+---
+
+## 9.8 Common Misconceptions
 
 - **"Creator is an advanced Standard."** No; it is an extension mode.
 - **"Installing a plugin is just config."** No; it may execute code.
@@ -2034,6 +2110,7 @@ Give me:
 - Use it to extend DSH, not for daily work.
 - Plugin code runs in the Host; have a trust and rollback plan.
 - Start minimal, verify, then iterate.
+- Real-world case: audit capabilities and contracts, review privacy, then publish.
 
 ---
 

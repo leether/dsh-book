@@ -59,7 +59,7 @@
     <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 9 章</p>
     <section class="chapter">
 <h1 id="9">第 9 章　创造模式：从使用者到扩展者</h1>
-<p class="chapter-meta">约 4 分钟 · 1,993 字 · 10 个小节</p>
+<p class="chapter-meta">约 7 分钟 · 3,514 字 · 11 个小节</p>
 <h2 id="_68">本章你会学会</h2>
 <ul>
 <li>创造模式到底是什么，不是什么；</li>
@@ -227,7 +227,67 @@
 - 如果失败，怎么回滚。
 </code></pre>
 <hr />
-<h2 id="97">9.7 常见误区</h2>
+<h2 id="97-getnote-cli-dsh">9.7 案例：把 GetNote CLI 做成一个 DSH 插件</h2>
+<p>前面几节讲的是方法。这一节用一个真实项目走一遍：<strong>GetNote（得到大脑）工具箱</strong>。</p>
+<p>它的目标不是“照着某个插件抄几个工具”，而是把本机 <code>getnote</code> CLI 变成一组 Agent 能稳定使用的 Host 工具。代码已经公开：</p>
+<p><a href="https://github.com/leether/getnote-toolbox">https://github.com/leether/getnote-toolbox</a></p>
+<p>公开的是源码，尚未发布到 npm；安装时按本地 bundle 处理。</p>
+<h3 id="_69">第一步：先审计能力，不要先写工具</h3>
+<p>先列 CLI 的 <code>--help</code>、输入输出、副作用、认证方式和版本差异，再决定哪些能力值得做成 Tool：</p>
+<ul>
+<li>高频、需要结构化参数、需要安全护栏的，做成 Tool；</li>
+<li>低频、复杂、变化快、需要领域判断的，留给 CLI 或 Skill；</li>
+<li>互逆操作要成对出现，比如 add / remove；</li>
+<li>不做通用 <code>run_command</code> 或任意 HTTP 透传。</li>
+</ul>
+<p>这个项目最后有 15 个工具，覆盖搜索、保存、读取、更新、删除、标签、知识库和配额。<strong>15 不是目标</strong>；每个工具都要能回答“它替模型承担了哪项契约、护栏或归一化工作”。</p>
+<h3 id="_70">第二步：把“能跑”变成契约</h3>
+<p>真正花时间的不是 <code>spawn</code> 一行命令，而是这些细节：</p>
+<ul>
+<li>19 位笔记 ID 一律按字符串处理，避免 JSON number 丢精度；</li>
+<li>列表的 <code>limit</code> 在旧版 CLI 上可能失效，插件在解析后自行截断；</li>
+<li>删除必须显式 <code>confirm: true</code>，标签删除要用标签 ID；</li>
+<li>参数以数组传给 <code>spawn</code>，不经过 Shell；</li>
+<li>超时、输出体积、登录失效都要给出可操作的错误；</li>
+<li>用 Config schema 暴露 <code>binaryPath</code>、<code>timeoutMs</code> 等字段；</li>
+<li>配一个 Skill，告诉 Agent 什么时候该用哪个工具。</li>
+</ul>
+<p>到这一步，插件才从“命令包装”变成“模型可用的接口”。</p>
+<h3 id="cli-cli">第三步：假 CLI 做单测，真 CLI 做验收</h3>
+<p>测试不碰真实账号：仓库里的 fake CLI 覆盖 ID 精度、嵌套响应、旧版 <code>-y</code> 回退、标签回读、知识库 add / remove 等 28 个测试。</p>
+<p>然后再用真实 CLI 做一次只读冒烟测试。真实输出可能包含笔记片段，所以：</p>
+<ul>
+<li>不把输出贴进 issue、聊天或提交；</li>
+<li>写测试只使用合成 ID；</li>
+<li>涉及写操作时，先建测试笔记，结束后清理。</li>
+</ul>
+<h3 id="_71">第四步：先做隐私和公开审查，再公开</h3>
+<p>这是这个案例最重要的部分。代码能跑，不等于可以公开。</p>
+<p>公开前我们逐项处理了：</p>
+<ul>
+<li><strong>评测报告</strong>：<code>evals/results/</code> 里有当前账号的笔记 ID、标题和对比结果，不能进公开仓库；</li>
+<li><strong>内部草稿</strong>：给上游提 issue / PR 的 <code>contrib/</code> 文档包含本机路径和操作计划，不公开；</li>
+<li><strong>git 历史</strong>：旧历史使用个人邮箱；公开版改用全新历史，提交作者用 noreply；</li>
+<li><strong>包名</strong>：本机用户名 scope 改成公开身份 scope，避免把本地账号带出去；</li>
+<li><strong>环境信息</strong>：删除“当前机器已 link 到某个 profile”这类描述；</li>
+<li><strong>敏感扫描</strong>：检查密钥、Token、邮箱、绝对路径、<code>.env</code>、长数字 ID 和评测输出；</li>
+<li><strong>文件清单</strong>：只保留受审的源码、测试、许可证和公开文档。</li>
+</ul>
+<p>原则很简单：</p>
+<blockquote>
+<p><strong>先审查，再公开；不是公开后再删。</strong></p>
+</blockquote>
+<h3 id="_72">结果与边界</h3>
+<p>这个插件现在是公开源码项目，15 个工具、28 个测试，代码使用 MIT。它还有几个明确边界：</p>
+<ul>
+<li>与官方 <code>@getnote/dsh-plugin</code> 使用相同的 <code>getnote_*</code> 工具名，不能同时安装；</li>
+<li>本机 CLI 版本会影响 ID、<code>limit</code> 和确认 flag，建议固定 <code>binaryPath</code> 并验证版本；</li>
+<li><code>npx</code> 兜底会下载最新 CLI，在意供应链风险时应改用本地固定版本；</li>
+<li>它不是一个“万能 GetNote 插件”，很多低频能力仍应交给 CLI 或领域 Skill。</li>
+</ul>
+<p>这个案例真正可复用的，不是 15 这个数字，而是四步：<strong>能力审计 → 契约设计 → 假 CLI 测试 → 隐私审查后再公开</strong>。</p>
+<hr />
+<h2 id="98">9.8 常见误区</h2>
 <ul>
 <li><strong>“创造模式是高级版标准模式”</strong>：不是。它是扩展模式。</li>
 <li><strong>“装插件只是改配置”</strong>：不是。插件可能执行代码。</li>
@@ -237,7 +297,7 @@
 <li><strong>“一次做很大”</strong>：先最小版本，再迭代。</li>
 </ul>
 <hr />
-<h2 id="_69">马上试试</h2>
+<h2 id="_73">马上试试</h2>
 <ol>
 <li>新建一个创造模式任务；</li>
 <li>不要安装任何东西；</li>
@@ -246,13 +306,14 @@
 <li>读它的回答，不执行。</li>
 </ol>
 <hr />
-<h2 id="_70">小结</h2>
+<h2 id="_74">小结</h2>
 <ul>
 <li>创造模式是 <code>cordis</code> Preset，不是模型/运行时。</li>
 <li>它多出运行时检查、插件管理、开发指引。</li>
 <li>适合扩展 DSH，不适合日常任务。</li>
 <li>插件代码在 Host 执行，必须有信任和回滚方案。</li>
 <li>先最小版本，再验证、再迭代。</li>
+<li>真实案例：先做能力审计与契约，再做隐私审查，最后公开。</li>
 </ul>
 <hr />
 

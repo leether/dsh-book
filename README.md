@@ -118,6 +118,7 @@ The first seven chapters assume no programming background. Chapter 8 introduces 
 - A complete plugin-building loop
 - Safety: code runs in the Host process
 - How non-programmers can participate
+- Case study: turning the GetNote CLI into a public DSH plugin
 
 ### Chapter 10 — Troubleshooting, Safety, and Next Steps
 

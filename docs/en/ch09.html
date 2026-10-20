@@ -59,7 +59,7 @@
     <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 9</p>
     <section class="chapter">
 <h1 id="chapter-9-creator-mode-from-user-to-extender">Chapter 9 — Creator Mode: From User to Extender</h1>
-<p class="chapter-meta">4 min read · 859 words · 10 sections</p>
+<p class="chapter-meta">7 min read · 1,557 words · 11 sections</p>
 <h2 id="what-you-will-learn_8">What You Will Learn</h2>
 <ul>
 <li>What Creator mode is and is not;</li>
@@ -222,7 +222,67 @@ Give me:
 - How to roll back if it fails.
 </code></pre>
 <hr />
-<h2 id="97-common-misconceptions">9.7 Common Misconceptions</h2>
+<h2 id="97-case-study-turning-the-getnote-cli-into-a-dsh-plugin">9.7 Case Study: Turning the GetNote CLI into a DSH Plugin</h2>
+<p>The previous sections described the method. This section walks through a real project: the <strong>GetNote Toolbox</strong>.</p>
+<p>The goal was not to copy another plugin's tool list. It was to turn the local <code>getnote</code> CLI into a set of Host tools that an Agent can use reliably. The source is public:</p>
+<p><a href="https://github.com/leether/getnote-toolbox">https://github.com/leether/getnote-toolbox</a></p>
+<p>The source is public, but the package is not published to npm; install it as a local bundle.</p>
+<h3 id="step-1-audit-capabilities-before-writing-tools">Step 1: Audit capabilities before writing tools</h3>
+<p>Start with the CLI's <code>--help</code>, inputs and outputs, side effects, authentication, and version differences. Then decide which capabilities deserve to become tools:</p>
+<ul>
+<li>High-frequency operations that need structured arguments or safety guards become Tools;</li>
+<li>Low-frequency, complex, fast-changing, or judgement-heavy operations stay with the CLI or a Skill;</li>
+<li>Reversible operations should exist in pairs, such as add and remove;</li>
+<li>Never add a generic <code>run_command</code> or arbitrary HTTP passthrough.</li>
+</ul>
+<p>The project ended up with 15 tools covering search, save, read, update, delete, tags, knowledge bases, and quotas. <strong>Fifteen was not the goal.</strong> Every tool had to answer a concrete question: which contract, guard, or normalization does it add?</p>
+<h3 id="step-2-turn-it-runs-into-a-contract">Step 2: Turn "it runs" into a contract</h3>
+<p>The difficult part was not the <code>spawn</code> call. It was the details:</p>
+<ul>
+<li>Treat 19-digit note IDs as strings so JSON numbers cannot silently lose precision;</li>
+<li>Some older CLIs ignore <code>limit</code>, so the plugin truncates the parsed result itself;</li>
+<li>Deleting a note requires an explicit <code>confirm: true</code>; tag deletion requires a tag ID;</li>
+<li>Arguments go to <code>spawn</code> as an array, never through a shell;</li>
+<li>Timeouts, output-size limits, and expired logins produce actionable errors;</li>
+<li>A Config schema exposes <code>binaryPath</code>, <code>timeoutMs</code>, and related fields;</li>
+<li>A bundled Skill tells the Agent when to use which tool.</li>
+</ul>
+<p>Only at that point does the plugin stop being a command wrapper and become a usable interface for a model.</p>
+<h3 id="step-3-unit-test-with-a-fake-cli-accept-with-the-real-one">Step 3: Unit-test with a fake CLI, accept with the real one</h3>
+<p>The test suite does not touch a real account. A fake CLI covers ID precision, nested responses, the old-CLI <code>-y</code> fallback, tag re-reads, and knowledge-base add/remove across 28 tests.</p>
+<p>Then run a read-only smoke test against the real CLI. Real output can contain note excerpts, so:</p>
+<ul>
+<li>Never paste that output into an issue, chat, or commit;</li>
+<li>Use synthetic IDs in tests;</li>
+<li>For write tests, create a test note first and clean it up afterwards.</li>
+</ul>
+<h3 id="step-4-do-the-privacy-and-publication-review-before-going-public">Step 4: Do the privacy and publication review before going public</h3>
+<p>This is the most important part of the case study. Working code is not the same as code that is safe to publish.</p>
+<p>Before publication, we handled:</p>
+<ul>
+<li><strong>Eval reports</strong>: <code>evals/results/</code> contained account-specific note IDs, titles, and comparisons; it must not enter the public repository;</li>
+<li><strong>Internal drafts</strong>: upstream issue/PR notes under <code>contrib/</code> contained local paths and operating plans; they were excluded;</li>
+<li><strong>Git history</strong>: the old history used a personal email; the public repository starts a fresh history with a noreply author;</li>
+<li><strong>Package name</strong>: a local username scope was replaced with a public identity scope;</li>
+<li><strong>Environment details</strong>: lines such as "this machine is already linked to a profile" were removed;</li>
+<li><strong>Sensitive-data scan</strong>: check for keys, tokens, emails, absolute paths, <code>.env</code> files, long numeric IDs, and eval output;</li>
+<li><strong>File inventory</strong>: keep only reviewed source, tests, licenses, and public documentation.</li>
+</ul>
+<p>The rule is simple:</p>
+<blockquote>
+<p><strong>Review first, publish second. Do not publish and delete afterwards.</strong></p>
+</blockquote>
+<h3 id="result-and-boundaries">Result and boundaries</h3>
+<p>The plugin is now a public source project with 15 tools and 28 tests, licensed under MIT. It also has clear boundaries:</p>
+<ul>
+<li>It uses the same <code>getnote_*</code> tool names as the official <code>@getnote/dsh-plugin</code>, so the two cannot be installed together;</li>
+<li>CLI version affects IDs, <code>limit</code>, and confirmation flags; pin <code>binaryPath</code> and verify the version;</li>
+<li>The <code>npx</code> fallback downloads the latest CLI; use a pinned local binary if supply-chain risk matters;</li>
+<li>It is not a universal GetNote plugin; many low-frequency capabilities still belong to the CLI or a domain Skill.</li>
+</ul>
+<p>What is reusable here is not the number 15. It is the four-step loop: <strong>audit capabilities, design contracts, test with a fake CLI, and review privacy before publishing.</strong></p>
+<hr />
+<h2 id="98-common-misconceptions">9.8 Common Misconceptions</h2>
 <ul>
 <li><strong>"Creator is an advanced Standard."</strong> No; it is an extension mode.</li>
 <li><strong>"Installing a plugin is just config."</strong> No; it may execute code.</li>
@@ -248,6 +308,7 @@ Give me:
 <li>Use it to extend DSH, not for daily work.</li>
 <li>Plugin code runs in the Host; have a trust and rollback plan.</li>
 <li>Start minimal, verify, then iterate.</li>
+<li>Real-world case: audit capabilities and contracts, review privacy, then publish.</li>
 </ul>
 <hr />
 
