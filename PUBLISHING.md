@@ -103,7 +103,7 @@ curl -I https://leether.github.io/dsh-book/
 - 如果返回 404，先等一分钟，再查 Pages 状态；
 - `status: built` 表示构建完成；
 - 中文入口 `/`，英文入口 `/en/`，右上角可切换；
-- 页面内容来自 `docs/index.html`、`docs/ch*.html`、`docs/appendix.html` 及对应的 `docs/en/` 页面；不需要 Jekyll 构建。
+- 页面内容来自 `docs/index.html`、`docs/structure.html`、`docs/ch*.html`、`docs/appendix.html` 及对应的 `docs/en/` 页面；不需要 Jekyll 构建。
 
 `docs/.nojekyll` 已存在，用于跳过 Jekyll 处理。
 

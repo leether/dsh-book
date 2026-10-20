@@ -8,6 +8,9 @@
 
 **给 0 基础用户的实用指南**
 
+> 本书是《DeepSeek Harness 实战手册》的**入门篇**。  
+> 全书结构：<https://leether.github.io/dsh-book/structure.html>
+
 > **在线阅读（中文）**：<https://leether.github.io/dsh-book/>  
 > **Read online (English)**: <https://leether.github.io/dsh-book/en/>  
 > **非官方指南 / Unofficial guide**：本书不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。
@@ -17,6 +20,23 @@
 正文：[dsh-book.md](dsh-book.md) · [English edition](en/dsh-book.md) · 站点构建脚本：[scripts/build-site.py](scripts/build-site.py)  
 书中案例插件：[GetNote Toolbox](https://github.com/leether/getnote-toolbox)  
 封面视觉：由即梦（Dreamina）生成，本地存放为 `docs/cover.webp`。
+
+---
+
+## 全书结构
+
+这套书按**研究对象**分四篇，而不是按难度分：
+
+| 篇 | 主题 | 状态 |
+| --- | --- | --- |
+| 入门篇 | 把 DSH 用起来 | 已发布 |
+| 进阶篇 | 插件设计 | 规划中 |
+| 深入篇 | DSH 是怎么设计的 | 研究中 |
+| 认知篇 | 权衡与决策 | 伴读/持续更新 |
+
+当前这 10 章 + 附录全部属于**入门篇**。进阶、深入、认知先以路线图、章节矩阵和占位形式存在，不生成空白章节。
+
+详见：[全书结构](https://leether.github.io/dsh-book/structure.html)
 
 ---
 
@@ -187,6 +207,7 @@ Pages 会在一两分钟内自动更新。
 
 ## 站点版式
 
+- **全书结构页**：`/structure.html` 与 `/en/structure.html`，四篇路线图、状态和占位；
 - **每章独立页面**：`/ch01.html` … `/ch10.html`、`/appendix.html`；英文对应 `/en/ch01.html` …；
 - **双语切换**：右上角 `English / 中文`，切换时保留当前章节；
 - **封面式目录页**：`/` 与 `/en/` 是书籍封面 + 章节卡片 + 阅读路线；
@@ -218,6 +239,7 @@ Pages 会在一两分钟内自动更新。
 ├── scripts/build-site.py # Markdown → 双语静态站点
 ├── docs/                # GitHub Pages 站点（main /docs）
 │   ├── index.html       # 中文封面/目录
+│   ├── structure.html   # 四篇结构/路线图
 │   ├── ch01.html … ch10.html
 │   ├── appendix.html
 │   ├── en/index.html    # English cover/contents

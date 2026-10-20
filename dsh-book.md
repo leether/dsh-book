@@ -7,6 +7,8 @@
 版本：2026-10  
 参考环境：DeepSeek Harness Desktop 0.2.1-rc.2
 
+> 本书是《DeepSeek Harness 实战手册》的入门篇。进阶篇、深入篇、认知篇见 [全书结构](https://leether.github.io/dsh-book/structure.html)。
+
 ---
 
 ## 写在前面

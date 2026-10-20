@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Book Structure · DeepSeek Harness: A Practical Handbook</title>
+<meta name="description" content="Four parts, not four difficulty levels: using DSH, designing plugins, designing DSH, and explaining our decisions. This is a living book; unwritten material appears only as a roadmap or placeholder, never as a blank chapter.">
+<meta property="og:title" content="Book Structure · DeepSeek Harness: A Practical Handbook">
+<meta property="og:description" content="Four parts, not four difficulty levels: using DSH, designing plugins, designing DSH, and explaining our decisions. This is a living book; unwritten material appears only as a roadmap or placeholder, never as a blank chapter.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/structure.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/structure.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/structure.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/structure.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/structure.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://leether.github.io/dsh-book/cover-v1.jpg">
+<meta property="og:image:width" content="900">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:alt" content="A brass armillary sphere holding a glowing amber orb on a dark field.">
+<meta name="twitter:image" content="https://leether.github.io/dsh-book/cover-v1.jpg">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style-afc99e77.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="structure.html">Structure</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../structure.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="landing structure-page">
+  <header class="structure-head">
+    <p class="series-kicker">DSH HANDBOOK · FOUR PARTS</p>
+    <h1>Book Structure</h1>
+    <p class="lede">Four parts, not four difficulty levels: using DSH, designing plugins, designing DSH, and explaining our decisions. This is a living book; unwritten material appears only as a roadmap or placeholder, never as a blank chapter.</p>
+  </header>
+  <div class="volume-grid">
+<a class="volume-card live" href="index.html#contents">
+  <span class="volume-status">Published</span>
+  <h3>Part I</h3>
+  <p>Getting Started</p>
+  <span class="volume-arrow">→</span>
+</a>
+<a class="volume-card planned" href="structure.html#advanced">
+  <span class="volume-status">Planned</span>
+  <h3>Part II</h3>
+  <p>Plugin Design</p>
+  <span class="volume-arrow">→</span>
+</a>
+<a class="volume-card research" href="structure.html#internals">
+  <span class="volume-status">Researching</span>
+  <h3>Part III</h3>
+  <p>DSH Internals</p>
+  <span class="volume-arrow">→</span>
+</a>
+<a class="volume-card companion" href="structure.html#decisions">
+  <span class="volume-status">Companion</span>
+  <h3>Part IV</h3>
+  <p>Decisions</p>
+  <span class="volume-arrow">→</span>
+</a>
+  </div>
+  <article class="book structure-body">
+<h2 id="four-parts-not-four-difficulty-levels">Four parts, not four difficulty levels</h2>
+<p>This book is organized by <strong>object of study</strong>, not by easy / medium / hard:</p>
+<ul>
+<li><strong>Part I — Getting Started</strong>: using DSH;</li>
+<li><strong>Part II — Plugin Design</strong>: designing plugins on DSH;</li>
+<li><strong>Part III — DSH Internals</strong>: designing DSH itself;</li>
+<li><strong>Part IV — Decisions</strong>: why we designed things this way.</li>
+</ul>
+<p>For now these are <strong>parts</strong>, not volumes.</p>
+<blockquote>
+<p><strong>A part is a reading structure. A volume is a publishing promise.</strong><br />
+Parts can grow and contain placeholders. Volumes must stand on their own.</p>
+</blockquote>
+<hr />
+<h2 id="part-i-getting-started-using-dsh">Part I — Getting Started: Using DSH</h2>
+<p><strong>Status: Published · 10 chapters + appendix</strong></p>
+<p>This is the entry point. The goal is not to explain all of DSH, but to help you complete a first real task safely: choose a workspace, connect a model, state the request, watch tool calls, and verify the result.</p>
+<p><strong>After this part, you can</strong></p>
+<ul>
+<li>Complete a read → process → write task on your own;</li>
+<li>Explain what the workspace, permissions, Session, Tool, and Skill each control;</li>
+<li>Know where to look when something fails, instead of reinstalling blindly.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Topic</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Meet DSH: Models, Harnesses, and Agents</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>2</td>
+<td>First Launch: Desktop, Model, Workspace</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Your First Task: Say What You Mean</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Workspaces, Files, and Permissions</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Sessions, Context, and Memory</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Tools and Skills: The Agent's Hands and Mind</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Modes and Presets: Same Model, Different Ways to Work</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Plugins, Bundles, and Profiles: Giving DSH New Powers</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Creator Mode: From User to Extender</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Troubleshooting, Safety, and Next Steps</td>
+<td>Published</td>
+</tr>
+<tr>
+<td>Appendix</td>
+<td>Glossary, prompt templates, checklists, cheat sheet</td>
+<td>Published</td>
+</tr>
+</tbody>
+</table>
+<p><a href="index.html#contents">Enter Part I →</a></p>
+<hr />
+<p><a id="advanced"></a></p>
+<h2 id="part-ii-plugin-design">Part II — Plugin Design</h2>
+<p><strong>Status: Planned · plugin design first</strong></p>
+<p>This part is about turning a capability into a reliable DSH plugin. The focus is not an API catalogue, but contracts, boundaries, testing, and release.</p>
+<p><strong>Questions this part will answer</strong></p>
+<ul>
+<li>When does a capability deserve a Tool, and when should it stay in the CLI or a Skill?</li>
+<li>How should arguments, results, errors, and side effects be designed?</li>
+<li>How should deletion, overwrite, permissions, and confirmation work?</li>
+<li>How do you test with a fake CLI and accept with the real one?</li>
+<li>How do you package and release a plugin without losing version control?</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Topic</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>II.1</td>
+<td>Plugin design: from workflow to tool contract</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>II.2</td>
+<td>The tool surface: arguments, results, errors</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>II.3</td>
+<td>Permissions, confirmation, and destructive actions</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>II.4</td>
+<td>Config, secrets, and observability</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>II.5</td>
+<td>Testing: fake CLI, fixtures, and evals</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>II.6</td>
+<td>Version compatibility, packaging, and release</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>II.7</td>
+<td>Case study: the GetNote Toolbox design review</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>II.8</td>
+<td>Anti-patterns and a plugin review checklist</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>II.9</td>
+<td>Open questions: MCP, UI plugins, memory plugins</td>
+<td>Placeholder</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>This part will grow as we build more plugins, hit more failures, and write more reviews. Unverified material will be marked as such.</p>
+</blockquote>
+<hr />
+<p><a id="internals"></a></p>
+<h2 id="part-iii-dsh-internals">Part III — DSH Internals</h2>
+<p><strong>Status: Researching · to be verified</strong></p>
+<p>This part moves from “using plugins” to “understanding DSH itself”: the runtime, plugin lifecycle, services, context, tool execution, permissions, UI, and release.</p>
+<p><strong>Questions this part will answer</strong></p>
+<ul>
+<li>What problems do Agent, Preset, Plugin, Bundle, and Profile each solve?</li>
+<li>What layers does a request pass through before a tool runs?</li>
+<li>How are tool permissions, sandboxing, and cancellation implemented?</li>
+<li>How are Session, Context, Skills, and UI slots organized?</li>
+<li>Which designs are stable contracts, and which are current implementation details?</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Topic</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>III.1</td>
+<td>DSH layers: Agent / Preset / Plugin / Bundle / Profile</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>III.2</td>
+<td>The Cordis runtime and plugin lifecycle</td>
+<td>To verify</td>
+</tr>
+<tr>
+<td>III.3</td>
+<td>Services, Context, and Events</td>
+<td>To verify</td>
+</tr>
+<tr>
+<td>III.4</td>
+<td>Tool execution, permissions, and sandboxing</td>
+<td>To verify</td>
+</tr>
+<tr>
+<td>III.5</td>
+<td>Session and Context management</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>III.6</td>
+<td>Skill loading and routing</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>III.7</td>
+<td>Desktop, Web, and Headless differences</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>III.8</td>
+<td>Release, upgrade, and compatibility</td>
+<td>Planned</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>DSH is still evolving. This part will separate confirmed behavior, inference, and open questions instead of presenting implementation details as permanent truth.</p>
+</blockquote>
+<hr />
+<p><a id="decisions"></a></p>
+<h2 id="part-iv-decisions">Part IV — Decisions</h2>
+<p><strong>Status: Companion · continuously updated</strong></p>
+<p>This part is not ordered by difficulty, and it does not need to be read first. It records the judgments behind DSH, our plugins, and this book.</p>
+<p>Each entry aims to read like a decision record:</p>
+<ul>
+<li>What problem were we facing?</li>
+<li>What options did we have?</li>
+<li>What did we choose?</li>
+<li>What did it cost?</li>
+<li>What would make us revisit the decision?</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Topic</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IV.1</td>
+<td>Why we built a Desktop version of the GetNote plugin</td>
+<td>Published (case study)</td>
+</tr>
+<tr>
+<td>IV.2</td>
+<td>Why the Tool surface is not a 1:1 CLI mapping</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>IV.3</td>
+<td>Why deletion requires confirmation</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>IV.4</td>
+<td>Why the book is CC BY-NC-ND and the code is MIT</td>
+<td>Published (notice)</td>
+</tr>
+<tr>
+<td>IV.5</td>
+<td>Why we started with parts, not volumes</td>
+<td>Published (this page)</td>
+</tr>
+<tr>
+<td>IV.6</td>
+<td>Why official and independent plugins can conflict</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>IV.7</td>
+<td>How to tell whether a plugin is actually better</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>IV.8</td>
+<td>The human role: judgment, acceptance, responsibility</td>
+<td>Planned</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>You can read this part out of order, or return to it when a chapter asks “why was this designed this way?”</p>
+</blockquote>
+<hr />
+<h2 id="writing-and-update-rules">Writing and update rules</h2>
+<ol>
+<li><strong>Finish one chapter properly at a time.</strong> Do not write empty chapters to fill a table of contents.</li>
+<li>Placeholders live on this roadmap, not as blank chapter pages.</li>
+<li>Mark every chapter: <code>Planned</code> / <code>To verify</code> / <code>Draft</code> / <code>Published</code>.</li>
+<li>Record the verification environment; revisit conclusions when DSH changes.</li>
+<li>Make a part stand on its own before discussing whether it should become a volume.</li>
+<li>Keep published chapter URLs stable; new material gets new paths, not broken old links.</li>
+</ol>
+<hr />
+<h2 id="how-to-read-now">How to read now</h2>
+<ul>
+<li><strong>New to DSH</strong>: start with Part I, Chapter 1.</li>
+<li><strong>Preparing to build a plugin</strong>: finish Part I, then read the contract, permission, and testing chapters in Part II.</li>
+<li><strong>Curious about internals</strong>: read Part II first, then Part III.</li>
+<li><strong>Looking for a decision</strong>: open Part IV at any time; no sequence required.</li>
+</ul>
+<p>The structure will keep growing, but we will not pretend it is complete before it is.</p>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · Text CC BY-NC-ND 4.0 · Code MIT · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/structure.html">GitHub Pages</a> · <a href="https://github.com/leether/dsh-book/blob/main/LICENSE">License</a> · <a href="https://github.com/leether/dsh-book/blob/main/LICENSE-CODE">Code license</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>
