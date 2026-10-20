@@ -59,7 +59,7 @@
     <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 9 章</p>
     <section class="chapter">
 <h1 id="9">第 9 章　创造模式：从使用者到扩展者</h1>
-<p class="chapter-meta">约 7 分钟 · 3,721 字 · 11 个小节</p>
+<p class="chapter-meta">约 8 分钟 · 3,890 字 · 11 个小节</p>
 <h2 id="_68">本章你会学会</h2>
 <ul>
 <li>创造模式到底是什么，不是什么；</li>
@@ -233,7 +233,12 @@
 <p>这不是要替代官方插件，而是补上 Desktop 这个入口。也正因为如此，项目优先处理 Desktop 的本地 bundle、locale/icon 展示、CLI 发现和 Plugin Manager 可见性。</p>
 <p>它的目标不是“照着某个插件抄几个工具”，而是把本机 <code>getnote</code> CLI 变成一组 Agent 能稳定使用的 Host 工具。代码已经公开：</p>
 <p><a href="https://github.com/leether/getnote-toolbox">https://github.com/leether/getnote-toolbox</a></p>
-<p>公开的是源码，尚未发布到 npm；安装时按本地 bundle 处理。</p>
+<p>源码已经公开，并已发布到 npm：<code>@leether/getnote-toolbox</code>。</p>
+<ul>
+<li>GitHub：<a href="https://github.com/leether/getnote-toolbox">https://github.com/leether/getnote-toolbox</a></li>
+<li>npm：<a href="https://www.npmjs.com/package/@leether/getnote-toolbox">https://www.npmjs.com/package/@leether/getnote-toolbox</a></li>
+</ul>
+<p>安装时可以通过 DSH Plugin Manager 使用 npm bundle，也可以在开发时从源码本地 link。</p>
 <h3 id="_69">第一步：先审计能力，不要先写工具</h3>
 <p>先列 CLI 的 <code>--help</code>、输入输出、副作用、认证方式和版本差异，再决定哪些能力值得做成 Tool：</p>
 <ul>

@@ -218,7 +218,12 @@ The goal was not to copy another plugin's tool list. It was to turn the local `g
 
 <https://github.com/leether/getnote-toolbox>
 
-The source is public, but the package is not published to npm; install it as a local bundle.
+The source is public, and the package is published on npm as `@leether/getnote-toolbox`.
+
+- GitHub: <https://github.com/leether/getnote-toolbox>
+- npm: <https://www.npmjs.com/package/@leether/getnote-toolbox>
+
+Install the npm bundle through DSH Plugin Manager, or link the source locally while developing.
 
 ### Step 1: Audit capabilities before writing tools
 

@@ -222,7 +222,12 @@
 
 <https://github.com/leether/getnote-toolbox>
 
-公开的是源码，尚未发布到 npm；安装时按本地 bundle 处理。
+源码已经公开，并已发布到 npm：`@leether/getnote-toolbox`。
+
+- GitHub：<https://github.com/leether/getnote-toolbox>
+- npm：<https://www.npmjs.com/package/@leether/getnote-toolbox>
+
+安装时可以通过 DSH Plugin Manager 使用 npm bundle，也可以在开发时从源码本地 link。
 
 ### 第一步：先审计能力，不要先写工具
 
