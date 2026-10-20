@@ -1,0 +1,2558 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>DeepSeek Harness 入门 · 从第一次对话到自己的插件</title>
+<meta name="description" content="给 0 基础用户的 DeepSeek Harness 使用指南：模型、工作区、权限、会话、工具、技能、Preset、插件与创造模式。">
+<meta property="og:title" content="DeepSeek Harness 入门">
+<meta property="og:description" content="给 0 基础用户的 DeepSeek Harness 使用指南。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/">
+<meta name="twitter:card" content="summary">
+<style>
+:root {
+  --bg: #fbfaf7;
+  --paper: #ffffff;
+  --ink: #1f2328;
+  --muted: #667085;
+  --line: #e5e1d8;
+  --accent: #b45309;
+  --accent-soft: #fff4e5;
+  --code: #f4f1ea;
+  --max: 920px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #151515;
+    --paper: #1d1d1f;
+    --ink: #ececec;
+    --muted: #a3a3a3;
+    --line: #333333;
+    --accent: #f0a35e;
+    --accent-soft: #2b2118;
+    --code: #262626;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 17px;
+  line-height: 1.8;
+  text-rendering: optimizeLegibility;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 72px 24px 32px;
+  border-bottom: 1px solid var(--line);
+}
+.badge {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: .04em;
+}
+.hero h1 {
+  margin: 0;
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.subtitle {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: clamp(18px, 2.4vw, 24px);
+}
+.meta {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.links { margin: 18px 0 0; font-size: 15px; }
+.links a { margin-right: 16px; }
+main {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 8px 24px 64px;
+}
+.toc {
+  margin: 36px 0 8px;
+  padding: 22px 24px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.toc h2 { margin: 0 0 12px; font-size: 18px; }
+.toc ol {
+  margin: 0;
+  padding-left: 1.3em;
+  columns: 2;
+  column-gap: 36px;
+}
+.toc li { break-inside: avoid; margin: 4px 0; }
+.book { padding-top: 12px; }
+.book h1 {
+  margin: 3.4rem 0 1rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+  font-size: clamp(26px, 4vw, 34px);
+  line-height: 1.3;
+  scroll-margin-top: 24px;
+}
+.book h1:first-child { border-top: 0; padding-top: 0; margin-top: 1.4rem; }
+.book h2 {
+  margin: 2.2rem 0 .8rem;
+  font-size: clamp(21px, 3vw, 25px);
+  line-height: 1.35;
+  scroll-margin-top: 24px;
+}
+.book h3 { margin: 1.7rem 0 .6rem; font-size: 19px; }
+.book p { margin: .8rem 0; }
+.book ul, .book ol { padding-left: 1.6em; }
+.book li { margin: .35rem 0; }
+.book blockquote {
+  margin: 1.2rem 0;
+  padding: 10px 16px;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 8px 8px 0;
+}
+.book blockquote p { margin: .3rem 0; }
+.book code {
+  padding: .15em .35em;
+  border-radius: 5px;
+  background: var(--code);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: .9em;
+}
+.book pre {
+  margin: 1.1rem 0;
+  padding: 16px;
+  overflow-x: auto;
+  background: var(--code);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  line-height: 1.55;
+}
+.book pre code { padding: 0; background: transparent; font-size: 14px; }
+.book table {
+  display: block;
+  width: 100%;
+  margin: 1.2rem 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.book th, .book td {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.book th { background: var(--code); white-space: nowrap; }
+.book hr { margin: 2.6rem 0; border: 0; border-top: 1px solid var(--line); }
+.book img { max-width: 100%; height: auto; }
+.top-link {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+}
+footer {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 28px 24px 56px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+footer p { margin: .35rem 0; }
+@media (max-width: 680px) {
+  body { font-size: 16px; }
+  .hero { padding-top: 48px; }
+  .toc ol { columns: 1; }
+  main { padding-left: 18px; padding-right: 18px; }
+  .book table { font-size: 14px; }
+  .top-link { right: 12px; bottom: 12px; }
+}
+@media print {
+  :root { --bg: #fff; --paper: #fff; --ink: #000; --muted: #444; --line: #ccc; --code: #f2f2f2; }
+  body { font-size: 11pt; }
+  .hero { padding-top: 0; }
+  .toc, .top-link { display: none; }
+  .book h1 { break-before: page; }
+  .book h1:first-child { break-before: auto; }
+  a { color: #000; text-decoration: none; }
+}
+</style>
+</head>
+<body id="top">
+<header class="hero">
+  <p class="badge">非官方指南 · 无 Cookie · 无统计</p>
+  <h1>DeepSeek Harness 入门</h1>
+  <p class="subtitle">从第一次对话到自己的插件</p>
+  <p class="meta">给 0 基础用户的实用指南 · 2026-10 · 基于 DSH Desktop 0.2.1-rc.2</p>
+  <p class="links">
+    <a href="https://github.com/leether/dsh-book">GitHub 仓库</a>
+    <a href="#toc">目录</a>
+    <a href="https://github.com/leether/dsh-book/issues">反馈</a>
+  </p>
+</header>
+<main>
+  <nav class="toc" id="toc" aria-label="目录">
+    <h2>目录</h2>
+    <ol>
+      <li><a href="#1-dshharnessagent">第 1 章　认识 DSH：模型、Harness、Agent</a></li>
+      <li><a href="#2">第 2 章　第一次启动：桌面、模型、工作区</a></li>
+      <li><a href="#3">第 3 章　第一次任务：把需求说清楚</a></li>
+      <li><a href="#4">第 4 章　工作区、文件与权限</a></li>
+      <li><a href="#5">第 5 章　会话、上下文与记忆</a></li>
+      <li><a href="#6-agent">第 6 章　工具与技能：Agent 的手和脑</a></li>
+      <li><a href="#7-preset">第 7 章　模式与 Preset：同一个模型，不同工作方式</a></li>
+      <li><a href="#8-bundle-profile-dsh">第 8 章　插件、Bundle 与 Profile：给 DSH 装能力</a></li>
+      <li><a href="#9">第 9 章　创造模式：从使用者到扩展者</a></li>
+      <li><a href="#10">第 10 章　排错、安全与继续学习</a></li>
+      <li><a href="#_79">附录</a></li>
+    </ol>
+  </nav>
+  <article class="book">
+<h1 id="1-dshharnessagent">第 1 章　认识 DSH：模型、Harness、Agent</h1>
+<h2 id="_1">本章你会学会</h2>
+<ul>
+<li>用一句话解释 DSH 是什么；</li>
+<li>分清“模型”“Harness”“Agent”三个容易混淆的词；</li>
+<li>知道 Session、Workspace、Tool、Skill 分别在说什么；</li>
+<li>知道自己该用 Desktop、Web 还是 Headless。</li>
+</ul>
+<hr />
+<h2 id="11-agent-model-harness">1.1 一个公式：Agent = Model + Harness</h2>
+<p>先记住一个公式：</p>
+<blockquote>
+<p><strong>Agent = Model + Harness</strong></p>
+</blockquote>
+<p>拆开看：</p>
+<table>
+<thead>
+<tr>
+<th>词</th>
+<th>你可以把它理解成</th>
+<th>它负责什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Model（模型）</strong></td>
+<td>大脑</td>
+<td>理解你的话、推理、写文字、写代码</td>
+</tr>
+<tr>
+<td><strong>Harness（脚手架/工作台）</strong></td>
+<td>手、眼睛、工具箱、工作台、规章制度</td>
+<td>读写文件、执行命令、搜索网页、保存会话、控制权限</td>
+</tr>
+<tr>
+<td><strong>Agent（智能体）</strong></td>
+<td>正在工作的助手</td>
+<td>模型 + Harness 组合起来，真正去完成任务</td>
+</tr>
+</tbody>
+</table>
+<p>如果只有模型，它像一个很聪明但被关在房间里的人：能思考、能说话，但看不见你的文件，也不能帮你运行程序。</p>
+<p>Harness 把房间打开：给它文件、终端、浏览器、工具、记忆和规则。它才能从“聊天”变成“干活”。</p>
+<p>DeepSeek Harness，简称 <strong>DSH</strong>，就是这样一个 Harness。</p>
+<hr />
+<h2 id="12-dsh">1.2 DSH 是什么，不是什么</h2>
+<h3 id="_2">它是</h3>
+<ul>
+<li>一个运行 Agent 的<strong>工作台</strong>；</li>
+<li>一个可以把模型、工具、技能、插件组合起来的<strong>宿主</strong>；</li>
+<li>一个支持 Desktop、Web、Headless 多种入口的<strong>平台</strong>；</li>
+<li>一个“几乎一切皆插件”的<strong>可扩展系统</strong>。</li>
+</ul>
+<h3 id="_3">它不是</h3>
+<ul>
+<li><strong>不是模型本身</strong>。DSH 不包含“DeepSeek 的大脑”，你要连接一个模型服务。</li>
+<li><strong>不是普通的聊天软件</strong>。它的重点不是陪你聊天，而是读写文件、执行任务、交付结果。</li>
+<li><strong>不是只有程序员才能用</strong>。日常任务完全可以用自然语言完成。</li>
+<li><strong>不是绝对安全的</strong>。它能执行真实操作，所以权限和审查很重要。</li>
+</ul>
+<p>一句话：</p>
+<blockquote>
+<p><strong>DSH 是 Agent 的工作台，不是 Agent 的大脑。</strong></p>
+</blockquote>
+<hr />
+<h2 id="13">1.3 五个核心词</h2>
+<p>先认识五个词，后面会反复出现。</p>
+<h3 id="agent">Agent：正在工作的助手</h3>
+<p>Agent 不是“一个模型”，而是“模型 + 当前工作区 + 当前会话 + 可用工具 + 当前模式”的组合。</p>
+<p>同一个模型，换一个工作区、换一个模式，能力就不一样。</p>
+<h3 id="session">Session：一次对话</h3>
+<p>Session 是你和 Agent 的一次连续对话。</p>
+<ul>
+<li>同一个 Session 里，它记得前面说过什么；</li>
+<li>新建 Session，它不会自动继承上一个 Session 的全部上下文；</li>
+<li>一个工作区可以有很多 Session。</li>
+</ul>
+<p>你可以把 Session 理解成“一次会议记录”。</p>
+<h3 id="workspace">Workspace：工作区</h3>
+<p>Workspace 是一个文件夹。Agent 默认在这个文件夹里读文件、写文件、执行命令。</p>
+<ul>
+<li>工作区是你的“项目边界”；</li>
+<li>Agent 的很多权限，都以工作区为边界；</li>
+<li>不要一上来就把整个用户目录当工作区。</li>
+</ul>
+<h3 id="tool">Tool：工具</h3>
+<p>Tool 是 Agent 能执行的一个动作，比如：</p>
+<ul>
+<li>读文件；</li>
+<li>写文件；</li>
+<li>修改文件；</li>
+<li>执行终端命令；</li>
+<li>搜索网页；</li>
+<li>启动子代理；</li>
+<li>交付文件。</li>
+</ul>
+<p>Tool 是 Agent 的“手”。</p>
+<h3 id="skill">Skill：技能</h3>
+<p>Skill 是一份“操作手册”，告诉 Agent：</p>
+<ul>
+<li>遇到某类任务时，应该先做什么、后做什么；</li>
+<li>有哪些注意事项；</li>
+<li>可以调用哪些脚本或参考资料。</li>
+</ul>
+<p>Skill 不是工具，它不直接执行动作；它是<strong>知识</strong>，帮助 Agent 更稳定地使用工具。</p>
+<blockquote>
+<p>Tool 是“手”，Skill 是“操作规程”，Model 是“大脑”，Harness 是“工作台”。</p>
+</blockquote>
+<p>后面还会遇到 Preset、Plugin、Bundle、Profile，先不用急，第 7、8 章会讲。</p>
+<hr />
+<h2 id="14-harness">1.4 为什么需要 Harness</h2>
+<p>你可能会问：模型已经很聪明了，为什么还要 Harness？</p>
+<p>因为真实任务需要三样模型本身没有的东西：</p>
+<ol>
+<li><strong>感知</strong>：看见你的文件、目录、网页、报错；</li>
+<li><strong>行动</strong>：写文件、跑命令、调用工具；</li>
+<li><strong>约束</strong>：知道哪些能做、哪些不能做、做完怎么验收。</li>
+</ol>
+<p>举个例子。你说：</p>
+<blockquote>
+<p>“帮我把 <code>notes/</code> 里的三篇文章合并成一份摘要。”</p>
+</blockquote>
+<p>模型可以写摘要，但它需要 Harness 帮它：</p>
+<ul>
+<li>找到 <code>notes/</code> 目录；</li>
+<li>读取三个文件；</li>
+<li>写入 <code>summary.md</code>；</li>
+<li>确认文件真的写成功了；</li>
+<li>在你允许的范围内操作。</li>
+</ul>
+<p>没有 Harness，这些动作都发生不了。</p>
+<hr />
+<h2 id="15-desktopwebheadless">1.5 三种入口：Desktop、Web、Headless</h2>
+<p>DSH 可以用不同方式启动。对 0 基础用户，建议从 <strong>Desktop</strong> 开始。</p>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>适合谁</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Desktop</strong></td>
+<td>绝大多数人</td>
+<td>图形界面，点按钮，最容易上手</td>
+</tr>
+<tr>
+<td><strong>Web</strong></td>
+<td>想在浏览器里用、或跑在远程服务器上的人</td>
+<td>打开一个网址，界面与 Desktop 类似</td>
+</tr>
+<tr>
+<td><strong>Headless</strong></td>
+<td>自动化、脚本、批量任务</td>
+<td>命令行一次性执行，没有图形界面</td>
+</tr>
+</tbody>
+</table>
+<p>三种入口共享同一套核心概念：Agent、Session、Workspace、Tool、Skill、Preset、Plugin。</p>
+<p>本书以 Desktop 为主。遇到 Web/Headless 的不同之处，会用“换一种入口”小栏说明。</p>
+<hr />
+<h2 id="16">1.6 本书怎么读</h2>
+<ul>
+<li><strong>日常用户</strong>：读第 1–7 章，足够覆盖 90% 的使用场景。</li>
+<li><strong>想装插件/技能</strong>：加读第 8 章。</li>
+<li><strong>想做插件</strong>：再加第 9 章。</li>
+<li><strong>遇到问题</strong>：直接翻第 10 章。</li>
+</ul>
+<p>不要试图一次记住所有名词。先会用，再理解。</p>
+<hr />
+<h2 id="_4">马上试试</h2>
+<p>拿出一张纸，写下你想让 Agent 做的三件事。每件事标注：</p>
+<ol>
+<li>它需要读哪些文件？</li>
+<li>它需要写哪些文件？</li>
+<li>它需要运行什么命令？</li>
+<li>哪些操作你希望它先问你？</li>
+</ol>
+<p>写不出来也没关系，第 3 章会教你怎么把任务说清楚。</p>
+<hr />
+<h2 id="_5">常见坑</h2>
+<ul>
+<li><strong>把 DSH 当成模型</strong>：DSH 只是工作台，模型要单独连接。</li>
+<li><strong>把 Agent 当成永远记得一切的人</strong>：Session 之外的记忆需要你自己设计。</li>
+<li><strong>一上来就给整个硬盘权限</strong>：先用一个专门的小文件夹。</li>
+</ul>
+<hr />
+<h2 id="_6">小结</h2>
+<ul>
+<li>Agent = Model + Harness。</li>
+<li>DSH 是 Harness，不是模型。</li>
+<li>Session 是一次对话，Workspace 是一个文件夹，Tool 是动作，Skill 是知识。</li>
+<li>Desktop 最适合入门；Web 和 Headless 是不同入口，不是不同产品。</li>
+</ul>
+<hr />
+<h1 id="2">第 2 章　第一次启动：桌面、模型、工作区</h1>
+<h2 id="_7">本章你会学会</h2>
+<ul>
+<li>打开 DSH Desktop；</li>
+<li>连接一个模型；</li>
+<li>选一个安全的工作区；</li>
+<li>用标准模式完成第一次只读对话；</li>
+<li>看懂界面上的工具卡片和审批提示。</li>
+</ul>
+<hr />
+<h2 id="21-desktop">2.1 打开 Desktop</h2>
+<p>安装完成后，打开 <strong>DeepSeek Harness</strong>。</p>
+<p>第一次打开时，你可能会看到：</p>
+<ul>
+<li>欢迎页；</li>
+<li>模型/账号设置；</li>
+<li>工作区选择；</li>
+<li>新建任务输入框。</li>
+</ul>
+<p>不同版本界面会略有差异，但顺序基本是：</p>
+<pre><code class="language-text">打开应用 → 连接模型 → 选择工作区 → 新建任务 → 开始对话
+</code></pre>
+<p>如果你还没有模型服务，先看下一节。</p>
+<hr />
+<h2 id="22">2.2 连接模型</h2>
+<p>DSH 需要一个模型来“思考”。通常有两种方式：</p>
+<ol>
+<li><strong>DeepSeek 官方账号/API</strong>：在设置里登录或填入 API Key；</li>
+<li><strong>兼容 OpenAI 接口的提供方</strong>：填入 Base URL、API Key、模型名。</li>
+</ol>
+<h3 id="_8">操作路径</h3>
+<p>通常在：</p>
+<pre><code class="language-text">设置（Settings） → 模型（Models） → 添加/选择提供方
+</code></pre>
+<p>你需要准备：</p>
+<ul>
+<li>Provider（提供方）；</li>
+<li>API Key；</li>
+<li>模型名称（例如 <code>deepseek-chat</code> / <code>deepseek-flash</code>，以实际提供方为准）；</li>
+<li>可选的 Base URL。</li>
+</ul>
+<h3 id="_9">怎么判断成功</h3>
+<ul>
+<li>设置页显示模型已连接；</li>
+<li>新建任务后，Agent 能正常回复；</li>
+<li>没有 <code>401</code>、<code>Invalid API key</code> 之类的错误。</li>
+</ul>
+<h3 id="401">常见错误：401</h3>
+<p><code>401</code> 基本只有一个意思：<strong>Key 不对，或者没有生效</strong>。</p>
+<p>检查：</p>
+<ul>
+<li>Key 是否复制完整；</li>
+<li>是否有多余空格；</li>
+<li>提供方和 Base URL 是否匹配；</li>
+<li>账号是否有余额/权限；</li>
+<li>是否把别的服务的 Key 填到了这里。</li>
+</ul>
+<blockquote>
+<p><strong>不要把 API Key 贴进对话里让 Agent 帮你检查。</strong> 在设置页里改。</p>
+</blockquote>
+<hr />
+<h2 id="23">2.3 选择工作区</h2>
+<p>工作区就是 Agent 工作的文件夹。</p>
+<p>第一次使用，建议这样做：</p>
+<ol>
+<li>在桌面或文档目录新建一个空文件夹，例如 <code>dsh-test</code>；</li>
+<li>在里面放一两个<strong>不重要</strong>的文本文件；</li>
+<li>在 DSH 里选择这个文件夹作为工作区。</li>
+</ol>
+<p>为什么不用整个用户目录？</p>
+<ul>
+<li>Agent 能看到的东西太多，容易误操作；</li>
+<li>上下文会变复杂；</li>
+<li>出问题不好回滚。</li>
+</ul>
+<p>工作区选好后，Agent 的“当前目录”通常就是这个文件夹。它读写相对路径时，默认以这里为基准。</p>
+<hr />
+<h2 id="24">2.4 选择标准模式</h2>
+<p>新建任务时，通常会让你选一个 <strong>Agent Preset</strong>（模式）。</p>
+<p>第一次使用，选 <strong>标准模式（Standard）</strong>。</p>
+<p>标准模式有完整的日常工具：读写文件、运行命令、搜索、子代理、计划、待办、交付文件。</p>
+<p>不要一上来选 <strong>创造模式（Creator）</strong>。创造模式是给“扩展 DSH 本身”用的，会多出插件管理、运行时检查等能力，也会带来更高的权限风险。第 7 章会详细讲。</p>
+<hr />
+<h2 id="25">2.5 界面地图</h2>
+<p>你不需要记住每个按钮，但要知道四类信息在哪里：</p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>你会看到什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>对话区</strong></td>
+<td>你输入任务，Agent 回复、解释、提问</td>
+</tr>
+<tr>
+<td><strong>工具卡片</strong></td>
+<td>Agent 调用工具的过程，例如“读取文件”“运行命令”“写入文件”</td>
+</tr>
+<tr>
+<td><strong>审批/权限提示</strong></td>
+<td>某些操作需要你点“允许”或“拒绝”</td>
+</tr>
+<tr>
+<td><strong>侧边栏/设置</strong></td>
+<td>会话列表、工作区、模型、插件、技能、模式</td>
+</tr>
+</tbody>
+</table>
+<p>最重要的习惯：</p>
+<blockquote>
+<p><strong>不要只看 Agent 的最后一段话，要看它中间做了什么。</strong></p>
+</blockquote>
+<p>工具卡片会告诉你它读了哪些文件、跑了什么命令、改了什么东西。</p>
+<hr />
+<h2 id="26">2.6 第一次对话：只读、可观察</h2>
+<p>第一次不要让它改文件。先做两个只读练习。</p>
+<h3 id="_10">练习一：自我介绍</h3>
+<p>输入：</p>
+<pre><code class="language-text">你好。请用三句话介绍你能做什么、不能做什么。
+先不要读取或修改任何文件。
+</code></pre>
+<p>观察它是否：</p>
+<ul>
+<li>说明自己是 Agent；</li>
+<li>说明需要工作区/权限；</li>
+<li>没有擅自调用工具。</li>
+</ul>
+<h3 id="_11">练习二：只读盘点</h3>
+<p>输入：</p>
+<pre><code class="language-text">请只读当前工作区的文件，按类型分组列出来。
+不要修改任何文件，也不要运行会改变文件的命令。
+最后告诉我你用了哪些工具。
+</code></pre>
+<p>你会看到类似这样的工具卡片：</p>
+<pre><code class="language-text">读取目录
+读取文件
+</code></pre>
+<p>如果它想写文件，你可以拒绝，并提醒：</p>
+<pre><code class="language-text">这一步只需要只读，请不要写入。
+</code></pre>
+<hr />
+<h2 id="27">2.7 第一次对话的目标</h2>
+<p>不是“让它做一件大事”，而是让你熟悉三件事：</p>
+<ol>
+<li><strong>它会在哪里工作</strong>：工作区；</li>
+<li><strong>它怎么做事</strong>：工具调用；</li>
+<li><strong>你怎么控制它</strong>：审批、拒绝、补充要求。</li>
+</ol>
+<hr />
+<h2 id="web-headless">换一种入口：Web / Headless</h2>
+<ul>
+<li><strong>Web</strong>：通常用 <code>dsh --profile web</code> 启动，浏览器打开带 token 的地址。界面与 Desktop 类似，适合远程服务器。</li>
+<li><strong>Headless</strong>：用 <code>dsh --profile headless "你的任务"</code> 一次性执行，没有图形界面，适合脚本/自动化。</li>
+<li><strong>Desktop</strong>：由桌面应用管理 <code>desktop</code> profile，不建议手动改它的配置文件。</li>
+</ul>
+<p>本书后续仍以 Desktop 为主。</p>
+<hr />
+<h2 id="_12">常见坑</h2>
+<ul>
+<li><strong>没连模型就开始任务</strong>：只会得到错误或空回复。</li>
+<li><strong>工作区选得太大</strong>：先小后大。</li>
+<li><strong>一上来就选创造模式</strong>：日常任务用标准模式。</li>
+<li><strong>把 Key 贴在聊天里</strong>：在设置里填。</li>
+<li><strong>只看最后一段话</strong>：中间的工具调用才是它真正做的事。</li>
+</ul>
+<hr />
+<h2 id="_13">小结</h2>
+<ul>
+<li>启动顺序：打开应用 → 连模型 → 选工作区 → 选标准模式 → 开始对话。</li>
+<li><code>401</code> 先查 Key。</li>
+<li>工作区要小、要可回滚。</li>
+<li>第一次对话以只读为主，观察工具卡片。</li>
+<li>标准模式是日常默认；创造模式是另一件事。</li>
+</ul>
+<hr />
+<h1 id="3">第 3 章　第一次任务：把需求说清楚</h1>
+<h2 id="_14">本章你会学会</h2>
+<ul>
+<li>用“目标 + 输入 + 约束 + 验收”描述任务；</li>
+<li>让 Agent 先计划、再执行；</li>
+<li>检查工具调用和文件改动；</li>
+<li>给出有效反馈；</li>
+<li>用 <code>present</code> 交付最终文件。</li>
+</ul>
+<hr />
+<h2 id="31">3.1 好任务的四个要素</h2>
+<p>很多人觉得 Agent“不好用”，其实是因为任务说得太模糊。</p>
+<p>一个好任务至少包含四件事：</p>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>回答什么问题</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>目标</strong></td>
+<td>最终要得到什么？</td>
+<td>一份 <code>summary.md</code></td>
+</tr>
+<tr>
+<td><strong>输入</strong></td>
+<td>从哪里拿材料？</td>
+<td><code>notes/</code> 下的三篇文章</td>
+</tr>
+<tr>
+<td><strong>约束</strong></td>
+<td>不能做什么？有什么规则？</td>
+<td>不改原文件；中文；保留链接</td>
+</tr>
+<tr>
+<td><strong>验收</strong></td>
+<td>怎么算完成？</td>
+<td>三个标题都在；每篇 3–5 句；能打开</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_15">反例</h3>
+<pre><code class="language-text">帮我整理一下笔记。
+</code></pre>
+<p>问题：</p>
+<ul>
+<li>哪些笔记？</li>
+<li>整理成什么？</li>
+<li>能不能改原文件？</li>
+<li>什么算整理好？</li>
+</ul>
+<h3 id="_16">正例</h3>
+<pre><code class="language-text">请阅读 notes/ 下的三篇 Markdown 文章，合并成一份 notes/summary.md。
+要求：
+1. 保留每篇的标题和原文链接；
+2. 每篇写 3–5 句摘要；
+3. 不要修改原文件；
+4. 先给我一个执行计划，我确认后再写。
+完成后告诉我你读了哪些文件、写了哪个文件，并检查 summary.md 是否存在。
+</code></pre>
+<p>区别不是“更长”，而是<strong>信息完整</strong>。</p>
+<hr />
+<h2 id="32">3.2 先计划，再执行</h2>
+<p>对稍微复杂一点的任务，建议先让 Agent 进入“计划”状态。</p>
+<p>你可以直接说：</p>
+<pre><code class="language-text">先不要改文件。请给我一个 3–5 步的计划，说明你准备读什么、写什么、怎么验证。
+</code></pre>
+<p>观察它的计划是否：</p>
+<ul>
+<li>覆盖了所有输入；</li>
+<li>说明了输出位置；</li>
+<li>包含验证步骤；</li>
+<li>没有偷偷扩大范围。</li>
+</ul>
+<p>如果计划不对，先改计划，不要让它直接开干。</p>
+<hr />
+<h2 id="33">3.3 看工具调用</h2>
+<p>Agent 执行时，会显示工具卡片。你要重点看：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>你要关注什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>读文件</td>
+<td>读的是不是正确的文件</td>
+</tr>
+<tr>
+<td>写文件</td>
+<td>写到了哪里，是否覆盖了原文件</td>
+</tr>
+<tr>
+<td>运行命令</td>
+<td>命令是否会删除/重置/推送</td>
+</tr>
+<tr>
+<td>搜索网页</td>
+<td>来源是否可靠</td>
+</tr>
+<tr>
+<td>子代理</td>
+<td>它派出去做了什么</td>
+</tr>
+</tbody>
+</table>
+<p>一个实用习惯：</p>
+<blockquote>
+<p><strong>看到“写入/删除/覆盖/重置/推送”这类词，先停一下。</strong></p>
+</blockquote>
+<hr />
+<h2 id="34">3.4 迭代：给具体反馈</h2>
+<p>Agent 第一版不完美很正常。有效反馈要具体：</p>
+<h3 id="_17">模糊反馈</h3>
+<pre><code class="language-text">不太好，重写。
+</code></pre>
+<h3 id="_18">具体反馈</h3>
+<pre><code class="language-text">第二段太长了，压缩到 3 句以内。
+保留原来的三个小标题，不要合并。
+把原文链接放到每段末尾，不要放在开头。
+</code></pre>
+<p>具体反馈 = 指出位置 + 指出问题 + 给出标准。</p>
+<hr />
+<h2 id="35">3.5 验收：不要只看“完成了”</h2>
+<p>Agent 说“完成了”，不等于真的完成。你要检查：</p>
+<ul>
+<li>文件是否存在；</li>
+<li>内容是否符合要求；</li>
+<li>原文件有没有被改；</li>
+<li>链接是否可点；</li>
+<li>有没有遗漏输入；</li>
+<li>有没有引入不存在的事实。</li>
+</ul>
+<p>可以要求它给出证据：</p>
+<pre><code class="language-text">请列出你实际读取的文件、写入的文件，以及你用来验证的检查项。
+不要只告诉我“已完成”。
+</code></pre>
+<hr />
+<h2 id="36-present">3.6 交付：<code>present</code> 是什么</h2>
+<p>当任务产出是一个文件时，Agent 可能会调用 <code>present</code>。</p>
+<p><code>present</code> 的准确含义是：</p>
+<blockquote>
+<p><strong>把已经存在的文件声明为本次任务的最终交付物，让界面生成文件卡片，用户可以预览或用默认应用打开。</strong></p>
+</blockquote>
+<p>它：</p>
+<ul>
+<li>不创建文件；</li>
+<li>不上传文件；</li>
+<li>不复制文件内容；</li>
+<li>只记录路径和说明；</li>
+<li>文件内容不会进入模型上下文。</li>
+</ul>
+<p>如果 Agent 直接说“文件在 <code>notes/summary.md</code>”，也可以；<code>present</code> 只是让交付更直观。</p>
+<hr />
+<h2 id="37">3.7 一个完整的第一次任务</h2>
+<h3 id="_19">第一步：准备</h3>
+<p>在工作区建：</p>
+<pre><code class="language-text">notes/
+  a.md
+  b.md
+  c.md
+</code></pre>
+<h3 id="_20">第二步：发任务</h3>
+<pre><code class="language-text">请阅读 notes/ 下的三篇文章，合并成 notes/summary.md。
+要求：
+1. 保留标题和原文链接；
+2. 每篇 3–5 句摘要；
+3. 不改原文件；
+4. 先给计划，我确认后再执行；
+5. 完成后检查 summary.md 是否存在，并告诉我你读了哪些文件。
+</code></pre>
+<h3 id="_21">第三步：看计划</h3>
+<p>确认它没有漏文件、没有要改原文件。</p>
+<h3 id="_22">第四步：批准执行</h3>
+<p>观察工具卡片：读了三个文件，写了一个新文件。</p>
+<h3 id="_23">第五步：验收</h3>
+<p>打开 <code>summary.md</code>，检查标题、链接、摘要长度。</p>
+<h3 id="_24">第六步：迭代</h3>
+<p>如果第二篇太短，直接说：</p>
+<pre><code class="language-text">第二篇摘要加到 4 句，保留原有链接，其他不动。
+</code></pre>
+<hr />
+<h2 id="_25">常见坑</h2>
+<ul>
+<li><strong>任务太大</strong>：一次只做一件可验收的事。</li>
+<li><strong>没有验收标准</strong>：Agent 不知道什么算好。</li>
+<li><strong>不看工具调用</strong>：它可能改了不该改的文件。</li>
+<li><strong>只说“重写”</strong>：给具体位置和标准。</li>
+<li><strong>把“完成”当“正确”</strong>：要检查证据。</li>
+</ul>
+<hr />
+<h2 id="_26">小结</h2>
+<ul>
+<li>好任务 = 目标 + 输入 + 约束 + 验收。</li>
+<li>复杂任务先计划，再执行。</li>
+<li>看工具卡片，尤其是写、删、跑命令。</li>
+<li>反馈要具体；验收要看证据。</li>
+<li><code>present</code> 是交付声明，不是上传。</li>
+</ul>
+<hr />
+<h2 id="_27">第一部分练习</h2>
+<ol>
+<li>用“目标 + 输入 + 约束 + 验收”重写一个你最近想让 AI 做的任务。</li>
+<li>在一个测试文件夹里，让 Agent 只读列出文件，并说明用了哪些工具。</li>
+<li>让它生成一个 <code>summary.md</code>，然后检查原文件是否被改动。</li>
+<li>用一句具体反馈让它修改摘要，而不是说“重做”。</li>
+</ol>
+<h1 id="4">第 4 章　工作区、文件与权限</h1>
+<h2 id="_28">本章你会学会</h2>
+<ul>
+<li>理解工作区为什么是“安全边界”；</li>
+<li>知道 Agent 能读什么、写什么；</li>
+<li>分清 <code>workspace-write</code> 和 <code>danger-full-access</code>；</li>
+<li>避免删除、覆盖、密钥泄漏这类真实事故；</li>
+<li>用 <code>AGENTS.md</code> 给项目立规矩。</li>
+</ul>
+<hr />
+<h2 id="41-workspace">4.1 Workspace 到底是什么</h2>
+<p>Workspace 是一个文件夹。</p>
+<p>Agent 的“当前目录”通常就是它。你让它读 <code>notes/a.md</code>，它会在工作区里找 <code>notes/a.md</code>。</p>
+<p>工作区有三个作用：</p>
+<ol>
+<li><strong>范围</strong>：Agent 默认只在这里工作；</li>
+<li><strong>上下文</strong>：这里的文件、目录结构、<code>AGENTS.md</code> 会影响它的判断；</li>
+<li><strong>权限</strong>：很多安全策略以工作区为边界。</li>
+</ol>
+<p>所以，工作区不是“随便选一个文件夹”，而是<strong>你给 Agent 划定的工作范围</strong>。</p>
+<h3 id="_29">建议</h3>
+<ul>
+<li>一个项目一个工作区；</li>
+<li>不要让工作区包含整个用户目录；</li>
+<li>重要项目先 <code>git init</code>，有版本可回滚；</li>
+<li>测试任务用 <code>dsh-test</code> 这类临时目录。</li>
+</ul>
+<hr />
+<h2 id="42-agent">4.2 Agent 能读什么、写什么</h2>
+<p>Agent 通过工具操作文件，常见的是：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>作用</th>
+<th>风险</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>读文件</td>
+<td>查看内容</td>
+<td>低；但可能读到敏感信息</td>
+</tr>
+<tr>
+<td>列目录/搜索</td>
+<td>找文件</td>
+<td>低</td>
+</tr>
+<tr>
+<td>写文件</td>
+<td>新建或覆盖</td>
+<td>高；可能覆盖原文件</td>
+</tr>
+<tr>
+<td>编辑文件</td>
+<td>局部替换</td>
+<td>中；可能改错位置</td>
+</tr>
+<tr>
+<td>执行命令</td>
+<td>运行任意程序</td>
+<td>很高；可能删除/重置/上传</td>
+</tr>
+</tbody>
+</table>
+<p>注意：<strong>“读”也可能有风险</strong>。如果工作区里有 <code>.env</code>、密钥、客户资料，Agent 读到后会进入上下文，甚至出现在回复里。</p>
+<h3 id="_30">最小权限原则</h3>
+<ul>
+<li>只给它完成当前任务需要的目录；</li>
+<li>不要把整个家目录、整个代码仓库根目录随便给它；</li>
+<li>处理敏感数据时，先脱敏或复制到隔离目录。</li>
+</ul>
+<hr />
+<h2 id="43">4.3 两种常见权限模式</h2>
+<p>DSH 中常见的文件策略：</p>
+<h3 id="workspace-write"><code>workspace-write</code></h3>
+<ul>
+<li>可以读写工作区内的文件；</li>
+<li>工作区外通常只读或需要审批；</li>
+<li>适合绝大多数日常任务。</li>
+</ul>
+<h3 id="danger-full-access"><code>danger-full-access</code></h3>
+<ul>
+<li>可以访问更大范围；</li>
+<li>能执行更高风险的操作；</li>
+<li>适合你明确知道自己在做什么的场景，例如安装插件、系统级调试。</li>
+</ul>
+<p><strong>不要因为“省事”就长期开 full access。</strong> 权限越大，一次误操作的后果越大。</p>
+<h3 id="_31">审批提示</h3>
+<p>当 Agent 要执行敏感操作时，界面可能会问：</p>
+<pre><code class="language-text">允许这次操作吗？
+</code></pre>
+<p>你有三个选择：</p>
+<ul>
+<li><strong>允许一次</strong>：只放行这一次；</li>
+<li><strong>拒绝</strong>：不让它做；</li>
+<li><strong>停止任务</strong>：直接中断。</li>
+</ul>
+<p>看到“删除”“覆盖”“reset”“push”“上传”“安装”这些词，先读清楚再点。</p>
+<hr />
+<h2 id="44">4.4 破坏性操作：先备份，再确认</h2>
+<p>Agent 可能做的危险动作包括：</p>
+<ul>
+<li>删除文件/目录；</li>
+<li>覆盖已有文件；</li>
+<li><code>git reset --hard</code>；</li>
+<li><code>git push --force</code>；</li>
+<li>修改系统配置；</li>
+<li>安装/卸载软件；</li>
+<li>上传文件到外部服务。</li>
+</ul>
+<h3 id="_32">三条规则</h3>
+<ol>
+<li><strong>重要文件先备份</strong>；</li>
+<li><strong>能用 git 就用 git</strong>，提交后再让它改；</li>
+<li><strong>让它先说明影响范围</strong>，再批准。</li>
+</ol>
+<p>可以这样说：</p>
+<pre><code class="language-text">在执行删除/覆盖之前，先列出会被影响的文件，并告诉我怎么回滚。
+没有我的确认，不要执行。
+</code></pre>
+<h3 id="git">git 是你的后悔药</h3>
+<p>如果项目在 git 里：</p>
+<pre><code class="language-bash">git add -A
+git commit -m &quot;before agent changes&quot;
+</code></pre>
+<p>Agent 改坏了，你可以：</p>
+<pre><code class="language-bash">git diff
+git restore .
+</code></pre>
+<p>不要在没有版本控制的情况下，让 Agent 大范围改重要文件。</p>
+<hr />
+<h2 id="45">4.5 密钥、密码、截图</h2>
+<p>这是最容易出事的地方。</p>
+<h3 id="_33">不要做</h3>
+<ul>
+<li>不要把 API Key、密码、Token 贴进对话；</li>
+<li>不要把 <code>.env</code> 内容复制给 Agent；</li>
+<li>不要让它把含密钥的文件上传/发送；</li>
+<li>不要截含密钥的屏幕给它看。</li>
+</ul>
+<h3 id="_34">应该做</h3>
+<ul>
+<li>密钥放环境变量或密钥管理工具；</li>
+<li>需要配置时，让 Agent 改“变量名”，不要改“值”；</li>
+<li>给它看脱敏后的样例；</li>
+<li>发现它读到了密钥，立即停止，轮换密钥。</li>
+</ul>
+<blockquote>
+<p>Agent 的上下文可能被记录、被回放、被展示。<strong>贴进去的秘密，就当作已经泄露。</strong></p>
+</blockquote>
+<hr />
+<h2 id="46-agentsmd">4.6 <code>AGENTS.md</code>：给项目立规矩</h2>
+<p><code>AGENTS.md</code> 是放在工作区里的“项目规则”。Agent 会读它，并尽量遵守。</p>
+<p>一个简单的例子：</p>
+<pre><code class="language-markdown"># 项目约定
+
+- 所有回复用中文。
+- 不要修改 `dist/` 和 `node_modules/`。
+- 修改代码前先读相关文件。
+- 提交前运行 `pnpm test`。
+- 删除文件前必须先问我。
+- 不要读取 `.env`。
+</code></pre>
+<p>它适合放：</p>
+<ul>
+<li>代码风格；</li>
+<li>目录规则；</li>
+<li>禁止事项；</li>
+<li>测试命令；</li>
+<li>交付格式；</li>
+<li>团队约定。</li>
+</ul>
+<p>注意：<code>AGENTS.md</code> 是“指令”，不是“强制沙箱”。它降低误操作概率，但不能替代权限控制。</p>
+<hr />
+<h2 id="47">4.7 工作区卫生</h2>
+<ul>
+<li>一个任务一个目录；</li>
+<li>输入、输出、临时文件分开；</li>
+<li>处理完删除临时文件；</li>
+<li>不要把测试数据和个人资料混在一起；</li>
+<li>大文件先确认是否需要读。</li>
+</ul>
+<hr />
+<h2 id="_35">马上试试</h2>
+<ol>
+<li>建一个 <code>dsh-test</code> 工作区；</li>
+<li>在里面放一个 <code>AGENTS.md</code>，写三条规则；</li>
+<li>让 Agent 读一遍，并复述它会遵守什么；</li>
+<li>故意让它改一个文件，观察审批提示；</li>
+<li>拒绝一次，看看它是否能停下来。</li>
+</ol>
+<hr />
+<h2 id="_36">常见坑</h2>
+<ul>
+<li><strong>工作区选太大</strong>：误操作范围变大。</li>
+<li><strong>长期开 full access</strong>：风险累积。</li>
+<li><strong>不备份就让它删/改</strong>：没有回滚。</li>
+<li><strong>把 Key 贴进对话</strong>：直接泄露。</li>
+<li><strong>以为 <code>AGENTS.md</code> 是沙箱</strong>：它只是指令。</li>
+</ul>
+<hr />
+<h2 id="_37">小结</h2>
+<ul>
+<li>工作区是范围、上下文和权限边界。</li>
+<li>读也有风险；密钥不要进对话。</li>
+<li><code>workspace-write</code> 是日常默认；<code>danger-full-access</code> 要克制。</li>
+<li>破坏性操作先备份、先确认。</li>
+<li><code>AGENTS.md</code> 用来立规矩，但不能替代权限控制。</li>
+</ul>
+<hr />
+<h1 id="5">第 5 章　会话、上下文与记忆</h1>
+<h2 id="_38">本章你会学会</h2>
+<ul>
+<li>理解 Session 和 Context Window；</li>
+<li>知道 Agent 为什么会“忘事”；</li>
+<li>区分“会话内记忆”和“跨会话记忆”；</li>
+<li>用文件、<code>AGENTS.md</code>、Skill 做长期记忆；</li>
+<li>管理上下文，避免越聊越慢、越聊越贵。</li>
+</ul>
+<hr />
+<h2 id="51-session">5.1 Session 是什么</h2>
+<p>Session 是一次连续对话。</p>
+<p>在同一个 Session 里：</p>
+<ul>
+<li>你说过的话、Agent 的回复、工具结果，会形成历史；</li>
+<li>Agent 能引用前面的内容；</li>
+<li>但历史不是无限的。</li>
+</ul>
+<p>新建 Session：</p>
+<ul>
+<li>通常不会自动继承上一个 Session 的完整聊天记录；</li>
+<li>它会重新读取工作区、<code>AGENTS.md</code>、可用 Skill 等；</li>
+<li>适合开始一个新任务。</li>
+</ul>
+<p>你可以把 Session 理解成“一次会议”。会议结束，新的会议不会自动记得上一次的每句话，除非你留下会议纪要。</p>
+<hr />
+<h2 id="52-context-windowagent">5.2 Context Window：Agent 的“工作内存”</h2>
+<p>模型一次能处理的文本量是有限的，这个上限叫 <strong>Context Window（上下文窗口）</strong>。</p>
+<p>进入上下文的东西包括：</p>
+<ul>
+<li>系统提示词；</li>
+<li>工具定义；</li>
+<li>Skill 内容；</li>
+<li>你的消息；</li>
+<li>Agent 的历史回复；</li>
+<li>工具返回结果；</li>
+<li>读进来的文件内容。</li>
+</ul>
+<h3 id="_39">上下文满了会怎样</h3>
+<ul>
+<li>变慢；</li>
+<li>变贵；</li>
+<li>开始忘掉早期内容；</li>
+<li>可能触发压缩（compaction）或截断；</li>
+<li>严重时，它会“自信地”用错误信息继续。</li>
+</ul>
+<h3 id="_40">常见信号</h3>
+<ul>
+<li>它开始重复问已经说过的事；</li>
+<li>它引用了错误的文件名；</li>
+<li>它忘记了你前面定的规则；</li>
+<li>回复越来越长、越来越散。</li>
+</ul>
+<hr />
+<h2 id="53-dsh">5.3 DSH 不会自动记住一切</h2>
+<p>这是新手最大的误解。</p>
+<p>DSH 有 Session 日志，但<strong>不等于跨会话的长期记忆</strong>。</p>
+<ul>
+<li>同一个 Session：它记得聊天历史；</li>
+<li>新建 Session：它通常不会自动记得上一个 Session 的每句话；</li>
+<li>它可能读取工作区文件、<code>AGENTS.md</code>、Skill；</li>
+<li>如果你装了记忆插件，才可能有额外的跨会话记忆。</li>
+</ul>
+<p>所以，重要信息要<strong>落到文件里</strong>：</p>
+<ul>
+<li>项目背景 → <code>PROJECT.md</code>；</li>
+<li>约定 → <code>AGENTS.md</code>；</li>
+<li>进度 → <code>TODO.md</code> 或任务列表；</li>
+<li>决策 → <code>DECISIONS.md</code>；</li>
+<li>交付物 → 输出文件。</li>
+</ul>
+<blockquote>
+<p><strong>能被文件记住的，不要指望聊天记住。</strong></p>
+</blockquote>
+<hr />
+<h2 id="54-vs">5.4 新会话 vs 继续会话</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始一个全新任务</td>
+<td>新建 Session</td>
+</tr>
+<tr>
+<td>同一任务继续做</td>
+<td>继续当前 Session</td>
+</tr>
+<tr>
+<td>当前 Session 太长、开始混乱</td>
+<td>让它先写总结，再新建</td>
+</tr>
+<tr>
+<td>换了一个完全不同的项目</td>
+<td>换工作区 + 新建 Session</td>
+</tr>
+<tr>
+<td>只想问一个独立问题</td>
+<td>新建 Session，避免污染上下文</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_41">长任务的做法</h3>
+<ol>
+<li>让 Agent 把当前进度写到 <code>PROGRESS.md</code>；</li>
+<li>让它列出“已完成 / 未完成 / 下一步”；</li>
+<li>新建 Session；</li>
+<li>第一句话让它读 <code>PROGRESS.md</code> 和 <code>AGENTS.md</code>。</li>
+</ol>
+<p>这比无限延长一个 Session 更稳。</p>
+<hr />
+<h2 id="55">5.5 用文件做“长期记忆”</h2>
+<p>一个简单可复用的结构：</p>
+<pre><code class="language-text">project/
+  AGENTS.md        # 规则
+  PROJECT.md       # 项目背景
+  DECISIONS.md     # 关键决策
+  PROGRESS.md      # 进度
+  TODO.md          # 待办
+  notes/           # 资料
+  output/          # 交付物
+</code></pre>
+<p>每次新 Session，先让它读：</p>
+<pre><code class="language-text">请先读 AGENTS.md、PROJECT.md、PROGRESS.md，然后用三句话复述当前状态。
+在复述之前不要改任何文件。
+</code></pre>
+<p>这样它不需要“记住”所有聊天，也能快速恢复上下文。</p>
+<hr />
+<h2 id="56-context">5.6 Context 卫生</h2>
+<ul>
+<li>不要一次读入大量无关文件；</li>
+<li>让 Agent 先搜索、再读需要的部分；</li>
+<li>长文档分段读；</li>
+<li>工具输出很大时，要求摘要或只取关键段；</li>
+<li>任务完成后，把结论写进文件，而不是留在聊天里；</li>
+<li>不要在一个 Session 里混很多不相关任务。</li>
+</ul>
+<h3 id="_42">一个实用提示词</h3>
+<pre><code class="language-text">请只读取与当前任务最相关的 3 个文件。
+如果需要更多，先告诉我为什么。
+不要一次性把整个目录读进来。
+</code></pre>
+<hr />
+<h2 id="57">5.7 记忆插件与记忆文件</h2>
+<p>有些插件提供“跨会话记忆”：</p>
+<ul>
+<li>自动提取事实；</li>
+<li>存储到本地或云端；</li>
+<li>下次对话时召回。</li>
+</ul>
+<p>它们有用，但不是魔法：</p>
+<ul>
+<li>可能召回错误；</li>
+<li>可能把旧信息当新信息；</li>
+<li>可能增加上下文和成本；</li>
+<li>需要隐私和权限评估。</li>
+</ul>
+<p>对 0 基础用户，建议先用<strong>文件 + <code>AGENTS.md</code></strong> 这种可控方式。等你有明确需求，再考虑记忆插件。</p>
+<hr />
+<h2 id="_43">马上试试</h2>
+<ol>
+<li>让 Agent 写一个 <code>PROJECT.md</code>，记录当前任务目标和约束；</li>
+<li>新建 Session；</li>
+<li>第一句话让它读 <code>PROJECT.md</code>，复述目标；</li>
+<li>观察它是否能在没有旧聊天记录的情况下继续工作。</li>
+</ol>
+<hr />
+<h2 id="_44">常见坑</h2>
+<ul>
+<li><strong>以为新 Session 会记得旧 Session</strong>：不会自动记得。</li>
+<li><strong>把所有资料一次性塞进上下文</strong>：又慢又贵。</li>
+<li><strong>长 Session 里反复改需求</strong>：上下文污染。</li>
+<li><strong>只让 Agent “记住”而不落文件</strong>：下次就没了。</li>
+<li><strong>记忆插件当真相</strong>：召回可能错。</li>
+</ul>
+<hr />
+<h2 id="_45">小结</h2>
+<ul>
+<li>Session 是一次对话；Context Window 是工作内存。</li>
+<li>上下文会满，满了会忘、会慢、会贵。</li>
+<li>DSH 不自动跨 Session 记住一切。</li>
+<li>重要信息落文件；长任务先总结再换 Session。</li>
+<li>记忆插件是补充，不是替代。</li>
+</ul>
+<hr />
+<h1 id="6-agent">第 6 章　工具与技能：Agent 的手和脑</h1>
+<h2 id="_46">本章你会学会</h2>
+<ul>
+<li>认识 Agent 常用工具的分类；</li>
+<li>看懂工具调用卡片和审批；</li>
+<li>用计划、待办、子代理处理多步任务；</li>
+<li>理解 Skill 是什么，和 Tool / Plugin 的区别；</li>
+<li>正确使用 <code>present</code>；</li>
+<li>避免“工具用太多”和“技能装太多”。</li>
+</ul>
+<hr />
+<h2 id="61">6.1 工具的分类</h2>
+<p>你不需要记住每个工具名，只要知道它们大概分成几类。</p>
+<table>
+<thead>
+<tr>
+<th>你想做什么</th>
+<th>工具类型</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>看文件</td>
+<td>读</td>
+<td>读文件、列目录、搜索内容</td>
+</tr>
+<tr>
+<td>改文件</td>
+<td>写</td>
+<td>新建、覆盖、局部编辑</td>
+</tr>
+<tr>
+<td>跑程序</td>
+<td>执行</td>
+<td>终端命令、测试、构建</td>
+</tr>
+<tr>
+<td>查资料</td>
+<td>搜索</td>
+<td>网页搜索、抓取网页</td>
+</tr>
+<tr>
+<td>拆任务</td>
+<td>协作</td>
+<td>子代理、工作流</td>
+</tr>
+<tr>
+<td>管理进度</td>
+<td>计划</td>
+<td>计划模式、待办清单、目标</td>
+</tr>
+<tr>
+<td>交付</td>
+<td>交付</td>
+<td><code>present</code></td>
+</tr>
+<tr>
+<td>问你</td>
+<td>交互</td>
+<td>提问、确认</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_47">一个原则</h3>
+<blockquote>
+<p><strong>能只读，就先只读；能小步，就不要大步。</strong></p>
+</blockquote>
+<hr />
+<h2 id="62">6.2 工具卡片与审批</h2>
+<p>每次工具调用，界面通常会显示：</p>
+<ul>
+<li>工具名；</li>
+<li>参数（例如文件路径、命令）；</li>
+<li>结果（成功/失败/输出）；</li>
+<li>有时会要求你批准。</li>
+</ul>
+<p>你要重点看：</p>
+<ul>
+<li>路径对不对；</li>
+<li>命令有没有破坏性；</li>
+<li>输出有没有异常；</li>
+<li>它有没有跳过你的约束。</li>
+</ul>
+<h3 id="_48">拒绝也是一种能力</h3>
+<p>如果它要做你没允许的事：</p>
+<pre><code class="language-text">停。这一步不要执行。
+先解释你为什么需要这个操作，以及有没有只读替代方案。
+</code></pre>
+<hr />
+<h2 id="63">6.3 计划与待办</h2>
+<p>复杂任务建议先计划。</p>
+<h3 id="_49">计划模式</h3>
+<p>让 Agent 先给出步骤，不执行：</p>
+<pre><code class="language-text">先进入计划模式。给我一个 5 步以内的计划，说明每步要读/写什么、怎么验证。
+我确认后再执行。
+</code></pre>
+<h3 id="_50">待办清单</h3>
+<p>执行阶段可以让它维护一个 todo：</p>
+<pre><code class="language-text">请把任务拆成 todo，完成一项就更新一项。
+不要一次开始所有项。
+</code></pre>
+<p>好处：</p>
+<ul>
+<li>你能看到进度；</li>
+<li>它不容易漏步骤；</li>
+<li>长任务更容易恢复。</li>
+</ul>
+<hr />
+<h2 id="64">6.4 子代理与工作流</h2>
+<h3 id="subagent">子代理（subagent）</h3>
+<p>子代理是一个独立的 Agent，有自己的上下文。适合：</p>
+<ul>
+<li>独立的调研；</li>
+<li>并行的资料整理；</li>
+<li>让主 Agent 不被大量中间结果淹没。</li>
+</ul>
+<p>你可以说：</p>
+<pre><code class="language-text">派一个子代理去调研这三个链接，只返回要点和来源。
+主任务继续做本地文件整理。
+</code></pre>
+<p>注意：</p>
+<ul>
+<li>子代理也要消耗模型调用；</li>
+<li>它的结果可能不准确；</li>
+<li>父 Agent 要负责验收。</li>
+</ul>
+<h3 id="workflow">工作流（workflow）</h3>
+<p>工作流是用脚本编排多个子代理，适合批量、并行、多阶段任务。</p>
+<p>对 0 基础用户，先不用碰。等你熟悉子代理，再考虑。</p>
+<hr />
+<h2 id="65-skill">6.5 Skill 是什么</h2>
+<p>Skill 是一份“操作手册”，通常是一个文件夹，里面有 <code>SKILL.md</code>。</p>
+<p>它告诉 Agent：</p>
+<ul>
+<li>什么时候用这个技能；</li>
+<li>步骤是什么；</li>
+<li>有哪些坑；</li>
+<li>可以读哪些参考资料；</li>
+<li>可以运行哪些脚本。</li>
+</ul>
+<h3 id="skill-tool">Skill 和 Tool 的区别</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Tool</th>
+<th>Skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本质</td>
+<td>可执行动作</td>
+<td>知识与流程</td>
+</tr>
+<tr>
+<td>例子</td>
+<td>读文件、跑命令</td>
+<td>“如何做一次代码审查”</td>
+</tr>
+<tr>
+<td>谁执行</td>
+<td>Harness</td>
+<td>Agent 阅读后按步骤做</td>
+</tr>
+<tr>
+<td>上下文</td>
+<td>schema 常驻</td>
+<td>按需加载</td>
+</tr>
+</tbody>
+</table>
+<h3 id="skill-plugin">Skill 和 Plugin 的区别</h3>
+<ul>
+<li>Skill 是知识，通常不直接提供新工具；</li>
+<li>Plugin 是运行时扩展，可以提供新工具、服务、界面；</li>
+<li>有些 Plugin 会自带 Skill。</li>
+</ul>
+<h3 id="_51">渐进披露</h3>
+<p>好的 Skill 不会一上来把几千行塞进上下文。它通常：</p>
+<ol>
+<li>先只加载名称和描述；</li>
+<li>任务匹配时，加载 <code>SKILL.md</code>；</li>
+<li>需要细节时，再读 <code>references/</code> 或运行脚本。</li>
+</ol>
+<p>这就是为什么 Skill 可以很多，但不会瞬间撑爆上下文。</p>
+<hr />
+<h2 id="66-skill">6.6 怎么用 Skill</h2>
+<p>通常有两种方式：</p>
+<ol>
+<li><strong>自动匹配</strong>：Agent 根据任务描述选择相关 Skill；</li>
+<li><strong>显式点名</strong>：你说“用 <code>xxx</code> 这个 Skill”。</li>
+</ol>
+<p>如果你知道有合适的 Skill：</p>
+<pre><code class="language-text">请使用 `code-review` 这个 Skill 来审查这次改动。
+先读它的 SKILL.md，再按步骤执行。
+</code></pre>
+<p>如果你不确定：</p>
+<pre><code class="language-text">当前有哪些 Skill 和我的任务相关？先列出来，不要直接执行。
+</code></pre>
+<h3 id="skill_1">装 Skill 的注意事项</h3>
+<ul>
+<li>只装可信来源；</li>
+<li>看它有没有脚本、会访问什么；</li>
+<li>不要把密钥写进 Skill；</li>
+<li>装太多会占用元数据上下文；</li>
+<li>版本要跟 CLI/插件对齐。</li>
+</ul>
+<hr />
+<h2 id="67-present">6.7 <code>present</code>：交付文件</h2>
+<p>当任务产出是文件时，Agent 可能调用 <code>present</code>。</p>
+<p>准确含义：</p>
+<blockquote>
+<p><strong>把已经存在的文件声明为最终交付物，让界面生成卡片，用户可以打开。</strong></p>
+</blockquote>
+<p>它不创建、不上传、不复制内容；只记录路径和说明。</p>
+<p>你可以要求：</p>
+<pre><code class="language-text">完成后用 present 交付最终文件，最多 2 个，不要把所有中间文件都 present。
+</code></pre>
+<hr />
+<h2 id="68">6.8 工具使用的常见误区</h2>
+<ul>
+<li><strong>工具越多越好</strong>：不，工具多会增加选择和上下文成本。</li>
+<li><strong>让 Agent 一次读整个目录</strong>：先搜索，再读相关文件。</li>
+<li><strong>子代理当免费劳动力</strong>：也要花 token，也可能错。</li>
+<li><strong>Skill 装一堆</strong>：只装当前需要的。</li>
+<li><strong>不看工具结果</strong>：只看总结容易漏错。</li>
+</ul>
+<hr />
+<h2 id="_52">马上试试</h2>
+<ol>
+<li>让 Agent 为一个任务写 3 步计划；</li>
+<li>让它用 todo 跟踪执行；</li>
+<li>让它只读搜索相关资料，不直接读整个目录；</li>
+<li>让它用 <code>present</code> 交付一个最终文件；</li>
+<li>问它：“你刚才用了哪些工具？哪些是只读的？”</li>
+</ol>
+<hr />
+<h2 id="_53">小结</h2>
+<ul>
+<li>工具分读、写、跑、搜、协作、计划、交付。</li>
+<li>先只读、再小步执行；看工具卡片。</li>
+<li>子代理/工作流适合拆任务，但不是免费。</li>
+<li>Skill 是知识，Tool 是动作，Plugin 是运行时扩展。</li>
+<li><code>present</code> 是交付声明，不是上传。</li>
+</ul>
+<hr />
+<h2 id="_54">第二部分练习</h2>
+<ol>
+<li>给你的测试工作区写一个 <code>AGENTS.md</code>，包含三条禁止事项。</li>
+<li>新建一个 Session，让它只读 <code>AGENTS.md</code> 和 <code>PROJECT.md</code>，复述规则。</li>
+<li>让 Agent 用 todo 完成一个三步任务，并在每步后更新。</li>
+<li>问它当前有哪些 Skill 与任务相关，只列名称，不执行。</li>
+<li>用 <code>present</code> 交付一个文件，观察卡片行为。</li>
+</ol>
+<h1 id="7-preset">第 7 章　模式与 Preset：同一个模型，不同工作方式</h1>
+<h2 id="_55">本章你会学会</h2>
+<ul>
+<li>理解 Preset 不是模型，也不是另一个软件；</li>
+<li>分清标准、创造、PTC、极简四种常见模式；</li>
+<li>知道什么任务该用哪种模式；</li>
+<li>理解“自定义 Preset”的正确做法；</li>
+<li>避免把“模式”当成“安全隔离”。</li>
+</ul>
+<hr />
+<h2 id="71-preset">7.1 一个比喻：Preset 是“角色卡”</h2>
+<p>同一个模型，可以有不同的工作方式：</p>
+<ul>
+<li>日常写代码、整理文件；</li>
+<li>专门扩展 DSH 本身；</li>
+<li>批量调用工具、做数据分析；</li>
+<li>只保留最少工具，快速回答问题。</li>
+</ul>
+<p>这些“工作方式”就是 <strong>Preset（预设）</strong>。</p>
+<p>你可以把 Preset 理解成一张“角色卡”或“装备方案”：</p>
+<pre><code class="language-text">同一个 Agent 引擎
+  + 不同的工具
+  + 不同的提示词
+  + 不同的 Skill
+  + 不同的策略
+= 不同的工作模式
+</code></pre>
+<p>它<strong>不换模型</strong>，<strong>不换运行时</strong>，<strong>不换沙箱</strong>；它只换“这个 Agent 这次拿到哪些能力”。</p>
+<hr />
+<h2 id="72-standard">7.2 标准模式（Standard）</h2>
+<p>这是日常默认模式。</p>
+<p>适合：</p>
+<ul>
+<li>写代码；</li>
+<li>读写文件；</li>
+<li>搜索资料；</li>
+<li>整理文档；</li>
+<li>做表格；</li>
+<li>日常问答；</li>
+<li>一般的多步任务。</li>
+</ul>
+<p>它通常包含：</p>
+<ul>
+<li>文件读写；</li>
+<li>终端命令；</li>
+<li>网页搜索/抓取；</li>
+<li>子代理；</li>
+<li>计划、待办、目标；</li>
+<li>交付文件；</li>
+<li>技能系统。</li>
+</ul>
+<p>如果你不知道选什么，选标准模式。</p>
+<hr />
+<h2 id="73-creator">7.3 创造模式（Creator）</h2>
+<p>创造模式不是“更聪明的标准模式”。它是<strong>用来扩展 DSH 本身的模式</strong>。</p>
+<p>它通常会多出：</p>
+<ul>
+<li><strong>运行时检查</strong>：查看 DSH 内部的 Service、Config、Tool、Skill、界面 Slot；</li>
+<li><strong>插件管理</strong>：安装、启用、停用、卸载插件；</li>
+<li><strong>开发指引</strong>：Cordis 插件、Bundle、Preset 的写法和模板。</li>
+</ul>
+<p>适合：</p>
+<ul>
+<li>写一个 DSH 插件；</li>
+<li>给 DSH 加一个工具/界面；</li>
+<li>做一个自定义 Preset；</li>
+<li>调试插件为什么没加载。</li>
+</ul>
+<p>不适合：</p>
+<ul>
+<li>日常写代码；</li>
+<li>普通文件整理；</li>
+<li>你不需要扩展 DSH 的时候。</li>
+</ul>
+<p>为什么？因为它多出的工具和权限会占用上下文，也带来更高的操作风险。日常任务用标准模式更轻、更安全。</p>
+<hr />
+<h2 id="74-ptc">7.4 PTC 模式</h2>
+<p>PTC 是 <strong>Programmatic Tool Calling</strong> 的缩写，可以理解为“用写代码的方式组织工具调用”。</p>
+<p>它适合：</p>
+<ul>
+<li>批量调用工具；</li>
+<li>对结果做筛选、去重、统计、汇总；</li>
+<li>需要循环、条件、组合的任务；</li>
+<li>数据分析类任务。</li>
+</ul>
+<p>它不一定更快，也不一定更省 token；取决于任务和实现。日常任务用标准模式即可。</p>
+<hr />
+<h2 id="75-minimal">7.5 极简模式（Minimal）</h2>
+<p>极简模式只保留很少的工具，通常用于：</p>
+<ul>
+<li>快速问答；</li>
+<li>小规模读写；</li>
+<li>想尽量减少上下文和工具干扰的场景。</li>
+</ul>
+<p>它的能力边界更窄。需要复杂操作时，换回标准模式。</p>
+<hr />
+<h2 id="76">7.6 四种模式怎么选</h2>
+<table>
+<thead>
+<tr>
+<th>你的任务</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日常写代码、整理文件</td>
+<td>标准模式</td>
+</tr>
+<tr>
+<td>做 DSH 插件、改 Preset</td>
+<td>创造模式</td>
+</tr>
+<tr>
+<td>批量工具调用、数据分析</td>
+<td>PTC</td>
+</tr>
+<tr>
+<td>快速问答、小任务</td>
+<td>极简模式</td>
+</tr>
+<tr>
+<td>不确定</td>
+<td>标准模式</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="77-preset">7.7 Preset 到底是什么</h2>
+<p>在 DSH 里，Preset 是一份 <strong>Agent 的子插件列表</strong>，加上名称、描述、排序等元数据。</p>
+<p>它通常长这样：</p>
+<pre><code class="language-yaml">id: standard
+name: 标准模式
+order: 1
+plugins:
+  - persona
+  - tool-bash
+  - tool-fs
+  - tool-web
+  - ...
+</code></pre>
+<p>几个关键点：</p>
+<ul>
+<li>它由 <code>@deepseek-ai/dsh-agent-preset</code> 这个插件声明；</li>
+<li>由 <code>agent-preset-registry</code> 管理；</li>
+<li>每个 Session 选择一个 Preset；</li>
+<li>定义会提前加载，但编辑只影响新创建的 Agent；</li>
+<li>运行中的 Agent 保留它启动时的版本；</li>
+<li>子 Agent 通常继承父 Agent 的 Preset。</li>
+</ul>
+<h3 id="_56">它不是</h3>
+<ul>
+<li>不是模型；</li>
+<li>不是沙箱；</li>
+<li>不是另一个进程；</li>
+<li>不是“更高级的模型”。</li>
+</ul>
+<h3 id="_57">它也不是安全隔离</h3>
+<p>Preset 可以隔离工具和服务，但它<strong>不是安全沙箱</strong>。</p>
+<ul>
+<li>插件代码仍然在 Host 进程执行；</li>
+<li>文件权限、审批、沙箱是另一套机制；</li>
+<li>不要因为“切了模式”就认为风险消失。</li>
+</ul>
+<hr />
+<h2 id="78-preset">7.8 自定义 Preset</h2>
+<p>你可以创建自己的模式，例如：</p>
+<ul>
+<li>“代码审查模式”：只读，先报告问题，不直接改文件；</li>
+<li>“写作模式”：固定文风、固定输出结构；</li>
+<li>“数据分析模式”：只允许读数据和跑分析脚本。</li>
+</ul>
+<p>正确做法通常是：</p>
+<ol>
+<li>在创造模式里描述你要的模式；</li>
+<li>让 Agent 生成一个 Bundle 补丁；</li>
+<li>通过 Plugin Manager 安装；</li>
+<li>在新建任务时选择它。</li>
+</ol>
+<p>不建议：</p>
+<ul>
+<li>手动去改 <code>~/.dsh/.agent-presets/</code> 旧目录；</li>
+<li>直接编辑 profile 的 <code>package.json</code>；</li>
+<li>复制一个内置 Preset 后长期不合并更新。</li>
+</ul>
+<blockquote>
+<p>自定义 Preset 的“整份替换”特性意味着：你覆盖后，内置 Preset 后续新增的工具不会自动出现。要定期检查。</p>
+</blockquote>
+<hr />
+<h2 id="79">7.9 常见误区</h2>
+<ul>
+<li><strong>“创造模式更聪明”</strong>：不是。它只是多了扩展 DSH 的工具和知识。</li>
+<li><strong>“换 Preset 就换了模型”</strong>：不是。模型由模型设置决定。</li>
+<li><strong>“Preset 是安全隔离”</strong>：不是。安全靠权限/沙箱/审批。</li>
+<li><strong>“Preset 越多越好”</strong>：不是。多一个模式就多一份维护成本。</li>
+<li><strong>“自定义 Preset 会自动跟进内置更新”</strong>：不会，覆盖是整份替换。</li>
+</ul>
+<hr />
+<h2 id="_58">马上试试</h2>
+<ol>
+<li>新建任务，选择标准模式；</li>
+<li>问 Agent：“你现在有哪些工具？哪些是只读的？”</li>
+<li>再新建一个任务，选择创造模式；</li>
+<li>问同样的问题，对比多了什么；</li>
+<li>不要执行任何安装/修改，先观察差异。</li>
+</ol>
+<hr />
+<h2 id="_59">小结</h2>
+<ul>
+<li>Preset 是 Agent 的能力组合，不是模型/沙箱。</li>
+<li>标准模式是日常默认；创造模式用于扩展 DSH；PTC 适合批量工具调用；极简模式适合小任务。</li>
+<li>运行中的 Agent 保留启动时的 Preset 版本。</li>
+<li>自定义 Preset 要走 Bundle + Plugin Manager，不要手改旧目录。</li>
+<li>Preset 不等于安全隔离。</li>
+</ul>
+<hr />
+<h1 id="8-bundle-profile-dsh">第 8 章　插件、Bundle 与 Profile：给 DSH 装能力</h1>
+<h2 id="_60">本章你会学会</h2>
+<ul>
+<li>分清 Plugin、Bundle、Profile 三个词；</li>
+<li>知道一个插件是怎么被“装进去”的；</li>
+<li>用 Plugin Manager 安装、启用、停用、卸载；</li>
+<li>理解第三方插件的信任边界；</li>
+<li>遇到“装了但不生效”时怎么排查。</li>
+</ul>
+<hr />
+<h2 id="81">8.1 三个词，三个层级</h2>
+<p>先记住一句话：</p>
+<blockquote>
+<p><strong>Plugin 是能力，Bundle 是安装包，Profile 是工作环境。</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>词</th>
+<th>你可以理解成</th>
+<th>回答的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Plugin</strong></td>
+<td>一个可插拔的能力模块</td>
+<td>运行的时候执行什么？</td>
+</tr>
+<tr>
+<td><strong>Bundle</strong></td>
+<td>一个可安装的“补丁包”</td>
+<td>哪些配置和代码一起分发？</td>
+</tr>
+<tr>
+<td><strong>Profile</strong></td>
+<td>一套安装环境</td>
+<td>这个环境装了哪些 Bundle？</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plugin">Plugin</h3>
+<p>Plugin 是运行时单元。它可以：</p>
+<ul>
+<li>注册工具；</li>
+<li>注册服务；</li>
+<li>注册 Skill；</li>
+<li>添加界面；</li>
+<li>监听事件；</li>
+<li>改变 Agent 的行为。</li>
+</ul>
+<p>例如，一个笔记类插件可以注册一组笔记工具、一个 Config 和一个 Skill。</p>
+<h3 id="bundle">Bundle</h3>
+<p>Bundle 是一个 npm 包，里面通常有：</p>
+<ul>
+<li>一个 <code>cordis.patch.yml</code>（或一组 patch 文件）；</li>
+<li>要挂载的插件代码；</li>
+<li>可能还有 Skill、界面资源、图标。</li>
+</ul>
+<p>它的作用是：</p>
+<ul>
+<li>把“要加哪些插件、怎么配置”打包；</li>
+<li>让用户一条命令安装；</li>
+<li>安装后，它的配置行仍然可以被上层覆盖。</li>
+</ul>
+<p>一个 Bundle 可以挂载多个 Plugin；一个 Plugin 也可以被不同的 Bundle 引用。</p>
+<h3 id="profile">Profile</h3>
+<p>Profile 是安装环境，通常对应：</p>
+<ul>
+<li><code>desktop</code>：桌面应用；</li>
+<li><code>web</code>：浏览器；</li>
+<li><code>headless</code>：命令行一次性执行。</li>
+</ul>
+<p>它里面有：</p>
+<ul>
+<li>已安装的 Bundle 列表；</li>
+<li>自己的 <code>cordis.patch.yml</code>；</li>
+<li>第三方插件依赖。</li>
+</ul>
+<p>Profile 决定“这个环境装了什么”，Bundle 决定“装的东西包含什么”，Plugin 决定“实际运行什么”。</p>
+<hr />
+<h2 id="82-preset">8.2 它们和 Preset 的关系</h2>
+<pre><code class="language-text">Profile（desktop）
+ ├─ Bundle A（dsh-base）
+ ├─ Bundle B（dsh-web-app）
+ │    └─ 声明 Preset: standard / creator / ...
+ └─ Bundle C（你的插件）
+      └─ 挂载 Plugin: 你的工具
+
+Preset（standard / creator）
+ └─ 给某个 Agent 选择一组 Plugin
+</code></pre>
+<ul>
+<li>Bundle 可以声明 Preset；</li>
+<li>Preset 是“给哪个 Agent 用哪些 Plugin”；</li>
+<li>Profile 是“这个环境装了哪些 Bundle”；</li>
+<li>Plugin 是“真正执行的能力”。</li>
+</ul>
+<hr />
+<h2 id="83-plugin-manager">8.3 用 Plugin Manager 安装</h2>
+<p>在 Desktop 里，通常有 <strong>Plugin Manager / 插件</strong>页面。</p>
+<p>基本流程：</p>
+<ol>
+<li>打开插件页面；</li>
+<li>搜索或选择要安装的 Bundle；</li>
+<li>阅读说明、权限、依赖；</li>
+<li>确认安装；</li>
+<li>按提示重启/重载；</li>
+<li>检查工具、Skill、界面是否出现。</li>
+</ol>
+<h3 id="_61">安装前要看的</h3>
+<ul>
+<li>作者/来源是否可信；</li>
+<li>它要求什么权限；</li>
+<li>是否依赖外部 CLI/服务；</li>
+<li>是否会执行安装脚本；</li>
+<li>是否和已有插件重名/冲突；</li>
+<li>有没有卸载方式。</li>
+</ul>
+<h3 id="_62">安装后要检查</h3>
+<ul>
+<li>插件是否显示“已启用”；</li>
+<li>工具列表里有没有新工具；</li>
+<li>Skill 列表里有没有新 Skill；</li>
+<li>有没有报错/警告；</li>
+<li>是否需要重启。</li>
+</ul>
+<hr />
+<h2 id="84">8.4 为什么“装了但不生效”</h2>
+<p>常见原因：</p>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>可能原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>插件列表里有，但工具没有</td>
+<td>没启用；需要重启/重载；依赖缺失</td>
+</tr>
+<tr>
+<td>启动报错</td>
+<td>版本不兼容；缺 peer 依赖；配置错误</td>
+</tr>
+<tr>
+<td>工具名冲突</td>
+<td>和另一个插件用了同一个名字</td>
+</tr>
+<tr>
+<td>需要登录/CLI</td>
+<td>外部依赖没装/没登录</td>
+</tr>
+<tr>
+<td>只在某个模式里有</td>
+<td>工具被挂在某个 Preset 里，不是全局</td>
+</tr>
+<tr>
+<td>改了代码不生效</td>
+<td>服务端插件需要重载；不是热更新</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_63">排查顺序</h3>
+<ol>
+<li>看 Plugin Manager 的状态和错误；</li>
+<li>看是否需要重启；</li>
+<li>看依赖/版本；</li>
+<li>看是否和已有插件冲突；</li>
+<li>看工具是否只在某个 Preset 中；</li>
+<li>看日志/诊断。</li>
+</ol>
+<hr />
+<h2 id="85">8.5 配置插件</h2>
+<p>很多插件有配置项，例如：</p>
+<ul>
+<li>可执行文件路径；</li>
+<li>API 地址；</li>
+<li>超时；</li>
+<li>输出上限。</li>
+</ul>
+<p>在 DSH 里，插件通常用 Config schema 声明这些字段，Plugin Manager 会显示成表单。</p>
+<p>原则：</p>
+<ul>
+<li>优先用界面配置；</li>
+<li>不要手动改 profile 的 <code>package.json</code>；</li>
+<li>不要手动改 <code>cordis.patch.yml</code>，除非你知道层顺序；</li>
+<li>改完要重载/重启；</li>
+<li>配置里的密钥要放在安全位置。</li>
+</ul>
+<hr />
+<h2 id="86">8.6 第三方插件的信任边界</h2>
+<p>这是最重要的一节。</p>
+<blockquote>
+<p><strong>插件不是“配置文件”，它可能执行代码。</strong></p>
+</blockquote>
+<p>安装第三方插件，相当于让别人的代码在你的 DSH 进程里运行。它可能：</p>
+<ul>
+<li>读取你的文件；</li>
+<li>调用网络；</li>
+<li>执行命令；</li>
+<li>修改配置；</li>
+<li>安装依赖；</li>
+<li>运行安装脚本。</li>
+</ul>
+<p>所以：</p>
+<ul>
+<li>只装可信来源；</li>
+<li>看权限和代码；</li>
+<li>不要给不必要的 full access；</li>
+<li>先在测试工作区试；</li>
+<li>出问题能卸载/回滚；</li>
+<li>不要把密钥交给不信任的插件。</li>
+</ul>
+<hr />
+<h2 id="87">8.7 卸载与回滚</h2>
+<p>安装前就要想好怎么卸载：</p>
+<ul>
+<li>Plugin Manager 里能否停用/移除；</li>
+<li>是否会留下配置/数据；</li>
+<li>是否会改 profile 的 bundle 列表；</li>
+<li>是否需要重启；</li>
+<li>有没有版本回退。</li>
+</ul>
+<p>重要环境先备份 profile，或至少记录安装前的状态。</p>
+<hr />
+<h2 id="_64">马上试试</h2>
+<ol>
+<li>打开 Plugin Manager，看看当前装了哪些 Bundle；</li>
+<li>找到“已启用/已停用”的区别；</li>
+<li>不要急着安装新插件，先读一个插件的说明和权限；</li>
+<li>找一个你已经在用的插件，看看它注册了哪些工具/Skill；</li>
+<li>写下：如果它出问题，你怎么停用它？</li>
+</ol>
+<hr />
+<h2 id="_65">常见坑</h2>
+<ul>
+<li><strong>把 Plugin 和 Bundle 混为一谈</strong>：一个是能力，一个是安装包。</li>
+<li><strong>以为装了 Bundle 就一定启用</strong>：还要看选择/重载/依赖。</li>
+<li><strong>手动改 profile 配置</strong>：容易破坏层顺序。</li>
+<li><strong>不看权限就装</strong>：插件可以执行代码。</li>
+<li><strong>装完不重启</strong>：很多插件需要重载才生效。</li>
+</ul>
+<hr />
+<h2 id="_66">小结</h2>
+<ul>
+<li>Plugin = 能力，Bundle = 安装包，Profile = 工作环境。</li>
+<li>Preset 决定“给哪个 Agent 用哪些 Plugin”。</li>
+<li>用 Plugin Manager 安装/启用/卸载；不要手改 profile。</li>
+<li>第三方插件是代码，不是纯配置；信任和权限第一。</li>
+<li>装了不生效，先查状态、重载、依赖、冲突、Preset 范围。</li>
+</ul>
+<hr />
+<h2 id="_67">第三部分练习</h2>
+<ol>
+<li>用一句话向你朋友解释 Plugin、Bundle、Profile 的区别。</li>
+<li>打开 Plugin Manager，记录当前启用的 Bundle 数量。</li>
+<li>找一个插件，阅读它的权限/依赖，判断你是否愿意安装。</li>
+<li>解释为什么“Preset 不是安全沙箱”。</li>
+<li>写下一个“插件装坏了怎么回滚”的步骤清单。</li>
+</ol>
+<h1 id="9">第 9 章　创造模式：从使用者到扩展者</h1>
+<h2 id="_68">本章你会学会</h2>
+<ul>
+<li>创造模式到底是什么，不是什么；</li>
+<li>它比标准模式多了哪些能力；</li>
+<li>什么时候该用，什么时候不该用；</li>
+<li>一次完整的“做插件”流程；</li>
+<li>不会编程的人怎么参与；</li>
+<li>怎么避免把 DSH 改坏。</li>
+</ul>
+<hr />
+<h2 id="91">9.1 创造模式是什么</h2>
+<p>创造模式是 DSH 的一个 <strong>Agent Preset</strong>，内部 id 是 <code>cordis</code>。</p>
+<p>它不是：</p>
+<ul>
+<li>另一个模型；</li>
+<li>另一套运行时；</li>
+<li>另一个软件；</li>
+<li>更聪明的标准模式。</li>
+</ul>
+<p>它是：</p>
+<blockquote>
+<p><strong>在标准任务工具之上，额外提供运行时检查、插件管理、以及插件/Preset 开发指引的一种工作模式。</strong></p>
+</blockquote>
+<p>它和标准模式共用：</p>
+<ul>
+<li>同一个 Agent loop；</li>
+<li>同一个模型；</li>
+<li>同一个沙箱/权限系统；</li>
+<li>绝大部分任务工具。</li>
+</ul>
+<p>差别只在“composition（插件组合）”。</p>
+<hr />
+<h2 id="92">9.2 它比标准模式多了什么</h2>
+<p>通常包括三类能力。</p>
+<h3 id="1">1. 运行时检查</h3>
+<p>可以查询 DSH 当前真实的：</p>
+<ul>
+<li>Service 方法；</li>
+<li>Config schema；</li>
+<li>Tool schema；</li>
+<li>Skill 列表；</li>
+<li>界面 Slot / theme token。</li>
+</ul>
+<p>这解决了一个大问题：<strong>不用猜 API</strong>。</p>
+<h3 id="2_1">2. 插件管理</h3>
+<p>可以：</p>
+<ul>
+<li>列出已安装的 Bundle；</li>
+<li>安装/启用/停用/卸载；</li>
+<li>修改 profile 的插件选择；</li>
+<li>查看安装结果和警告。</li>
+</ul>
+<p>这些操作会持久化到 profile，影响所有 Session，并在重启后保留。</p>
+<h3 id="3_1">3. 开发指引</h3>
+<p>创造模式会挂载一组 authoring Skill，告诉你：</p>
+<ul>
+<li>怎么写 Cordis 插件；</li>
+<li>怎么写 Bundle patch；</li>
+<li>怎么创建/覆盖 Preset；</li>
+<li>怎么验证插件真的生效。</li>
+</ul>
+<p>它还会提供模板和参考资料，按需加载。</p>
+<hr />
+<h2 id="93">9.3 什么时候该用</h2>
+<p>适合：</p>
+<ul>
+<li>想给 DSH 加一个工具；</li>
+<li>想加一个界面/按钮/面板；</li>
+<li>想做一个自定义模式；</li>
+<li>想调试“插件为什么没加载”；</li>
+<li>想把自己的工作流封装成插件。</li>
+</ul>
+<p>不适合：</p>
+<ul>
+<li>日常写代码；</li>
+<li>普通文件整理；</li>
+<li>只是想让 Agent 帮你查资料；</li>
+<li>你不需要扩展 DSH 的时候。</li>
+</ul>
+<p>原因：</p>
+<ul>
+<li>多出的工具和 Skill 会占用上下文；</li>
+<li>插件安装是高风险操作；</li>
+<li>日常任务用标准模式更轻。</li>
+</ul>
+<hr />
+<h2 id="94">9.4 安全边界：这是高信任模式</h2>
+<p>创造模式可以做很多“普通模式不能做”的事，因为：</p>
+<ul>
+<li>安装插件会在 Host 进程执行代码；</li>
+<li>修改 profile 会影响所有 Session；</li>
+<li>插件可能读写文件、访问网络、运行命令；</li>
+<li>这些代码在 workspace sandbox 之外执行。</li>
+</ul>
+<p>所以：</p>
+<ul>
+<li>插件管理通常需要 <strong>full access 或逐次审批</strong>；</li>
+<li>不要给不信任的代码 full access；</li>
+<li>先在测试 profile/工作区试；</li>
+<li>重要配置先备份；</li>
+<li>出问题要能停用/回滚。</li>
+</ul>
+<blockquote>
+<p>创造模式不是“安全模式”，它是“高信任的扩展模式”。</p>
+</blockquote>
+<hr />
+<h2 id="95">9.5 一次完整的“做插件”流程</h2>
+<p>下面是一个通用流程，不要求你会写代码，但要求你能描述目标和验收。</p>
+<h3 id="1_1">第 1 步：描述能力</h3>
+<p>不要一上来就说“帮我写个插件”。先说清楚：</p>
+<pre><code class="language-text">我想给 DSH 加一个能力：
+- 它做什么；
+- 在哪里使用（聊天/按钮/面板/工具）；
+- 输入是什么；
+- 输出是什么；
+- 怎么验证它成功；
+- 不需要做什么。
+</code></pre>
+<h3 id="2_2">第 2 步：让它先检查</h3>
+<pre><code class="language-text">先不要写代码。
+请用运行时检查工具，确认：
+1. 这个能力应该挂在哪一层（Host 插件 / Preset 插件 / 纯配置）；
+2. 可用的 Service / Slot / Tool API；
+3. 是否需要新的 Bundle；
+4. 有没有现成模板。
+把结论和风险列给我。
+</code></pre>
+<h3 id="3_2">第 3 步：做最小版本</h3>
+<pre><code class="language-text">先做一个最小可用版本。
+不要做额外功能、不要做多个变体。
+给出文件清单、安装方式、验证步骤。
+</code></pre>
+<h3 id="4_1">第 4 步：安装并验证</h3>
+<pre><code class="language-text">安装到当前 profile。
+安装后告诉我：
+- 安装结果（applied / warnings）；
+- 新增了哪些工具/Skill/界面；
+- 怎么验证；
+- 怎么卸载。
+</code></pre>
+<h3 id="5_1">第 5 步：修复与迭代</h3>
+<p>只修观察到的问题，不要无限加功能。</p>
+<h3 id="6">第 6 步：收尾</h3>
+<pre><code class="language-text">请给出：
+- 插件位置；
+- 安装/卸载方式；
+- 已验证的内容；
+- 未验证的内容；
+- 已知限制。
+</code></pre>
+<hr />
+<h2 id="96">9.6 不会编程的人怎么参与</h2>
+<p>你不需要自己写代码，但你需要做三件事：</p>
+<ol>
+<li><strong>说清楚目标</strong>：用户是谁、在什么场景、输入输出是什么；</li>
+<li><strong>审查结果</strong>：它有没有做你没要求的事？有没有权限过大？</li>
+<li><strong>验收</strong>：按你定义的场景试一遍，不通过就具体反馈。</li>
+</ol>
+<p>你可以要求：</p>
+<pre><code class="language-text">不要只告诉我“完成了”。
+请给出：
+- 改了哪些文件；
+- 新增了哪些能力；
+- 我怎么手动验证；
+- 如果失败，怎么回滚。
+</code></pre>
+<hr />
+<h2 id="97">9.7 常见误区</h2>
+<ul>
+<li><strong>“创造模式是高级版标准模式”</strong>：不是。它是扩展模式。</li>
+<li><strong>“装插件只是改配置”</strong>：不是。插件可能执行代码。</li>
+<li><strong>“装了就会自动生效”</strong>：不一定，可能需要重载/重启。</li>
+<li><strong>“Preset 可以当沙箱”</strong>：不可以。</li>
+<li><strong>“让 Agent 直接改 profile 文件”</strong>：不要，用 Plugin Manager。</li>
+<li><strong>“一次做很大”</strong>：先最小版本，再迭代。</li>
+</ul>
+<hr />
+<h2 id="_69">马上试试</h2>
+<ol>
+<li>新建一个创造模式任务；</li>
+<li>不要安装任何东西；</li>
+<li>让它列出当前可用的运行时检查能力；</li>
+<li>问它：“如果我要加一个只读工具，应该挂在哪一层？为什么？”</li>
+<li>读它的回答，不执行。</li>
+</ol>
+<hr />
+<h2 id="_70">小结</h2>
+<ul>
+<li>创造模式是 <code>cordis</code> Preset，不是模型/运行时。</li>
+<li>它多出运行时检查、插件管理、开发指引。</li>
+<li>适合扩展 DSH，不适合日常任务。</li>
+<li>插件代码在 Host 执行，必须有信任和回滚方案。</li>
+<li>先最小版本，再验证、再迭代。</li>
+</ul>
+<hr />
+<h1 id="10">第 10 章　排错、安全与继续学习</h1>
+<h2 id="_71">本章你会学会</h2>
+<ul>
+<li>用一张表定位常见问题；</li>
+<li>知道去哪里看诊断信息；</li>
+<li>建立自己的安全清单；</li>
+<li>控制成本；</li>
+<li>规划继续练习的路线。</li>
+</ul>
+<hr />
+<h2 id="101">10.1 常见问题对照表</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>先检查什么</th>
+<th>常见原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>打不开/连不上模型</td>
+<td>设置 → 模型</td>
+<td>Key 错、Base URL 错、没余额</td>
+</tr>
+<tr>
+<td><code>401 Invalid API key</code></td>
+<td>API Key</td>
+<td>复制不完整、过期、服务不匹配</td>
+</tr>
+<tr>
+<td>Agent 不回复/一直转</td>
+<td>模型、网络、会话</td>
+<td>服务超时、上下文过大</td>
+</tr>
+<tr>
+<td>Agent 说没有工具</td>
+<td>当前模式、插件状态</td>
+<td>选了极简模式、插件没启用</td>
+</tr>
+<tr>
+<td>插件装了但没工具</td>
+<td>Plugin Manager、重载</td>
+<td>没启用、需要重启、依赖缺失</td>
+</tr>
+<tr>
+<td>Skill 不加载</td>
+<td>Skill 目录、版本</td>
+<td>路径不对、描述不匹配、版本冲突</td>
+</tr>
+<tr>
+<td>改文件被拒绝</td>
+<td>权限/工作区</td>
+<td>不在工作区、沙箱限制</td>
+</tr>
+<tr>
+<td>找不到文件</td>
+<td>工作区、相对路径</td>
+<td>当前目录不对、文件不存在</td>
+</tr>
+<tr>
+<td>越聊越慢/越贵</td>
+<td>上下文</td>
+<td>历史太长、读了太多文件</td>
+</tr>
+<tr>
+<td>Agent 重复/忘事</td>
+<td>上下文</td>
+<td>窗口满、压缩、旧信息干扰</td>
+</tr>
+<tr>
+<td>工具名冲突</td>
+<td>插件列表</td>
+<td>两个插件注册了同名工具</td>
+</tr>
+<tr>
+<td>插件报版本错误</td>
+<td>版本</td>
+<td>DSH/CLI/插件版本不匹配</td>
+</tr>
+<tr>
+<td>运行命令卡住</td>
+<td>命令本身</td>
+<td>交互式命令、无超时、网络阻塞</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="102">10.2 怎么读诊断信息</h2>
+<h3 id="_72">先看界面</h3>
+<ul>
+<li>红色错误；</li>
+<li>工具卡片的失败原因；</li>
+<li>Plugin Manager 的 warnings；</li>
+<li>模型设置的状态。</li>
+</ul>
+<h3 id="_73">再看上下文</h3>
+<ul>
+<li>当前工作区对不对；</li>
+<li>当前模式对不对；</li>
+<li>当前插件是否启用；</li>
+<li>当前 Session 是否太长。</li>
+</ul>
+<h3 id="_74">最后看日志</h3>
+<p>Desktop/CLI 通常会有日志或诊断入口。CLI 用户可以：</p>
+<pre><code class="language-bash">dsh --profile web --dump-config
+</code></pre>
+<p>查看实际组合的配置。不要在不理解的情况下直接改 profile 文件。</p>
+<h3 id="_75">一个通用排查顺序</h3>
+<pre><code class="language-text">1. 最小复现
+2. 换新 Session
+3. 换标准模式
+4. 停用最近装的插件
+5. 检查模型/网络
+6. 检查工作区/权限
+7. 看日志/诊断
+8. 再考虑重装/回滚
+</code></pre>
+<hr />
+<h2 id="103">10.3 安全清单</h2>
+<p>每次开始重要任务前，问自己：</p>
+<pre><code class="language-text">[ ] 工作区是不是只包含需要的文件？
+[ ] 重要文件有没有备份/git 提交？
+[ ] 是否只需要只读？能不能先只读？
+[ ] 是否要执行删除/覆盖/推送/上传？
+[ ] 是否要把密钥/密码/隐私数据给它看？
+[ ] 插件来源是否可信？
+[ ] 是否真的需要 full access？
+[ ] 出问题怎么回滚？
+</code></pre>
+<h3 id="_76">三条底线</h3>
+<ol>
+<li><strong>密钥不进对话</strong>；</li>
+<li><strong>破坏性操作先备份、先确认</strong>；</li>
+<li><strong>不信任的插件不给高权限</strong>。</li>
+</ol>
+<hr />
+<h2 id="104">10.4 成本与用量</h2>
+<p>Agent 的成本主要来自 token：</p>
+<ul>
+<li>上下文越长，越贵；</li>
+<li>读大文件、长网页，会显著增加；</li>
+<li>子代理/工作流会额外调用模型；</li>
+<li>频繁重试也会增加。</li>
+</ul>
+<h3 id="_77">省钱习惯</h3>
+<ul>
+<li>只读需要的文件；</li>
+<li>长文档分段；</li>
+<li>任务完成就总结成文件，换新 Session；</li>
+<li>不用子代理时不要开；</li>
+<li>选合适的模型，不要所有任务都用最贵的。</li>
+</ul>
+<hr />
+<h2 id="105">10.5 继续学习路线</h2>
+<h3 id="1_2">第 1 周：日常使用</h3>
+<ul>
+<li>用标准模式完成 3 个真实任务；</li>
+<li>练习“目标 + 输入 + 约束 + 验收”；</li>
+<li>学会看工具卡片和审批。</li>
+</ul>
+<h3 id="2_3">第 2 周：工作区与上下文</h3>
+<ul>
+<li>给项目写 <code>AGENTS.md</code>；</li>
+<li>用 <code>PROJECT.md</code> / <code>PROGRESS.md</code> 管理长任务；</li>
+<li>练习新 Session 恢复。</li>
+</ul>
+<h3 id="3_3">第 3 周：工具与技能</h3>
+<ul>
+<li>用 todo 管理多步任务；</li>
+<li>试一个子代理；</li>
+<li>读一个 Skill 的 <code>SKILL.md</code>；</li>
+<li>用 <code>present</code> 交付文件。</li>
+</ul>
+<h3 id="4_2">第 4 周：扩展</h3>
+<ul>
+<li>读第 8 章，理解 Plugin/Bundle/Profile；</li>
+<li>在创造模式里做一个小工具；</li>
+<li>学会安装、验证、卸载；</li>
+<li>写一份自己的插件说明。</li>
+</ul>
+<hr />
+<h2 id="106">10.6 一页纸速查</h2>
+<pre><code class="language-text">Agent = Model + Harness
+
+日常任务 → 标准模式
+扩展 DSH → 创造模式
+批量工具 → PTC
+小任务   → 极简模式
+
+工作区 = 文件夹 + 权限边界
+Session = 一次对话
+Context = 工作内存，会满
+Skill   = 知识/流程
+Tool    = 动作
+Plugin  = 运行时能力
+Bundle  = 安装包
+Profile = 安装环境
+Preset  = 单 Agent 的能力组合
+
+好任务 = 目标 + 输入 + 约束 + 验收
+先只读，再写入
+先计划，再执行
+破坏性操作先备份
+密钥不进对话
+</code></pre>
+<hr />
+<h2 id="_78">小结</h2>
+<ul>
+<li>排错从“最小复现 + 新 Session + 标准模式 + 停用新插件”开始。</li>
+<li>安全三条底线：密钥、备份、权限。</li>
+<li>成本主要来自上下文和模型调用。</li>
+<li>学习路线：日常 → 工作区 → 工具/技能 → 插件。</li>
+<li>先会用，再扩展；不要一上来做很大的插件。</li>
+</ul>
+<hr />
+<h1 id="_79">附录</h1>
+<h2 id="a">A. 术语表</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>一句话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Agent</strong></td>
+<td>正在工作的助手：模型 + Harness + 当前上下文</td>
+</tr>
+<tr>
+<td><strong>Harness</strong></td>
+<td>Agent 的工作台：工具、会话、权限、插件</td>
+</tr>
+<tr>
+<td><strong>Model</strong></td>
+<td>大脑：负责理解、推理、生成</td>
+</tr>
+<tr>
+<td><strong>Session</strong></td>
+<td>一次连续对话</td>
+</tr>
+<tr>
+<td><strong>Workspace</strong></td>
+<td>Agent 工作的文件夹</td>
+</tr>
+<tr>
+<td><strong>Context Window</strong></td>
+<td>模型一次能处理的内容上限</td>
+</tr>
+<tr>
+<td><strong>Compaction</strong></td>
+<td>上下文快满时的压缩</td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td>
+<td>Agent 能执行的动作</td>
+</tr>
+<tr>
+<td><strong>Skill</strong></td>
+<td>教 Agent 怎么做的知识/流程</td>
+</tr>
+<tr>
+<td><strong>Preset</strong></td>
+<td>单个 Agent 的能力组合</td>
+</tr>
+<tr>
+<td><strong>Plugin</strong></td>
+<td>运行时能力扩展</td>
+</tr>
+<tr>
+<td><strong>Bundle</strong></td>
+<td>可安装的插件/配置补丁包</td>
+</tr>
+<tr>
+<td><strong>Profile</strong></td>
+<td>一套安装环境</td>
+</tr>
+<tr>
+<td><strong>Sandbox</strong></td>
+<td>限制文件/命令访问范围的机制</td>
+</tr>
+<tr>
+<td><strong>Approval</strong></td>
+<td>敏感操作前的确认</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>连接外部工具/数据的协议</td>
+</tr>
+<tr>
+<td><strong>PTC</strong></td>
+<td>用代码组织工具调用的模式</td>
+</tr>
+<tr>
+<td><strong>Creator</strong></td>
+<td>扩展 DSH 的 Preset（内部 id <code>cordis</code>）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="b-10">B. 10 个提示词模板</h2>
+<h3 id="1_3">1. 只读盘点</h3>
+<pre><code class="language-text">请只读当前工作区，列出文件并按类型分组。
+不要修改任何文件，也不要运行会改变文件的命令。
+最后说明你用了哪些工具。
+</code></pre>
+<h3 id="2_4">2. 先计划</h3>
+<pre><code class="language-text">先不要执行。请给我一个 3–5 步计划：
+每步做什么、读/写哪些文件、怎么验证。
+我确认后你再开始。
+</code></pre>
+<h3 id="3_4">3. 生成文档</h3>
+<pre><code class="language-text">请阅读 [文件列表]，生成 [输出文件]。
+要求：[结构/长度/语言/链接]。
+不要修改原文件。
+完成后检查输出文件是否存在，并列出你读过的文件。
+</code></pre>
+<h3 id="4_3">4. 代码审查</h3>
+<pre><code class="language-text">请审查这次改动，优先找 bug、边界情况、测试缺口。
+按严重程度排序，指出文件和行号。
+先不要改代码，只给报告。
+</code></pre>
+<h3 id="5_2">5. 调试</h3>
+<pre><code class="language-text">请先复现问题，再提出最多 3 个假设。
+每次只验证一个假设，并给出证据。
+不要在没有验证的情况下大改代码。
+</code></pre>
+<h3 id="6_1">6. 资料调研</h3>
+<pre><code class="language-text">请调研 [主题]，优先使用一手来源。
+输出：结论、证据链接、反方观点、仍不确定的地方。
+不要编造来源。
+</code></pre>
+<h3 id="7">7. 数据整理</h3>
+<pre><code class="language-text">请读取 [输入]，按 [字段] 整理成 [输出格式]。
+不要修改原始数据。
+先给我字段映射和清洗规则，确认后再执行。
+</code></pre>
+<h3 id="8">8. 写作</h3>
+<pre><code class="language-text">请按 [读者/语气/长度/结构] 写一篇 [主题]。
+不要使用空泛套话；每个观点要有依据。
+先给提纲，确认后再写全文。
+</code></pre>
+<h3 id="9_1">9. 文件整理</h3>
+<pre><code class="language-text">请先只读列出 [目录] 的文件，给出整理方案。
+不要删除/移动任何文件，等我确认。
+方案要说明每个文件去哪、为什么。
+</code></pre>
+<h3 id="10_1">10. 插件需求</h3>
+<pre><code class="language-text">我想给 DSH 加一个能力：[描述]。
+先不要写代码。请检查：
+1. 应该挂在哪一层；
+2. 需要哪些 API/模板；
+3. 最小版本是什么；
+4. 怎么验证、怎么卸载。
+</code></pre>
+<hr />
+<h2 id="c">C. 开始任务前的检查清单</h2>
+<pre><code class="language-text">[ ] 目标一句话说清楚了吗？
+[ ] 输入文件/目录明确了吗？
+[ ] 输出位置和格式明确了吗？
+[ ] 有哪些禁止事项？
+[ ] 怎么验收？
+[ ] 需要备份/提交吗？
+[ ] 是否需要只读先行？
+[ ] 是否涉及密钥/隐私？
+[ ] 是否需要安装插件/开高权限？
+</code></pre>
+<hr />
+<h2 id="d">D. 任务完成检查清单</h2>
+<pre><code class="language-text">[ ] 输出文件真的存在吗？
+[ ] 内容符合要求吗？
+[ ] 原文件有没有被改？
+[ ] 有没有遗漏输入？
+[ ] 有没有编造事实/来源？
+[ ] 有没有测试/验证证据？
+[ ] 需要交付的文件 present 了吗？
+[ ] 临时文件清理了吗？
+[ ] 需要回滚时知道怎么做吗？
+</code></pre>
+<hr />
+<h2 id="_80">结语</h2>
+<p>DSH 不难用，难的是<strong>在它变强之前，先学会控制它</strong>。</p>
+<p>记住三句话：</p>
+<ol>
+<li><strong>先只读，再写入。</strong></li>
+<li><strong>先小步，再扩大。</strong></li>
+<li><strong>密钥不进对话，破坏性操作先备份。</strong></li>
+</ol>
+<p>当你熟悉了这些，再去碰 Preset、Plugin、Bundle、Creator。那时你看到的不再是一堆名词，而是一套可以按需组合的工作台。</p>
+  </article>
+</main>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/">GitHub Pages</a></p>
+</footer>
+</body>
+</html>
