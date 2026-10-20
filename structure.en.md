@@ -1,16 +1,11 @@
-## Four parts, not four difficulty levels
+## Four parts
 
-This book is organized by **object of study**, not by easy / medium / hard:
+The book is organized by object of study:
 
 - **Part I — Getting Started**: using DSH;
 - **Part II — Plugin Design**: designing plugins on DSH;
 - **Part III — DSH Internals**: designing DSH itself;
 - **Part IV — Decisions**: why we designed things this way.
-
-For now these are **parts**, not volumes.
-
-> **A part is a reading structure. A volume is a publishing promise.**  
-> Parts can grow and contain placeholders. Volumes must stand on their own.
 
 ---
 
@@ -129,23 +124,19 @@ Each entry aims to read like a decision record:
 | IV.2 | Why the Tool surface is not a 1:1 CLI mapping | Planned |
 | IV.3 | Why deletion requires confirmation | Planned |
 | IV.4 | Why the book is CC BY-NC-ND and the code is MIT | Published (notice) |
-| IV.5 | Why we started with parts, not volumes | Published (this page) |
-| IV.6 | Why official and independent plugins can conflict | Planned |
-| IV.7 | How to tell whether a plugin is actually better | Planned |
-| IV.8 | The human role: judgment, acceptance, responsibility | Planned |
+| IV.5 | Why official and independent plugins can conflict | Planned |
+| IV.6 | How to tell whether a plugin is actually better | Planned |
+| IV.7 | The human role: judgment, acceptance, responsibility | Planned |
 
 > You can read this part out of order, or return to it when a chapter asks “why was this designed this way?”
 
 ---
 
-## Writing and update rules
+## Updates
 
-1. **Finish one chapter properly at a time.** Do not write empty chapters to fill a table of contents.
-2. Placeholders live on this roadmap, not as blank chapter pages.
-3. Mark every chapter: `Planned` / `To verify` / `Draft` / `Published`.
-4. Record the verification environment; revisit conclusions when DSH changes.
-5. Make a part stand on its own before discussing whether it should become a volume.
-6. Keep published chapter URLs stable; new material gets new paths, not broken old links.
+1. Unwritten material appears only on this roadmap, not as blank chapter pages.
+2. Mark every chapter's status; revisit conclusions when DSH changes.
+3. Keep published chapter URLs stable; new material gets new paths.
 
 ---
 
