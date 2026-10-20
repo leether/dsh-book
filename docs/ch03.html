@@ -64,8 +64,8 @@
     <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 3 章</p>
     <section class="chapter">
 <h1 id="3">第 3 章　第一次任务：把需求说清楚</h1>
-<p class="chapter-meta">约 4 分钟 · 1,789 字 · 11 个小节</p>
-<h2 id="_14">本章你会学会</h2>
+<p class="chapter-meta">约 4 分钟 · 1,857 字 · 12 个小节</p>
+<h2 id="_16">本章你会学会</h2>
 <ul>
 <li>用“目标 + 输入 + 约束 + 验收”描述任务；</li>
 <li>让 Agent 先计划、再执行；</li>
@@ -76,7 +76,7 @@
 <hr />
 <h2 id="31">3.1 好任务的四个要素</h2>
 <p>很多人觉得 Agent“不好用”，其实是因为任务说得太模糊。</p>
-<p>一个好任务至少包含四件事：</p>
+<p>一个好任务至少包含四件事：<a href="#ref1">[1]</a></p>
 <table>
 <thead>
 <tr>
@@ -108,7 +108,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_15">反例</h3>
+<h3 id="_17">反例</h3>
 <pre><code class="language-text">帮我整理一下笔记。
 </code></pre>
 <p>问题：</p>
@@ -118,7 +118,7 @@
 <li>能不能改原文件？</li>
 <li>什么算整理好？</li>
 </ul>
-<h3 id="_16">正例</h3>
+<h3 id="_18">正例</h3>
 <pre><code class="language-text">请阅读 notes/ 下的三篇 Markdown 文章，合并成一份 notes/summary.md。
 要求：
 1. 保留每篇的标题和原文链接；
@@ -182,10 +182,10 @@
 <hr />
 <h2 id="34">3.4 迭代：给具体反馈</h2>
 <p>Agent 第一版不完美很正常。有效反馈要具体：</p>
-<h3 id="_17">模糊反馈</h3>
+<h3 id="_19">模糊反馈</h3>
 <pre><code class="language-text">不太好，重写。
 </code></pre>
-<h3 id="_18">具体反馈</h3>
+<h3 id="_20">具体反馈</h3>
 <pre><code class="language-text">第二段太长了，压缩到 3 句以内。
 保留原来的三个小标题，不要合并。
 把原文链接放到每段末尾，不要放在开头。
@@ -224,14 +224,14 @@
 <p>如果 Agent 直接说“文件在 <code>notes/summary.md</code>”，也可以；<code>present</code> 只是让交付更直观。</p>
 <hr />
 <h2 id="37">3.7 一个完整的第一次任务</h2>
-<h3 id="_19">第一步：准备</h3>
+<h3 id="_21">第一步：准备</h3>
 <p>在工作区建：</p>
 <pre><code class="language-text">notes/
   a.md
   b.md
   c.md
 </code></pre>
-<h3 id="_20">第二步：发任务</h3>
+<h3 id="_22">第二步：发任务</h3>
 <pre><code class="language-text">请阅读 notes/ 下的三篇文章，合并成 notes/summary.md。
 要求：
 1. 保留标题和原文链接；
@@ -240,18 +240,18 @@
 4. 先给计划，我确认后再执行；
 5. 完成后检查 summary.md 是否存在，并告诉我你读了哪些文件。
 </code></pre>
-<h3 id="_21">第三步：看计划</h3>
+<h3 id="_23">第三步：看计划</h3>
 <p>确认它没有漏文件、没有要改原文件。</p>
-<h3 id="_22">第四步：批准执行</h3>
+<h3 id="_24">第四步：批准执行</h3>
 <p>观察工具卡片：读了三个文件，写了一个新文件。</p>
-<h3 id="_23">第五步：验收</h3>
+<h3 id="_25">第五步：验收</h3>
 <p>打开 <code>summary.md</code>，检查标题、链接、摘要长度。</p>
-<h3 id="_24">第六步：迭代</h3>
+<h3 id="_26">第六步：迭代</h3>
 <p>如果第二篇太短，直接说：</p>
 <pre><code class="language-text">第二篇摘要加到 4 句，保留原有链接，其他不动。
 </code></pre>
 <hr />
-<h2 id="_25">常见坑</h2>
+<h2 id="_27">常见坑</h2>
 <ul>
 <li><strong>任务太大</strong>：一次只做一件可验收的事。</li>
 <li><strong>没有验收标准</strong>：Agent 不知道什么算好。</li>
@@ -260,7 +260,7 @@
 <li><strong>把“完成”当“正确”</strong>：要检查证据。</li>
 </ul>
 <hr />
-<h2 id="_26">小结</h2>
+<h2 id="_28">小结</h2>
 <ul>
 <li>好任务 = 目标 + 输入 + 约束 + 验收。</li>
 <li>复杂任务先计划，再执行。</li>
@@ -269,13 +269,21 @@
 <li><code>present</code> 是交付声明，不是上传。</li>
 </ul>
 <hr />
-<h2 id="_27">第一部分练习</h2>
+<h2 id="_29">第一部分练习</h2>
 <ol>
 <li>用“目标 + 输入 + 约束 + 验收”重写一个你最近想让 AI 做的任务。</li>
 <li>在一个测试文件夹里，让 Agent 只读列出文件，并说明用了哪些工具。</li>
 <li>让它生成一个 <code>summary.md</code>，然后检查原文件是否被改动。</li>
 <li>用一句具体反馈让它修改摘要，而不是说“重做”。</li>
 </ol>
+<h2 id="_30">参考</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://deepseek-harness.github.io/deepseek-harness/guide/quickstart">DeepSeek Harness 快速开始</a></li>
+<li><a id="ref2"></a><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness GitHub 仓库</a></li>
+</ol>
+<blockquote>
+<p>链接均为公开来源；产品行为可能随版本变化。</p>
+</blockquote>
 
 <nav class="pager" aria-label="章节导航">
   <a class="prev" href="ch02.html"><small>上一章</small><span>第一次启动：桌面、模型、工作区</span></a>

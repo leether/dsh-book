@@ -85,7 +85,7 @@ A model alone is like a brilliant person locked in a room. It can think and talk
 
 The harness opens the room. It gives the model files, a terminal, a browser, tools, memory, and rules. That is when chatting becomes doing.
 
-DeepSeek Harness, or **DSH**, is that harness.
+DeepSeek Harness, or **DSH**, is that harness.[[1]](#ref1)
 
 ---
 
@@ -200,7 +200,7 @@ Without a harness, none of those actions happen.
 | **Web** | Browser access, remote servers | A web page with a similar interface |
 | **Headless** | Automation, scripts, batch jobs | A one-shot command-line run, no GUI |
 
-All three share the same core ideas: Agent, Session, Workspace, Tool, Skill, Preset, and Plugin.
+All three share the same core ideas: Agent, Session, Workspace, Tool, Skill, Preset, and Plugin.[[2]](#ref2)
 
 This book is Desktop-first. Web and Headless differences appear in small sidebars.
 
@@ -245,6 +245,13 @@ If you cannot answer yet, Chapter 3 will help.
 - Session is a conversation; Workspace is a folder; Tool is an action; Skill is knowledge.
 - Desktop is the easiest entry point; Web and Headless are different surfaces, not different products.
 
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness official site](https://www.deepseek.com/en/harness/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Chapter 2 — First Launch: Desktop, Model, Workspace
@@ -282,7 +289,7 @@ If you do not have a model service yet, read the next section.
 
 ## 2.2 Connect a Model
 
-DSH needs a model to think. There are usually two options:
+DSH needs a model to think. There are usually two options:[[1]](#ref1)[[2]](#ref2)
 
 1. **DeepSeek official account/API**: sign in or enter an API key;
 2. **An OpenAI-compatible provider**: enter a Base URL, API key, and model name.
@@ -451,6 +458,13 @@ This book stays Desktop-first.
 - Start read-only; watch tool cards.
 - Standard is the daily default; Creator is a different job.
 
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness quickstart](https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart)
+2. <a id="ref2"></a>[Configure models](https://deepseek-harness.github.io/deepseek-harness/en/guide/providers)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Chapter 3 — Your First Task: Say What You Mean
@@ -469,7 +483,7 @@ This book stays Desktop-first.
 
 Most "the Agent is bad at this" experiences come from vague requests.
 
-A good task contains:
+A good task contains:[[1]](#ref1)
 
 | Element | Question it answers | Example |
 | --- | --- | --- |
@@ -673,6 +687,13 @@ Expand the second summary to four sentences, keep its link, and leave everything
 2. In a test folder, ask the Agent to list files read-only and report the tools it used.
 3. Ask it to produce `summary.md`, then check whether the originals changed.
 4. Give one specific revision instruction instead of "redo it".
+
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness quickstart](https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.
 # Chapter 4 — Workspaces, Files, and Permissions
 
 ## What You Will Learn
@@ -687,7 +708,7 @@ Expand the second summary to four sentences, keep its link, and leave everything
 
 ## 4.1 What a Workspace Really Is
 
-A workspace is a folder.
+A workspace is a folder.[[1]](#ref1)
 
 The Agent's current directory is usually that folder. When you say "read `notes/a.md`", it looks for `notes/a.md` inside the workspace.
 
@@ -794,7 +815,7 @@ git add -A
 git commit -m "before agent changes"
 ```
 
-If the Agent breaks something:
+If the Agent breaks something:[[2]](#ref2)
 
 ```bash
 git diff
@@ -895,6 +916,13 @@ Use it for:
 - Back up and confirm before destructive operations.
 - `AGENTS.md` sets rules but does not enforce them by itself.
 
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+2. <a id="ref2"></a>[Git documentation](https://git-scm.com/docs)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Chapter 5 — Sessions, Context, and Memory
@@ -927,7 +955,7 @@ Think of a Session as one meeting. A new meeting does not remember every sentenc
 
 ## 5.2 Context Window: The Agent's Working Memory
 
-A model can process only a limited amount of text at once. That limit is the **Context Window**.
+A model can process only a limited amount of text at once. That limit is the **Context Window**.[[1]](#ref1)
 
 Context includes:
 
@@ -960,7 +988,7 @@ When the context fills up:
 
 This is the most common beginner misconception.
 
-DSH keeps a session log, but that is not the same as cross-session long-term memory.
+DSH keeps a session log, but that is not the same as cross-session long-term memory.[[2]](#ref2)
 
 - Within a Session: it remembers the chat;
 - A new Session: it usually does not remember every previous message;
@@ -1092,6 +1120,13 @@ For beginners, start with files and `AGENTS.md`. Add a memory plugin only when y
 - Write important information to files; summarize long tasks before starting a new Session.
 - Memory plugins are a supplement, not a replacement.
 
+## References
+
+1. <a id="ref1"></a>[DeepSeek API token usage](https://api-docs.deepseek.com/quick_start/token_usage)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Chapter 6 — Tools and Skills: The Agent's Hands and Mind
@@ -1211,7 +1246,7 @@ Beginners can skip workflows until subagents feel comfortable.
 
 ## 6.5 What a Skill Is
 
-A Skill is an instruction manual, usually a folder with `SKILL.md`.
+A Skill is an instruction manual, usually a folder with `SKILL.md`.[[1]](#ref1)
 
 It tells the Agent:
 
@@ -1280,7 +1315,7 @@ Which Skills are relevant to this task? List them first; do not execute yet.
 
 ## 6.7 `present`: Delivering Files
 
-When the output is a file, the Agent may call `present`.
+When the output is a file, the Agent may call `present`.[[2]](#ref2)
 
 It means:
 
@@ -1333,6 +1368,13 @@ When done, use present for the final file. At most two files; do not present eve
 3. Use todos to complete a three-step task, updating after each step.
 4. Ask which Skills are relevant, without executing them.
 5. Deliver one file with `present` and observe the card.
+
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness plugin development](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.
 # Chapter 7 — Modes and Presets: Same Model, Different Ways to Work
 
 ## What You Will Learn
@@ -1464,7 +1506,7 @@ Its capability boundary is narrow. Switch back to Standard for complex work.
 
 ## 7.7 What a Preset Actually Is
 
-In DSH, a Preset is a **list of child plugins for one Agent**, plus metadata such as name, description, and order.
+In DSH, a Preset is a **list of child plugins for one Agent**, plus metadata such as name, description, and order.[[1]](#ref1)
 
 It looks roughly like:
 
@@ -1558,7 +1600,14 @@ Avoid:
 - Standard is the daily default; Creator is for extending DSH; PTC is for programmatic tool use; Minimal is for small tasks.
 - Running Agents keep their starting Preset revision.
 - Customize Presets through Bundles and Plugin Manager, not legacy directories.
-- A Preset is not a security boundary.
+- A Preset is not a security boundary.[[2]](#ref2)
+
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness plugin development](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.
 
 ---
 
@@ -1586,7 +1635,7 @@ Avoid:
 
 ### Plugin
 
-A Plugin is the runtime unit. It can:
+A Plugin is the runtime unit. It can:[[1]](#ref1)
 
 - Register tools;
 - Register services;
@@ -1597,7 +1646,7 @@ A Plugin is the runtime unit. It can:
 
 ### Bundle
 
-A Bundle is an npm package that usually contains:
+A Bundle is an npm package that usually contains:[[2]](#ref2)
 
 - A `cordis.patch.yml`, or a list of patch files;
 - Plugin code;
@@ -1609,7 +1658,7 @@ One Bundle can mount many Plugins; one Plugin can be referenced by different Bun
 
 ### Profile
 
-A Profile is an installation environment:
+A Profile is an installation environment:[[3]](#ref3)
 
 - `desktop`: the desktop app;
 - `web`: the browser;
@@ -1798,6 +1847,14 @@ Back up the profile, or at least record the state before installation.
 3. Read one plugin's permissions and dependencies; decide whether you would install it.
 4. Explain why a Preset is not a security sandbox.
 5. Write a rollback checklist for a broken plugin.
+
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness plugin development](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/)
+2. <a id="ref2"></a>[npm publish documentation](https://docs.npmjs.com/cli/v11/commands/npm-publish)
+3. <a id="ref3"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.
 # Chapter 9 — Creator Mode: From User to Extender
 
 ## What You Will Learn
@@ -1813,7 +1870,7 @@ Back up the profile, or at least record the state before installation.
 
 ## 9.1 What Creator Mode Is
 
-Creator mode is an **Agent Preset** in DSH. Its internal id is `cordis`.
+Creator mode is an **Agent Preset** in DSH. Its internal id is `cordis`.[[3]](#ref3)
 
 It is not:
 
@@ -2010,7 +2067,7 @@ Give me:
 
 The previous sections described the method. This section walks through a real project: the **GetNote Toolbox**.
 
-The direct motivation was simple: **when we started, the official `@getnote/dsh-plugin` did not support DSH Desktop**. Desktop is the entry point most people use every day, so we needed a version that actually worked in a local Desktop profile.
+The direct motivation was simple: **when we started, the official `@getnote/dsh-plugin` did not support DSH Desktop**.[[2]](#ref2) Desktop is the entry point most people use every day, so we needed a version that actually worked in a local Desktop profile.
 
 This was not an attempt to replace the official plugin. It was meant to fill the Desktop gap. That is also why the project focuses on the Desktop local bundle, locale/icon display, CLI discovery, and visibility in Plugin Manager.
 
@@ -2018,7 +2075,7 @@ The goal was not to copy another plugin's tool list. It was to turn the local `g
 
 <https://github.com/leether/getnote-toolbox>
 
-The source is public, and the package is published on npm as `@leether/getnote-toolbox`.
+The source is public, and the package is published on npm as `@leether/getnote-toolbox`.[[1]](#ref1)
 
 - GitHub: <https://github.com/leether/getnote-toolbox>
 - npm: <https://www.npmjs.com/package/@leether/getnote-toolbox>
@@ -2121,6 +2178,14 @@ What is reusable here is not the number 15. It is the four-step loop: **audit ca
 - Start minimal, verify, then iterate.
 - Real-world case: audit capabilities and contracts, review privacy, then publish.
 
+## References
+
+1. <a id="ref1"></a>[GetNote Toolbox repository](https://github.com/leether/getnote-toolbox)
+2. <a id="ref2"></a>[Official GetNote DSH plugin](https://github.com/iswalle/getnote-dsh-plugin)
+3. <a id="ref3"></a>[DeepSeek Harness plugin development](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Chapter 10 — Troubleshooting, Safety, and Next Steps
@@ -2221,7 +2286,7 @@ Before an important task:
 
 ## 10.4 Cost and Usage
 
-Agent cost is mostly tokens:
+Agent cost is mostly tokens:[[2]](#ref2)
 
 - Longer context costs more;
 - Large files and long pages cost more;
@@ -2305,9 +2370,20 @@ Secrets never go into chat
 - Learning path: daily use → workspace → tools/Skills → plugins.
 - Use first; extend later. Do not start with a huge plugin.
 
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness quickstart](https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart)
+2. <a id="ref2"></a>[DeepSeek API token usage](https://api-docs.deepseek.com/quick_start/token_usage)
+3. <a id="ref3"></a>[Git documentation](https://git-scm.com/docs)
+4. <a id="ref4"></a>[npm publish documentation](https://docs.npmjs.com/cli/v11/commands/npm-publish)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Appendix
+
+Tool names and product behavior in this appendix follow the official documentation and the case-study repository.[[1]](#ref1)[[2]](#ref2)[[3]](#ref3)
 
 ## A. Glossary
 
@@ -2465,3 +2541,12 @@ Remember three sentences:
 3. **Secrets never go into chat; back up before destructive actions.**
 
 Once those are habits, Presets, Plugins, Bundles, and Creator stop being a pile of nouns. They become a workbench you can compose on demand.
+
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness official site](https://www.deepseek.com/en/harness/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+3. <a id="ref3"></a>[GetNote Toolbox repository](https://github.com/leether/getnote-toolbox)
+4. <a id="ref4"></a>[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+> All links are public sources; product behavior may change between versions.

@@ -132,7 +132,7 @@ PTC 是 **Programmatic Tool Calling** 的缩写，可以理解为“用写代码
 
 ## 7.7 Preset 到底是什么
 
-在 DSH 里，Preset 是一份 **Agent 的子插件列表**，加上名称、描述、排序等元数据。
+在 DSH 里，Preset 是一份 **Agent 的子插件列表**，加上名称、描述、排序等元数据。[[1]](#ref1)
 
 它通常长这样：
 
@@ -203,7 +203,7 @@ Preset 可以隔离工具和服务，但它**不是安全沙箱**。
 
 - **“创造模式更聪明”**：不是。它只是多了扩展 DSH 的工具和知识。
 - **“换 Preset 就换了模型”**：不是。模型由模型设置决定。
-- **“Preset 是安全隔离”**：不是。安全靠权限/沙箱/审批。
+- **“Preset 是安全隔离”**：不是。安全靠权限/沙箱/审批。[[2]](#ref2)
 - **“Preset 越多越好”**：不是。多一个模式就多一份维护成本。
 - **“自定义 Preset 会自动跟进内置更新”**：不会，覆盖是整份替换。
 
@@ -226,6 +226,13 @@ Preset 可以隔离工具和服务，但它**不是安全沙箱**。
 - 运行中的 Agent 保留启动时的 Preset 版本。
 - 自定义 Preset 要走 Bundle + Plugin Manager，不要手改旧目录。
 - Preset 不等于安全隔离。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 插件开发](https://deepseek-harness.github.io/deepseek-harness/develop/basic/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。
 
 ---
 
@@ -255,7 +262,7 @@ Preset 可以隔离工具和服务，但它**不是安全沙箱**。
 
 ### Plugin
 
-Plugin 是运行时单元。它可以：
+Plugin 是运行时单元。它可以：[[1]](#ref1)
 
 - 注册工具；
 - 注册服务；
@@ -268,7 +275,7 @@ Plugin 是运行时单元。它可以：
 
 ### Bundle
 
-Bundle 是一个 npm 包，里面通常有：
+Bundle 是一个 npm 包，里面通常有：[[2]](#ref2)
 
 - 一个 `cordis.patch.yml`（或一组 patch 文件）；
 - 要挂载的插件代码；
@@ -284,7 +291,7 @@ Bundle 是一个 npm 包，里面通常有：
 
 ### Profile
 
-Profile 是安装环境，通常对应：
+Profile 是安装环境，通常对应：[[3]](#ref3)
 
 - `desktop`：桌面应用；
 - `web`：浏览器；
@@ -475,3 +482,11 @@ Preset（standard / creator）
 3. 找一个插件，阅读它的权限/依赖，判断你是否愿意安装。
 4. 解释为什么“Preset 不是安全沙箱”。
 5. 写下一个“插件装坏了怎么回滚”的步骤清单。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 插件开发](https://deepseek-harness.github.io/deepseek-harness/develop/basic/)
+2. <a id="ref2"></a>[npm publish 文档](https://docs.npmjs.com/cli/v11/commands/npm-publish)
+3. <a id="ref3"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。

@@ -64,8 +64,8 @@
     <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 9 章</p>
     <section class="chapter">
 <h1 id="9">第 9 章　创造模式：从使用者到扩展者</h1>
-<p class="chapter-meta">约 8 分钟 · 3,890 字 · 11 个小节</p>
-<h2 id="_68">本章你会学会</h2>
+<p class="chapter-meta">约 8 分钟 · 3,973 字 · 12 个小节</p>
+<h2 id="_76">本章你会学会</h2>
 <ul>
 <li>创造模式到底是什么，不是什么；</li>
 <li>它比标准模式多了哪些能力；</li>
@@ -76,7 +76,7 @@
 </ul>
 <hr />
 <h2 id="91">9.1 创造模式是什么</h2>
-<p>创造模式是 DSH 的一个 <strong>Agent Preset</strong>，内部 id 是 <code>cordis</code>。</p>
+<p>创造模式是 DSH 的一个 <strong>Agent Preset</strong>，内部 id 是 <code>cordis</code>。<a href="#ref3">[3]</a></p>
 <p>它不是：</p>
 <ul>
 <li>另一个模型；</li>
@@ -234,17 +234,17 @@
 <hr />
 <h2 id="97-getnote-cli-dsh">9.7 案例：把 GetNote CLI 做成一个 DSH 插件</h2>
 <p>前面几节讲的是方法。这一节用一个真实项目走一遍：<strong>GetNote（得到大脑）工具箱</strong>。</p>
-<p>做这个插件的直接动机是：<strong>在我们开始的时候，官方 <code>@getnote/dsh-plugin</code> 还不支持 DSH Desktop</strong>。Desktop 是大多数人日常使用的入口，所以我们需要一个能在本机 Desktop profile 里真正跑起来的版本。</p>
+<p>做这个插件的直接动机是：<strong>在我们开始的时候，官方 <code>@getnote/dsh-plugin</code> 还不支持 DSH Desktop</strong><a href="#ref2">[2]</a>。Desktop 是大多数人日常使用的入口，所以我们需要一个能在本机 Desktop profile 里真正跑起来的版本。</p>
 <p>这不是要替代官方插件，而是补上 Desktop 这个入口。也正因为如此，项目优先处理 Desktop 的本地 bundle、locale/icon 展示、CLI 发现和 Plugin Manager 可见性。</p>
 <p>它的目标不是“照着某个插件抄几个工具”，而是把本机 <code>getnote</code> CLI 变成一组 Agent 能稳定使用的 Host 工具。代码已经公开：</p>
 <p><a href="https://github.com/leether/getnote-toolbox">https://github.com/leether/getnote-toolbox</a></p>
-<p>源码已经公开，并已发布到 npm：<code>@leether/getnote-toolbox</code>。</p>
+<p>源码已经公开，并已发布到 npm：<code>@leether/getnote-toolbox</code>。<a href="#ref1">[1]</a></p>
 <ul>
 <li>GitHub：<a href="https://github.com/leether/getnote-toolbox">https://github.com/leether/getnote-toolbox</a></li>
 <li>npm：<a href="https://www.npmjs.com/package/@leether/getnote-toolbox">https://www.npmjs.com/package/@leether/getnote-toolbox</a></li>
 </ul>
 <p>安装时可以通过 DSH Plugin Manager 使用 npm bundle，也可以在开发时从源码本地 link。</p>
-<h3 id="_69">第一步：先审计能力，不要先写工具</h3>
+<h3 id="_77">第一步：先审计能力，不要先写工具</h3>
 <p>先列 CLI 的 <code>--help</code>、输入输出、副作用、认证方式和版本差异，再决定哪些能力值得做成 Tool：</p>
 <ul>
 <li>高频、需要结构化参数、需要安全护栏的，做成 Tool；</li>
@@ -253,7 +253,7 @@
 <li>不做通用 <code>run_command</code> 或任意 HTTP 透传。</li>
 </ul>
 <p>这个项目最后有 15 个工具，覆盖搜索、保存、读取、更新、删除、标签、知识库和配额。<strong>15 不是目标</strong>；每个工具都要能回答“它替模型承担了哪项契约、护栏或归一化工作”。</p>
-<h3 id="_70">第二步：把“能跑”变成契约</h3>
+<h3 id="_78">第二步：把“能跑”变成契约</h3>
 <p>真正花时间的不是 <code>spawn</code> 一行命令，而是这些细节：</p>
 <ul>
 <li>19 位笔记 ID 一律按字符串处理，避免 JSON number 丢精度；</li>
@@ -273,7 +273,7 @@
 <li>写测试只使用合成 ID；</li>
 <li>涉及写操作时，先建测试笔记，结束后清理。</li>
 </ul>
-<h3 id="_71">第四步：先做隐私和公开审查，再公开</h3>
+<h3 id="_79">第四步：先做隐私和公开审查，再公开</h3>
 <p>这是这个案例最重要的部分。代码能跑，不等于可以公开。</p>
 <p>公开前我们逐项处理了：</p>
 <ul>
@@ -289,7 +289,7 @@
 <blockquote>
 <p><strong>先审查，再公开；不是公开后再删。</strong></p>
 </blockquote>
-<h3 id="_72">结果与边界</h3>
+<h3 id="_80">结果与边界</h3>
 <p>这个插件现在是公开源码项目，15 个工具、28 个测试，代码使用 MIT。它还有几个明确边界：</p>
 <ul>
 <li>与官方 <code>@getnote/dsh-plugin</code> 使用相同的 <code>getnote_*</code> 工具名，不能同时安装；</li>
@@ -309,7 +309,7 @@
 <li><strong>“一次做很大”</strong>：先最小版本，再迭代。</li>
 </ul>
 <hr />
-<h2 id="_73">马上试试</h2>
+<h2 id="_81">马上试试</h2>
 <ol>
 <li>新建一个创造模式任务；</li>
 <li>不要安装任何东西；</li>
@@ -318,7 +318,7 @@
 <li>读它的回答，不执行。</li>
 </ol>
 <hr />
-<h2 id="_74">小结</h2>
+<h2 id="_82">小结</h2>
 <ul>
 <li>创造模式是 <code>cordis</code> Preset，不是模型/运行时。</li>
 <li>它多出运行时检查、插件管理、开发指引。</li>
@@ -327,6 +327,15 @@
 <li>先最小版本，再验证、再迭代。</li>
 <li>真实案例：先做能力审计与契约，再做隐私审查，最后公开。</li>
 </ul>
+<h2 id="_83">参考</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://github.com/leether/getnote-toolbox">GetNote Toolbox 插件仓库</a></li>
+<li><a id="ref2"></a><a href="https://github.com/iswalle/getnote-dsh-plugin">官方 GetNote DSH 插件</a></li>
+<li><a id="ref3"></a><a href="https://deepseek-harness.github.io/deepseek-harness/develop/basic/">DeepSeek Harness 插件开发</a></li>
+</ol>
+<blockquote>
+<p>链接均为公开来源；产品行为可能随版本变化。</p>
+</blockquote>
 <hr />
 
 <nav class="pager" aria-label="章节导航">

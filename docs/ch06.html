@@ -64,8 +64,8 @@
     <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 6 章</p>
     <section class="chapter">
 <h1 id="6-agent">第 6 章　工具与技能：Agent 的手和脑</h1>
-<p class="chapter-meta">约 4 分钟 · 2,086 字 · 12 个小节</p>
-<h2 id="_46">本章你会学会</h2>
+<p class="chapter-meta">约 4 分钟 · 2,157 字 · 13 个小节</p>
+<h2 id="_51">本章你会学会</h2>
 <ul>
 <li>认识 Agent 常用工具的分类；</li>
 <li>看懂工具调用卡片和审批；</li>
@@ -128,7 +128,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_47">一个原则</h3>
+<h3 id="_52">一个原则</h3>
 <blockquote>
 <p><strong>能只读，就先只读；能小步，就不要大步。</strong></p>
 </blockquote>
@@ -148,7 +148,7 @@
 <li>输出有没有异常；</li>
 <li>它有没有跳过你的约束。</li>
 </ul>
-<h3 id="_48">拒绝也是一种能力</h3>
+<h3 id="_53">拒绝也是一种能力</h3>
 <p>如果它要做你没允许的事：</p>
 <pre><code class="language-text">停。这一步不要执行。
 先解释你为什么需要这个操作，以及有没有只读替代方案。
@@ -156,12 +156,12 @@
 <hr />
 <h2 id="63">6.3 计划与待办</h2>
 <p>复杂任务建议先计划。</p>
-<h3 id="_49">计划模式</h3>
+<h3 id="_54">计划模式</h3>
 <p>让 Agent 先给出步骤，不执行：</p>
 <pre><code class="language-text">先进入计划模式。给我一个 5 步以内的计划，说明每步要读/写什么、怎么验证。
 我确认后再执行。
 </code></pre>
-<h3 id="_50">待办清单</h3>
+<h3 id="_55">待办清单</h3>
 <p>执行阶段可以让它维护一个 todo：</p>
 <pre><code class="language-text">请把任务拆成 todo，完成一项就更新一项。
 不要一次开始所有项。
@@ -196,7 +196,7 @@
 <p>对 0 基础用户，先不用碰。等你熟悉子代理，再考虑。</p>
 <hr />
 <h2 id="65-skill">6.5 Skill 是什么</h2>
-<p>Skill 是一份“操作手册”，通常是一个文件夹，里面有 <code>SKILL.md</code>。</p>
+<p>Skill 是一份“操作手册”，通常是一个文件夹，里面有 <code>SKILL.md</code>。<a href="#ref1">[1]</a></p>
 <p>它告诉 Agent：</p>
 <ul>
 <li>什么时候用这个技能；</li>
@@ -243,7 +243,7 @@
 <li>Plugin 是运行时扩展，可以提供新工具、服务、界面；</li>
 <li>有些 Plugin 会自带 Skill。</li>
 </ul>
-<h3 id="_51">渐进披露</h3>
+<h3 id="_56">渐进披露</h3>
 <p>好的 Skill 不会一上来把几千行塞进上下文。它通常：</p>
 <ol>
 <li>先只加载名称和描述；</li>
@@ -275,7 +275,7 @@
 </ul>
 <hr />
 <h2 id="67-present">6.7 <code>present</code>：交付文件</h2>
-<p>当任务产出是文件时，Agent 可能调用 <code>present</code>。</p>
+<p>当任务产出是文件时，Agent 可能调用 <code>present</code>。<a href="#ref2">[2]</a></p>
 <p>准确含义：</p>
 <blockquote>
 <p><strong>把已经存在的文件声明为最终交付物，让界面生成卡片，用户可以打开。</strong></p>
@@ -294,7 +294,7 @@
 <li><strong>不看工具结果</strong>：只看总结容易漏错。</li>
 </ul>
 <hr />
-<h2 id="_52">马上试试</h2>
+<h2 id="_57">马上试试</h2>
 <ol>
 <li>让 Agent 为一个任务写 3 步计划；</li>
 <li>让它用 todo 跟踪执行；</li>
@@ -303,7 +303,7 @@
 <li>问它：“你刚才用了哪些工具？哪些是只读的？”</li>
 </ol>
 <hr />
-<h2 id="_53">小结</h2>
+<h2 id="_58">小结</h2>
 <ul>
 <li>工具分读、写、跑、搜、协作、计划、交付。</li>
 <li>先只读、再小步执行；看工具卡片。</li>
@@ -312,7 +312,7 @@
 <li><code>present</code> 是交付声明，不是上传。</li>
 </ul>
 <hr />
-<h2 id="_54">第二部分练习</h2>
+<h2 id="_59">第二部分练习</h2>
 <ol>
 <li>给你的测试工作区写一个 <code>AGENTS.md</code>，包含三条禁止事项。</li>
 <li>新建一个 Session，让它只读 <code>AGENTS.md</code> 和 <code>PROJECT.md</code>，复述规则。</li>
@@ -320,6 +320,14 @@
 <li>问它当前有哪些 Skill 与任务相关，只列名称，不执行。</li>
 <li>用 <code>present</code> 交付一个文件，观察卡片行为。</li>
 </ol>
+<h2 id="_60">参考</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://deepseek-harness.github.io/deepseek-harness/develop/basic/">DeepSeek Harness 插件开发</a></li>
+<li><a id="ref2"></a><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness GitHub 仓库</a></li>
+</ol>
+<blockquote>
+<p>链接均为公开来源；产品行为可能随版本变化。</p>
+</blockquote>
 
 <nav class="pager" aria-label="章节导航">
   <a class="prev" href="ch05.html"><small>上一章</small><span>会话、上下文与记忆</span></a>

@@ -129,7 +129,7 @@ Its capability boundary is narrow. Switch back to Standard for complex work.
 
 ## 7.7 What a Preset Actually Is
 
-In DSH, a Preset is a **list of child plugins for one Agent**, plus metadata such as name, description, and order.
+In DSH, a Preset is a **list of child plugins for one Agent**, plus metadata such as name, description, and order.[[1]](#ref1)
 
 It looks roughly like:
 
@@ -223,7 +223,14 @@ Avoid:
 - Standard is the daily default; Creator is for extending DSH; PTC is for programmatic tool use; Minimal is for small tasks.
 - Running Agents keep their starting Preset revision.
 - Customize Presets through Bundles and Plugin Manager, not legacy directories.
-- A Preset is not a security boundary.
+- A Preset is not a security boundary.[[2]](#ref2)
+
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness plugin development](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.
 
 ---
 
@@ -251,7 +258,7 @@ Avoid:
 
 ### Plugin
 
-A Plugin is the runtime unit. It can:
+A Plugin is the runtime unit. It can:[[1]](#ref1)
 
 - Register tools;
 - Register services;
@@ -262,7 +269,7 @@ A Plugin is the runtime unit. It can:
 
 ### Bundle
 
-A Bundle is an npm package that usually contains:
+A Bundle is an npm package that usually contains:[[2]](#ref2)
 
 - A `cordis.patch.yml`, or a list of patch files;
 - Plugin code;
@@ -274,7 +281,7 @@ One Bundle can mount many Plugins; one Plugin can be referenced by different Bun
 
 ### Profile
 
-A Profile is an installation environment:
+A Profile is an installation environment:[[3]](#ref3)
 
 - `desktop`: the desktop app;
 - `web`: the browser;
@@ -463,3 +470,11 @@ Back up the profile, or at least record the state before installation.
 3. Read one plugin's permissions and dependencies; decide whether you would install it.
 4. Explain why a Preset is not a security sandbox.
 5. Write a rollback checklist for a broken plugin.
+
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness plugin development](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/)
+2. <a id="ref2"></a>[npm publish documentation](https://docs.npmjs.com/cli/v11/commands/npm-publish)
+3. <a id="ref3"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.

@@ -64,8 +64,8 @@
     <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 5 章</p>
     <section class="chapter">
 <h1 id="5">第 5 章　会话、上下文与记忆</h1>
-<p class="chapter-meta">约 4 分钟 · 1,921 字 · 11 个小节</p>
-<h2 id="_38">本章你会学会</h2>
+<p class="chapter-meta">约 4 分钟 · 1,991 字 · 12 个小节</p>
+<h2 id="_42">本章你会学会</h2>
 <ul>
 <li>理解 Session 和 Context Window；</li>
 <li>知道 Agent 为什么会“忘事”；</li>
@@ -91,7 +91,7 @@
 <p>你可以把 Session 理解成“一次会议”。会议结束，新的会议不会自动记得上一次的每句话，除非你留下会议纪要。</p>
 <hr />
 <h2 id="52-context-windowagent">5.2 Context Window：Agent 的“工作内存”</h2>
-<p>模型一次能处理的文本量是有限的，这个上限叫 <strong>Context Window（上下文窗口）</strong>。</p>
+<p>模型一次能处理的文本量是有限的，这个上限叫 <strong>Context Window（上下文窗口）</strong>。<a href="#ref1">[1]</a></p>
 <p>进入上下文的东西包括：</p>
 <ul>
 <li>系统提示词；</li>
@@ -102,7 +102,7 @@
 <li>工具返回结果；</li>
 <li>读进来的文件内容。</li>
 </ul>
-<h3 id="_39">上下文满了会怎样</h3>
+<h3 id="_43">上下文满了会怎样</h3>
 <ul>
 <li>变慢；</li>
 <li>变贵；</li>
@@ -110,7 +110,7 @@
 <li>可能触发压缩（compaction）或截断；</li>
 <li>严重时，它会“自信地”用错误信息继续。</li>
 </ul>
-<h3 id="_40">常见信号</h3>
+<h3 id="_44">常见信号</h3>
 <ul>
 <li>它开始重复问已经说过的事；</li>
 <li>它引用了错误的文件名；</li>
@@ -120,7 +120,7 @@
 <hr />
 <h2 id="53-dsh">5.3 DSH 不会自动记住一切</h2>
 <p>这是新手最大的误解。</p>
-<p>DSH 有 Session 日志，但<strong>不等于跨会话的长期记忆</strong>。</p>
+<p>DSH 有 Session 日志，但<strong>不等于跨会话的长期记忆</strong>。<a href="#ref2">[2]</a></p>
 <ul>
 <li>同一个 Session：它记得聊天历史；</li>
 <li>新建 Session：它通常不会自动记得上一个 Session 的每句话；</li>
@@ -170,7 +170,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_41">长任务的做法</h3>
+<h3 id="_45">长任务的做法</h3>
 <ol>
 <li>让 Agent 把当前进度写到 <code>PROGRESS.md</code>；</li>
 <li>让它列出“已完成 / 未完成 / 下一步”；</li>
@@ -205,7 +205,7 @@
 <li>任务完成后，把结论写进文件，而不是留在聊天里；</li>
 <li>不要在一个 Session 里混很多不相关任务。</li>
 </ul>
-<h3 id="_42">一个实用提示词</h3>
+<h3 id="_46">一个实用提示词</h3>
 <pre><code class="language-text">请只读取与当前任务最相关的 3 个文件。
 如果需要更多，先告诉我为什么。
 不要一次性把整个目录读进来。
@@ -227,7 +227,7 @@
 </ul>
 <p>对 0 基础用户，建议先用<strong>文件 + <code>AGENTS.md</code></strong> 这种可控方式。等你有明确需求，再考虑记忆插件。</p>
 <hr />
-<h2 id="_43">马上试试</h2>
+<h2 id="_47">马上试试</h2>
 <ol>
 <li>让 Agent 写一个 <code>PROJECT.md</code>，记录当前任务目标和约束；</li>
 <li>新建 Session；</li>
@@ -235,7 +235,7 @@
 <li>观察它是否能在没有旧聊天记录的情况下继续工作。</li>
 </ol>
 <hr />
-<h2 id="_44">常见坑</h2>
+<h2 id="_48">常见坑</h2>
 <ul>
 <li><strong>以为新 Session 会记得旧 Session</strong>：不会自动记得。</li>
 <li><strong>把所有资料一次性塞进上下文</strong>：又慢又贵。</li>
@@ -244,7 +244,7 @@
 <li><strong>记忆插件当真相</strong>：召回可能错。</li>
 </ul>
 <hr />
-<h2 id="_45">小结</h2>
+<h2 id="_49">小结</h2>
 <ul>
 <li>Session 是一次对话；Context Window 是工作内存。</li>
 <li>上下文会满，满了会忘、会慢、会贵。</li>
@@ -252,6 +252,14 @@
 <li>重要信息落文件；长任务先总结再换 Session。</li>
 <li>记忆插件是补充，不是替代。</li>
 </ul>
+<h2 id="_50">参考</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://api-docs.deepseek.com/quick_start/token_usage">DeepSeek API Token 用量</a></li>
+<li><a id="ref2"></a><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness GitHub 仓库</a></li>
+</ol>
+<blockquote>
+<p>链接均为公开来源；产品行为可能随版本变化。</p>
+</blockquote>
 <hr />
 
 <nav class="pager" aria-label="章节导航">

@@ -64,7 +64,7 @@
     <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 4</p>
     <section class="chapter">
 <h1 id="chapter-4-workspaces-files-and-permissions">Chapter 4 — Workspaces, Files, and Permissions</h1>
-<p class="chapter-meta">4 min read · 830 words · 11 sections</p>
+<p class="chapter-meta">4 min read · 850 words · 12 sections</p>
 <h2 id="what-you-will-learn_3">What You Will Learn</h2>
 <ul>
 <li>Why the workspace is a safety boundary;</li>
@@ -75,7 +75,7 @@
 </ul>
 <hr />
 <h2 id="41-what-a-workspace-really-is">4.1 What a Workspace Really Is</h2>
-<p>A workspace is a folder.</p>
+<p>A workspace is a folder.<a href="#ref1">[1]</a></p>
 <p>The Agent's current directory is usually that folder. When you say "read <code>notes/a.md</code>", it looks for <code>notes/a.md</code> inside the workspace.</p>
 <p>A workspace does three jobs:</p>
 <ol>
@@ -188,7 +188,7 @@ Do not execute until I confirm.
 <pre><code class="language-bash">git add -A
 git commit -m &quot;before agent changes&quot;
 </code></pre>
-<p>If the Agent breaks something:</p>
+<p>If the Agent breaks something:<a href="#ref2">[2]</a></p>
 <pre><code class="language-bash">git diff
 git restore .
 </code></pre>
@@ -272,6 +272,14 @@ git restore .
 <li>Back up and confirm before destructive operations.</li>
 <li><code>AGENTS.md</code> sets rules but does not enforce them by itself.</li>
 </ul>
+<h2 id="references_3">References</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness GitHub repository</a></li>
+<li><a id="ref2"></a><a href="https://git-scm.com/docs">Git documentation</a></li>
+</ol>
+<blockquote>
+<p>All links are public sources; product behavior may change between versions.</p>
+</blockquote>
 <hr />
 
 <nav class="pager" aria-label="Chapter navigation">

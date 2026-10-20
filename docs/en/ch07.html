@@ -64,7 +64,7 @@
     <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 7</p>
     <section class="chapter">
 <h1 id="chapter-7-modes-and-presets-same-model-different-ways-to-work">Chapter 7 — Modes and Presets: Same Model, Different Ways to Work</h1>
-<p class="chapter-meta">4 min read · 804 words · 12 sections</p>
+<p class="chapter-meta">4 min read · 826 words · 13 sections</p>
 <h2 id="what-you-will-learn_6">What You Will Learn</h2>
 <ul>
 <li>Understand that a Preset is neither a model nor a separate app;</li>
@@ -191,7 +191,7 @@
 </table>
 <hr />
 <h2 id="77-what-a-preset-actually-is">7.7 What a Preset Actually Is</h2>
-<p>In DSH, a Preset is a <strong>list of child plugins for one Agent</strong>, plus metadata such as name, description, and order.</p>
+<p>In DSH, a Preset is a <strong>list of child plugins for one Agent</strong>, plus metadata such as name, description, and order.<a href="#ref1">[1]</a></p>
 <p>It looks roughly like:</p>
 <pre><code class="language-yaml">id: standard
 name: Standard
@@ -276,8 +276,16 @@ plugins:
 <li>Standard is the daily default; Creator is for extending DSH; PTC is for programmatic tool use; Minimal is for small tasks.</li>
 <li>Running Agents keep their starting Preset revision.</li>
 <li>Customize Presets through Bundles and Plugin Manager, not legacy directories.</li>
-<li>A Preset is not a security boundary.</li>
+<li>A Preset is not a security boundary.<a href="#ref2">[2]</a></li>
 </ul>
+<h2 id="references_6">References</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/">DeepSeek Harness plugin development</a></li>
+<li><a id="ref2"></a><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness GitHub repository</a></li>
+</ol>
+<blockquote>
+<p>All links are public sources; product behavior may change between versions.</p>
+</blockquote>
 <hr />
 
 <nav class="pager" aria-label="Chapter navigation">

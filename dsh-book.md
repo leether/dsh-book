@@ -85,7 +85,7 @@ Agent 能执行真实操作。
 
 Harness 把房间打开：给它文件、终端、浏览器、工具、记忆和规则。它才能从“聊天”变成“干活”。
 
-DeepSeek Harness，简称 **DSH**，就是这样一个 Harness。
+DeepSeek Harness，简称 **DSH**，就是这样一个 Harness。[[1]](#ref1)
 
 ---
 
@@ -205,7 +205,7 @@ DSH 可以用不同方式启动。对 0 基础用户，建议从 **Desktop** 开
 | **Web** | 想在浏览器里用、或跑在远程服务器上的人 | 打开一个网址，界面与 Desktop 类似 |
 | **Headless** | 自动化、脚本、批量任务 | 命令行一次性执行，没有图形界面 |
 
-三种入口共享同一套核心概念：Agent、Session、Workspace、Tool、Skill、Preset、Plugin。
+三种入口共享同一套核心概念：Agent、Session、Workspace、Tool、Skill、Preset、Plugin。[[2]](#ref2)
 
 本书以 Desktop 为主。遇到 Web/Headless 的不同之处，会用“换一种入口”小栏说明。
 
@@ -250,6 +250,13 @@ DSH 可以用不同方式启动。对 0 基础用户，建议从 **Desktop** 开
 - Session 是一次对话，Workspace 是一个文件夹，Tool 是动作，Skill 是知识。
 - Desktop 最适合入门；Web 和 Headless 是不同入口，不是不同产品。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 官方网站](https://www.deepseek.com/harness/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 2 章　第一次启动：桌面、模型、工作区
@@ -287,7 +294,7 @@ DSH 可以用不同方式启动。对 0 基础用户，建议从 **Desktop** 开
 
 ## 2.2 连接模型
 
-DSH 需要一个模型来“思考”。通常有两种方式：
+DSH 需要一个模型来“思考”。通常有两种方式：[[1]](#ref1)[[2]](#ref2)
 
 1. **DeepSeek 官方账号/API**：在设置里登录或填入 API Key；
 2. **兼容 OpenAI 接口的提供方**：填入 Base URL、API Key、模型名。
@@ -462,6 +469,13 @@ DSH 需要一个模型来“思考”。通常有两种方式：
 - 第一次对话以只读为主，观察工具卡片。
 - 标准模式是日常默认；创造模式是另一件事。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 快速开始](https://deepseek-harness.github.io/deepseek-harness/guide/quickstart)
+2. <a id="ref2"></a>[配置模型](https://deepseek-harness.github.io/deepseek-harness/guide/providers)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 3 章　第一次任务：把需求说清楚
@@ -480,7 +494,7 @@ DSH 需要一个模型来“思考”。通常有两种方式：
 
 很多人觉得 Agent“不好用”，其实是因为任务说得太模糊。
 
-一个好任务至少包含四件事：
+一个好任务至少包含四件事：[[1]](#ref1)
 
 | 要素 | 回答什么问题 | 例子 |
 | --- | --- | --- |
@@ -692,6 +706,13 @@ notes/
 2. 在一个测试文件夹里，让 Agent 只读列出文件，并说明用了哪些工具。
 3. 让它生成一个 `summary.md`，然后检查原文件是否被改动。
 4. 用一句具体反馈让它修改摘要，而不是说“重做”。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 快速开始](https://deepseek-harness.github.io/deepseek-harness/guide/quickstart)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。
 # 第 4 章　工作区、文件与权限
 
 ## 本章你会学会
@@ -716,7 +737,7 @@ Agent 的“当前目录”通常就是它。你让它读 `notes/a.md`，它会�
 2. **上下文**：这里的文件、目录结构、`AGENTS.md` 会影响它的判断；
 3. **权限**：很多安全策略以工作区为边界。
 
-所以，工作区不是“随便选一个文件夹”，而是**你给 Agent 划定的工作范围**。
+所以，工作区不是“随便选一个文件夹”，而是**你给 Agent 划定的工作范围**。[[1]](#ref1)
 
 ### 建议
 
@@ -819,7 +840,7 @@ git add -A
 git commit -m "before agent changes"
 ```
 
-Agent 改坏了，你可以：
+Agent 改坏了，你可以：[[2]](#ref2)
 
 ```bash
 git diff
@@ -920,6 +941,13 @@ git restore .
 - 破坏性操作先备份、先确认。
 - `AGENTS.md` 用来立规矩，但不能替代权限控制。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+2. <a id="ref2"></a>[Git 文档](https://git-scm.com/docs)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 5 章　会话、上下文与记忆
@@ -956,7 +984,7 @@ Session 是一次连续对话。
 
 ## 5.2 Context Window：Agent 的“工作内存”
 
-模型一次能处理的文本量是有限的，这个上限叫 **Context Window（上下文窗口）**。
+模型一次能处理的文本量是有限的，这个上限叫 **Context Window（上下文窗口）**。[[1]](#ref1)
 
 进入上下文的东西包括：
 
@@ -989,7 +1017,7 @@ Session 是一次连续对话。
 
 这是新手最大的误解。
 
-DSH 有 Session 日志，但**不等于跨会话的长期记忆**。
+DSH 有 Session 日志，但**不等于跨会话的长期记忆**。[[2]](#ref2)
 
 - 同一个 Session：它记得聊天历史；
 - 新建 Session：它通常不会自动记得上一个 Session 的每句话；
@@ -1120,6 +1148,13 @@ project/
 - 重要信息落文件；长任务先总结再换 Session。
 - 记忆插件是补充，不是替代。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek API Token 用量](https://api-docs.deepseek.com/quick_start/token_usage)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 6 章　工具与技能：Agent 的手和脑
@@ -1246,7 +1281,7 @@ project/
 
 ## 6.5 Skill 是什么
 
-Skill 是一份“操作手册”，通常是一个文件夹，里面有 `SKILL.md`。
+Skill 是一份“操作手册”，通常是一个文件夹，里面有 `SKILL.md`。[[1]](#ref1)
 
 它告诉 Agent：
 
@@ -1315,7 +1350,7 @@ Skill 是一份“操作手册”，通常是一个文件夹，里面有 `SKILL.
 
 ## 6.7 `present`：交付文件
 
-当任务产出是文件时，Agent 可能调用 `present`。
+当任务产出是文件时，Agent 可能调用 `present`。[[2]](#ref2)
 
 准确含义：
 
@@ -1368,6 +1403,13 @@ Skill 是一份“操作手册”，通常是一个文件夹，里面有 `SKILL.
 3. 让 Agent 用 todo 完成一个三步任务，并在每步后更新。
 4. 问它当前有哪些 Skill 与任务相关，只列名称，不执行。
 5. 用 `present` 交付一个文件，观察卡片行为。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 插件开发](https://deepseek-harness.github.io/deepseek-harness/develop/basic/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。
 # 第 7 章　模式与 Preset：同一个模型，不同工作方式
 
 ## 本章你会学会
@@ -1502,7 +1544,7 @@ PTC 是 **Programmatic Tool Calling** 的缩写，可以理解为“用写代码
 
 ## 7.7 Preset 到底是什么
 
-在 DSH 里，Preset 是一份 **Agent 的子插件列表**，加上名称、描述、排序等元数据。
+在 DSH 里，Preset 是一份 **Agent 的子插件列表**，加上名称、描述、排序等元数据。[[1]](#ref1)
 
 它通常长这样：
 
@@ -1573,7 +1615,7 @@ Preset 可以隔离工具和服务，但它**不是安全沙箱**。
 
 - **“创造模式更聪明”**：不是。它只是多了扩展 DSH 的工具和知识。
 - **“换 Preset 就换了模型”**：不是。模型由模型设置决定。
-- **“Preset 是安全隔离”**：不是。安全靠权限/沙箱/审批。
+- **“Preset 是安全隔离”**：不是。安全靠权限/沙箱/审批。[[2]](#ref2)
 - **“Preset 越多越好”**：不是。多一个模式就多一份维护成本。
 - **“自定义 Preset 会自动跟进内置更新”**：不会，覆盖是整份替换。
 
@@ -1596,6 +1638,13 @@ Preset 可以隔离工具和服务，但它**不是安全沙箱**。
 - 运行中的 Agent 保留启动时的 Preset 版本。
 - 自定义 Preset 要走 Bundle + Plugin Manager，不要手改旧目录。
 - Preset 不等于安全隔离。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 插件开发](https://deepseek-harness.github.io/deepseek-harness/develop/basic/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。
 
 ---
 
@@ -1625,7 +1674,7 @@ Preset 可以隔离工具和服务，但它**不是安全沙箱**。
 
 ### Plugin
 
-Plugin 是运行时单元。它可以：
+Plugin 是运行时单元。它可以：[[1]](#ref1)
 
 - 注册工具；
 - 注册服务；
@@ -1638,7 +1687,7 @@ Plugin 是运行时单元。它可以：
 
 ### Bundle
 
-Bundle 是一个 npm 包，里面通常有：
+Bundle 是一个 npm 包，里面通常有：[[2]](#ref2)
 
 - 一个 `cordis.patch.yml`（或一组 patch 文件）；
 - 要挂载的插件代码；
@@ -1654,7 +1703,7 @@ Bundle 是一个 npm 包，里面通常有：
 
 ### Profile
 
-Profile 是安装环境，通常对应：
+Profile 是安装环境，通常对应：[[3]](#ref3)
 
 - `desktop`：桌面应用；
 - `web`：浏览器；
@@ -1845,6 +1894,14 @@ Preset（standard / creator）
 3. 找一个插件，阅读它的权限/依赖，判断你是否愿意安装。
 4. 解释为什么“Preset 不是安全沙箱”。
 5. 写下一个“插件装坏了怎么回滚”的步骤清单。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 插件开发](https://deepseek-harness.github.io/deepseek-harness/develop/basic/)
+2. <a id="ref2"></a>[npm publish 文档](https://docs.npmjs.com/cli/v11/commands/npm-publish)
+3. <a id="ref3"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。
 # 第 9 章　创造模式：从使用者到扩展者
 
 ## 本章你会学会
@@ -1860,7 +1917,7 @@ Preset（standard / creator）
 
 ## 9.1 创造模式是什么
 
-创造模式是 DSH 的一个 **Agent Preset**，内部 id 是 `cordis`。
+创造模式是 DSH 的一个 **Agent Preset**，内部 id 是 `cordis`。[[3]](#ref3)
 
 它不是：
 
@@ -2061,7 +2118,7 @@ Preset（standard / creator）
 
 前面几节讲的是方法。这一节用一个真实项目走一遍：**GetNote（得到大脑）工具箱**。
 
-做这个插件的直接动机是：**在我们开始的时候，官方 `@getnote/dsh-plugin` 还不支持 DSH Desktop**。Desktop 是大多数人日常使用的入口，所以我们需要一个能在本机 Desktop profile 里真正跑起来的版本。
+做这个插件的直接动机是：**在我们开始的时候，官方 `@getnote/dsh-plugin` 还不支持 DSH Desktop**[[2]](#ref2)。Desktop 是大多数人日常使用的入口，所以我们需要一个能在本机 Desktop profile 里真正跑起来的版本。
 
 这不是要替代官方插件，而是补上 Desktop 这个入口。也正因为如此，项目优先处理 Desktop 的本地 bundle、locale/icon 展示、CLI 发现和 Plugin Manager 可见性。
 
@@ -2069,7 +2126,7 @@ Preset（standard / creator）
 
 <https://github.com/leether/getnote-toolbox>
 
-源码已经公开，并已发布到 npm：`@leether/getnote-toolbox`。
+源码已经公开，并已发布到 npm：`@leether/getnote-toolbox`。[[1]](#ref1)
 
 - GitHub：<https://github.com/leether/getnote-toolbox>
 - npm：<https://www.npmjs.com/package/@leether/getnote-toolbox>
@@ -2172,6 +2229,14 @@ Preset（standard / creator）
 - 先最小版本，再验证、再迭代。
 - 真实案例：先做能力审计与契约，再做隐私审查，最后公开。
 
+## 参考
+
+1. <a id="ref1"></a>[GetNote Toolbox 插件仓库](https://github.com/leether/getnote-toolbox)
+2. <a id="ref2"></a>[官方 GetNote DSH 插件](https://github.com/iswalle/getnote-dsh-plugin)
+3. <a id="ref3"></a>[DeepSeek Harness 插件开发](https://deepseek-harness.github.io/deepseek-harness/develop/basic/)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 10 章　排错、安全与继续学习
@@ -2272,7 +2337,7 @@ dsh --profile web --dump-config
 
 ## 10.4 成本与用量
 
-Agent 的成本主要来自 token：
+Agent 的成本主要来自 token：[[2]](#ref2)
 
 - 上下文越长，越贵；
 - 读大文件、长网页，会显著增加；
@@ -2356,9 +2421,20 @@ Preset  = 单 Agent 的能力组合
 - 学习路线：日常 → 工作区 → 工具/技能 → 插件。
 - 先会用，再扩展；不要一上来做很大的插件。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 快速开始](https://deepseek-harness.github.io/deepseek-harness/guide/quickstart)
+2. <a id="ref2"></a>[DeepSeek API Token 用量](https://api-docs.deepseek.com/quick_start/token_usage)
+3. <a id="ref3"></a>[Git 文档](https://git-scm.com/docs)
+4. <a id="ref4"></a>[npm publish 文档](https://docs.npmjs.com/cli/v11/commands/npm-publish)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 附录
+
+本附录的工具名和产品行为以官方文档和本书案例仓库为准。[[1]](#ref1)[[2]](#ref2)[[3]](#ref3)
 
 ## A. 术语表
 
@@ -2516,3 +2592,12 @@ DSH 不难用，难的是**在它变强之前，先学会控制它**。
 3. **密钥不进对话，破坏性操作先备份。**
 
 当你熟悉了这些，再去碰 Preset、Plugin、Bundle、Creator。那时你看到的不再是一堆名词，而是一套可以按需组合的工作台。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 官方网站](https://www.deepseek.com/harness/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+3. <a id="ref3"></a>[GetNote Toolbox 插件仓库](https://github.com/leether/getnote-toolbox)
+4. <a id="ref4"></a>[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+> 链接均为公开来源；产品行为可能随版本变化。

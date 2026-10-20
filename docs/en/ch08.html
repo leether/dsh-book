@@ -64,7 +64,7 @@
     <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 8</p>
     <section class="chapter">
 <h1 id="chapter-8-plugins-bundles-and-profiles-giving-dsh-new-powers">Chapter 8 — Plugins, Bundles, and Profiles: Giving DSH New Powers</h1>
-<p class="chapter-meta">4 min read · 908 words · 12 sections</p>
+<p class="chapter-meta">4 min read · 934 words · 13 sections</p>
 <h2 id="what-you-will-learn_7">What You Will Learn</h2>
 <ul>
 <li>Distinguish Plugin, Bundle, and Profile;</li>
@@ -105,7 +105,7 @@
 </tbody>
 </table>
 <h3 id="plugin">Plugin</h3>
-<p>A Plugin is the runtime unit. It can:</p>
+<p>A Plugin is the runtime unit. It can:<a href="#ref1">[1]</a></p>
 <ul>
 <li>Register tools;</li>
 <li>Register services;</li>
@@ -115,7 +115,7 @@
 <li>Change Agent behavior.</li>
 </ul>
 <h3 id="bundle">Bundle</h3>
-<p>A Bundle is an npm package that usually contains:</p>
+<p>A Bundle is an npm package that usually contains:<a href="#ref2">[2]</a></p>
 <ul>
 <li>A <code>cordis.patch.yml</code>, or a list of patch files;</li>
 <li>Plugin code;</li>
@@ -124,7 +124,7 @@
 <p>It packages "which plugins to add and how to configure them" so a user can install it in one step. Its rows remain patchable by higher layers.</p>
 <p>One Bundle can mount many Plugins; one Plugin can be referenced by different Bundles.</p>
 <h3 id="profile">Profile</h3>
-<p>A Profile is an installation environment:</p>
+<p>A Profile is an installation environment:<a href="#ref3">[3]</a></p>
 <ul>
 <li><code>desktop</code>: the desktop app;</li>
 <li><code>web</code>: the browser;</li>
@@ -318,6 +318,15 @@ Preset (standard / creator)
 <li>Explain why a Preset is not a security sandbox.</li>
 <li>Write a rollback checklist for a broken plugin.</li>
 </ol>
+<h2 id="references_7">References</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/">DeepSeek Harness plugin development</a></li>
+<li><a id="ref2"></a><a href="https://docs.npmjs.com/cli/v11/commands/npm-publish">npm publish documentation</a></li>
+<li><a id="ref3"></a><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness GitHub repository</a></li>
+</ol>
+<blockquote>
+<p>All links are public sources; product behavior may change between versions.</p>
+</blockquote>
 
 <nav class="pager" aria-label="Chapter navigation">
   <a class="prev" href="ch07.html"><small>Previous</small><span>Modes and Presets: Same Mo…</span></a>

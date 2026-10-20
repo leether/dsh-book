@@ -27,7 +27,7 @@
 
 Harness 把房间打开：给它文件、终端、浏览器、工具、记忆和规则。它才能从“聊天”变成“干活”。
 
-DeepSeek Harness，简称 **DSH**，就是这样一个 Harness。
+DeepSeek Harness，简称 **DSH**，就是这样一个 Harness。[[1]](#ref1)
 
 ---
 
@@ -147,7 +147,7 @@ DSH 可以用不同方式启动。对 0 基础用户，建议从 **Desktop** 开
 | **Web** | 想在浏览器里用、或跑在远程服务器上的人 | 打开一个网址，界面与 Desktop 类似 |
 | **Headless** | 自动化、脚本、批量任务 | 命令行一次性执行，没有图形界面 |
 
-三种入口共享同一套核心概念：Agent、Session、Workspace、Tool、Skill、Preset、Plugin。
+三种入口共享同一套核心概念：Agent、Session、Workspace、Tool、Skill、Preset、Plugin。[[2]](#ref2)
 
 本书以 Desktop 为主。遇到 Web/Headless 的不同之处，会用“换一种入口”小栏说明。
 
@@ -192,6 +192,13 @@ DSH 可以用不同方式启动。对 0 基础用户，建议从 **Desktop** 开
 - Session 是一次对话，Workspace 是一个文件夹，Tool 是动作，Skill 是知识。
 - Desktop 最适合入门；Web 和 Headless 是不同入口，不是不同产品。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 官方网站](https://www.deepseek.com/harness/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 2 章　第一次启动：桌面、模型、工作区
@@ -229,7 +236,7 @@ DSH 可以用不同方式启动。对 0 基础用户，建议从 **Desktop** 开
 
 ## 2.2 连接模型
 
-DSH 需要一个模型来“思考”。通常有两种方式：
+DSH 需要一个模型来“思考”。通常有两种方式：[[1]](#ref1)[[2]](#ref2)
 
 1. **DeepSeek 官方账号/API**：在设置里登录或填入 API Key；
 2. **兼容 OpenAI 接口的提供方**：填入 Base URL、API Key、模型名。
@@ -404,6 +411,13 @@ DSH 需要一个模型来“思考”。通常有两种方式：
 - 第一次对话以只读为主，观察工具卡片。
 - 标准模式是日常默认；创造模式是另一件事。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 快速开始](https://deepseek-harness.github.io/deepseek-harness/guide/quickstart)
+2. <a id="ref2"></a>[配置模型](https://deepseek-harness.github.io/deepseek-harness/guide/providers)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 3 章　第一次任务：把需求说清楚
@@ -422,7 +436,7 @@ DSH 需要一个模型来“思考”。通常有两种方式：
 
 很多人觉得 Agent“不好用”，其实是因为任务说得太模糊。
 
-一个好任务至少包含四件事：
+一个好任务至少包含四件事：[[1]](#ref1)
 
 | 要素 | 回答什么问题 | 例子 |
 | --- | --- | --- |
@@ -634,3 +648,10 @@ notes/
 2. 在一个测试文件夹里，让 Agent 只读列出文件，并说明用了哪些工具。
 3. 让它生成一个 `summary.md`，然后检查原文件是否被改动。
 4. 用一句具体反馈让它修改摘要，而不是说“重做”。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 快速开始](https://deepseek-harness.github.io/deepseek-harness/guide/quickstart)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。

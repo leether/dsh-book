@@ -25,7 +25,7 @@ A model alone is like a brilliant person locked in a room. It can think and talk
 
 The harness opens the room. It gives the model files, a terminal, a browser, tools, memory, and rules. That is when chatting becomes doing.
 
-DeepSeek Harness, or **DSH**, is that harness.
+DeepSeek Harness, or **DSH**, is that harness.[[1]](#ref1)
 
 ---
 
@@ -140,7 +140,7 @@ Without a harness, none of those actions happen.
 | **Web** | Browser access, remote servers | A web page with a similar interface |
 | **Headless** | Automation, scripts, batch jobs | A one-shot command-line run, no GUI |
 
-All three share the same core ideas: Agent, Session, Workspace, Tool, Skill, Preset, and Plugin.
+All three share the same core ideas: Agent, Session, Workspace, Tool, Skill, Preset, and Plugin.[[2]](#ref2)
 
 This book is Desktop-first. Web and Headless differences appear in small sidebars.
 
@@ -185,6 +185,13 @@ If you cannot answer yet, Chapter 3 will help.
 - Session is a conversation; Workspace is a folder; Tool is an action; Skill is knowledge.
 - Desktop is the easiest entry point; Web and Headless are different surfaces, not different products.
 
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness official site](https://www.deepseek.com/en/harness/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Chapter 2 — First Launch: Desktop, Model, Workspace
@@ -222,7 +229,7 @@ If you do not have a model service yet, read the next section.
 
 ## 2.2 Connect a Model
 
-DSH needs a model to think. There are usually two options:
+DSH needs a model to think. There are usually two options:[[1]](#ref1)[[2]](#ref2)
 
 1. **DeepSeek official account/API**: sign in or enter an API key;
 2. **An OpenAI-compatible provider**: enter a Base URL, API key, and model name.
@@ -391,6 +398,13 @@ This book stays Desktop-first.
 - Start read-only; watch tool cards.
 - Standard is the daily default; Creator is a different job.
 
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness quickstart](https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart)
+2. <a id="ref2"></a>[Configure models](https://deepseek-harness.github.io/deepseek-harness/en/guide/providers)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Chapter 3 — Your First Task: Say What You Mean
@@ -409,7 +423,7 @@ This book stays Desktop-first.
 
 Most "the Agent is bad at this" experiences come from vague requests.
 
-A good task contains:
+A good task contains:[[1]](#ref1)
 
 | Element | Question it answers | Example |
 | --- | --- | --- |
@@ -613,3 +627,10 @@ Expand the second summary to four sentences, keep its link, and leave everything
 2. In a test folder, ask the Agent to list files read-only and report the tools it used.
 3. Ask it to produce `summary.md`, then check whether the originals changed.
 4. Give one specific revision instruction instead of "redo it".
+
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness quickstart](https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.

@@ -64,8 +64,8 @@
     <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 2 章</p>
     <section class="chapter">
 <h1 id="2">第 2 章　第一次启动：桌面、模型、工作区</h1>
-<p class="chapter-meta">约 4 分钟 · 1,913 字 · 11 个小节</p>
-<h2 id="_7">本章你会学会</h2>
+<p class="chapter-meta">约 4 分钟 · 1,965 字 · 12 个小节</p>
+<h2 id="_8">本章你会学会</h2>
 <ul>
 <li>打开 DSH Desktop；</li>
 <li>连接一个模型；</li>
@@ -89,12 +89,12 @@
 <p>如果你还没有模型服务，先看下一节。</p>
 <hr />
 <h2 id="22">2.2 连接模型</h2>
-<p>DSH 需要一个模型来“思考”。通常有两种方式：</p>
+<p>DSH 需要一个模型来“思考”。通常有两种方式：<a href="#ref1">[1]</a><a href="#ref2">[2]</a></p>
 <ol>
 <li><strong>DeepSeek 官方账号/API</strong>：在设置里登录或填入 API Key；</li>
 <li><strong>兼容 OpenAI 接口的提供方</strong>：填入 Base URL、API Key、模型名。</li>
 </ol>
-<h3 id="_8">操作路径</h3>
+<h3 id="_9">操作路径</h3>
 <p>通常在：</p>
 <pre><code class="language-text">设置（Settings） → 模型（Models） → 添加/选择提供方
 </code></pre>
@@ -105,7 +105,7 @@
 <li>模型名称（例如 <code>deepseek-chat</code> / <code>deepseek-flash</code>，以实际提供方为准）；</li>
 <li>可选的 Base URL。</li>
 </ul>
-<h3 id="_9">怎么判断成功</h3>
+<h3 id="_10">怎么判断成功</h3>
 <ul>
 <li>设置页显示模型已连接；</li>
 <li>新建任务后，Agent 能正常回复；</li>
@@ -183,7 +183,7 @@
 <hr />
 <h2 id="26">2.6 第一次对话：只读、可观察</h2>
 <p>第一次不要让它改文件。先做两个只读练习。</p>
-<h3 id="_10">练习一：自我介绍</h3>
+<h3 id="_11">练习一：自我介绍</h3>
 <p>输入：</p>
 <pre><code class="language-text">你好。请用三句话介绍你能做什么、不能做什么。
 先不要读取或修改任何文件。
@@ -194,7 +194,7 @@
 <li>说明需要工作区/权限；</li>
 <li>没有擅自调用工具。</li>
 </ul>
-<h3 id="_11">练习二：只读盘点</h3>
+<h3 id="_12">练习二：只读盘点</h3>
 <p>输入：</p>
 <pre><code class="language-text">请只读当前工作区的文件，按类型分组列出来。
 不要修改任何文件，也不要运行会改变文件的命令。
@@ -224,7 +224,7 @@
 </ul>
 <p>本书后续仍以 Desktop 为主。</p>
 <hr />
-<h2 id="_12">常见坑</h2>
+<h2 id="_13">常见坑</h2>
 <ul>
 <li><strong>没连模型就开始任务</strong>：只会得到错误或空回复。</li>
 <li><strong>工作区选得太大</strong>：先小后大。</li>
@@ -233,7 +233,7 @@
 <li><strong>只看最后一段话</strong>：中间的工具调用才是它真正做的事。</li>
 </ul>
 <hr />
-<h2 id="_13">小结</h2>
+<h2 id="_14">小结</h2>
 <ul>
 <li>启动顺序：打开应用 → 连模型 → 选工作区 → 选标准模式 → 开始对话。</li>
 <li><code>401</code> 先查 Key。</li>
@@ -241,6 +241,14 @@
 <li>第一次对话以只读为主，观察工具卡片。</li>
 <li>标准模式是日常默认；创造模式是另一件事。</li>
 </ul>
+<h2 id="_15">参考</h2>
+<ol>
+<li><a id="ref1"></a><a href="https://deepseek-harness.github.io/deepseek-harness/guide/quickstart">DeepSeek Harness 快速开始</a></li>
+<li><a id="ref2"></a><a href="https://deepseek-harness.github.io/deepseek-harness/guide/providers">配置模型</a></li>
+</ol>
+<blockquote>
+<p>链接均为公开来源；产品行为可能随版本变化。</p>
+</blockquote>
 <hr />
 
 <nav class="pager" aria-label="章节导航">

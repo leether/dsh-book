@@ -22,7 +22,7 @@ Agent 的“当前目录”通常就是它。你让它读 `notes/a.md`，它会�
 2. **上下文**：这里的文件、目录结构、`AGENTS.md` 会影响它的判断；
 3. **权限**：很多安全策略以工作区为边界。
 
-所以，工作区不是“随便选一个文件夹”，而是**你给 Agent 划定的工作范围**。
+所以，工作区不是“随便选一个文件夹”，而是**你给 Agent 划定的工作范围**。[[1]](#ref1)
 
 ### 建议
 
@@ -125,7 +125,7 @@ git add -A
 git commit -m "before agent changes"
 ```
 
-Agent 改坏了，你可以：
+Agent 改坏了，你可以：[[2]](#ref2)
 
 ```bash
 git diff
@@ -226,6 +226,13 @@ git restore .
 - 破坏性操作先备份、先确认。
 - `AGENTS.md` 用来立规矩，但不能替代权限控制。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+2. <a id="ref2"></a>[Git 文档](https://git-scm.com/docs)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 5 章　会话、上下文与记忆
@@ -262,7 +269,7 @@ Session 是一次连续对话。
 
 ## 5.2 Context Window：Agent 的“工作内存”
 
-模型一次能处理的文本量是有限的，这个上限叫 **Context Window（上下文窗口）**。
+模型一次能处理的文本量是有限的，这个上限叫 **Context Window（上下文窗口）**。[[1]](#ref1)
 
 进入上下文的东西包括：
 
@@ -295,7 +302,7 @@ Session 是一次连续对话。
 
 这是新手最大的误解。
 
-DSH 有 Session 日志，但**不等于跨会话的长期记忆**。
+DSH 有 Session 日志，但**不等于跨会话的长期记忆**。[[2]](#ref2)
 
 - 同一个 Session：它记得聊天历史；
 - 新建 Session：它通常不会自动记得上一个 Session 的每句话；
@@ -426,6 +433,13 @@ project/
 - 重要信息落文件；长任务先总结再换 Session。
 - 记忆插件是补充，不是替代。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek API Token 用量](https://api-docs.deepseek.com/quick_start/token_usage)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 6 章　工具与技能：Agent 的手和脑
@@ -552,7 +566,7 @@ project/
 
 ## 6.5 Skill 是什么
 
-Skill 是一份“操作手册”，通常是一个文件夹，里面有 `SKILL.md`。
+Skill 是一份“操作手册”，通常是一个文件夹，里面有 `SKILL.md`。[[1]](#ref1)
 
 它告诉 Agent：
 
@@ -621,7 +635,7 @@ Skill 是一份“操作手册”，通常是一个文件夹，里面有 `SKILL.
 
 ## 6.7 `present`：交付文件
 
-当任务产出是文件时，Agent 可能调用 `present`。
+当任务产出是文件时，Agent 可能调用 `present`。[[2]](#ref2)
 
 准确含义：
 
@@ -674,3 +688,10 @@ Skill 是一份“操作手册”，通常是一个文件夹，里面有 `SKILL.
 3. 让 Agent 用 todo 完成一个三步任务，并在每步后更新。
 4. 问它当前有哪些 Skill 与任务相关，只列名称，不执行。
 5. 用 `present` 交付一个文件，观察卡片行为。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 插件开发](https://deepseek-harness.github.io/deepseek-harness/develop/basic/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+
+> 链接均为公开来源；产品行为可能随版本变化。

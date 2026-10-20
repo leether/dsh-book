@@ -12,7 +12,7 @@
 
 ## 4.1 What a Workspace Really Is
 
-A workspace is a folder.
+A workspace is a folder.[[1]](#ref1)
 
 The Agent's current directory is usually that folder. When you say "read `notes/a.md`", it looks for `notes/a.md` inside the workspace.
 
@@ -119,7 +119,7 @@ git add -A
 git commit -m "before agent changes"
 ```
 
-If the Agent breaks something:
+If the Agent breaks something:[[2]](#ref2)
 
 ```bash
 git diff
@@ -220,6 +220,13 @@ Use it for:
 - Back up and confirm before destructive operations.
 - `AGENTS.md` sets rules but does not enforce them by itself.
 
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+2. <a id="ref2"></a>[Git documentation](https://git-scm.com/docs)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Chapter 5 — Sessions, Context, and Memory
@@ -252,7 +259,7 @@ Think of a Session as one meeting. A new meeting does not remember every sentenc
 
 ## 5.2 Context Window: The Agent's Working Memory
 
-A model can process only a limited amount of text at once. That limit is the **Context Window**.
+A model can process only a limited amount of text at once. That limit is the **Context Window**.[[1]](#ref1)
 
 Context includes:
 
@@ -285,7 +292,7 @@ When the context fills up:
 
 This is the most common beginner misconception.
 
-DSH keeps a session log, but that is not the same as cross-session long-term memory.
+DSH keeps a session log, but that is not the same as cross-session long-term memory.[[2]](#ref2)
 
 - Within a Session: it remembers the chat;
 - A new Session: it usually does not remember every previous message;
@@ -417,6 +424,13 @@ For beginners, start with files and `AGENTS.md`. Add a memory plugin only when y
 - Write important information to files; summarize long tasks before starting a new Session.
 - Memory plugins are a supplement, not a replacement.
 
+## References
+
+1. <a id="ref1"></a>[DeepSeek API token usage](https://api-docs.deepseek.com/quick_start/token_usage)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.
+
 ---
 
 # Chapter 6 — Tools and Skills: The Agent's Hands and Mind
@@ -536,7 +550,7 @@ Beginners can skip workflows until subagents feel comfortable.
 
 ## 6.5 What a Skill Is
 
-A Skill is an instruction manual, usually a folder with `SKILL.md`.
+A Skill is an instruction manual, usually a folder with `SKILL.md`.[[1]](#ref1)
 
 It tells the Agent:
 
@@ -605,7 +619,7 @@ Which Skills are relevant to this task? List them first; do not execute yet.
 
 ## 6.7 `present`: Delivering Files
 
-When the output is a file, the Agent may call `present`.
+When the output is a file, the Agent may call `present`.[[2]](#ref2)
 
 It means:
 
@@ -658,3 +672,10 @@ When done, use present for the final file. At most two files; do not present eve
 3. Use todos to complete a three-step task, updating after each step.
 4. Ask which Skills are relevant, without executing them.
 5. Deliver one file with `present` and observe the card.
+
+## References
+
+1. <a id="ref1"></a>[DeepSeek Harness plugin development](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub repository](https://github.com/deepseek-ai/deepseek-harness)
+
+> All links are public sources; product behavior may change between versions.

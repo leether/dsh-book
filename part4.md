@@ -13,7 +13,7 @@
 
 ## 9.1 创造模式是什么
 
-创造模式是 DSH 的一个 **Agent Preset**，内部 id 是 `cordis`。
+创造模式是 DSH 的一个 **Agent Preset**，内部 id 是 `cordis`。[[3]](#ref3)
 
 它不是：
 
@@ -214,7 +214,7 @@
 
 前面几节讲的是方法。这一节用一个真实项目走一遍：**GetNote（得到大脑）工具箱**。
 
-做这个插件的直接动机是：**在我们开始的时候，官方 `@getnote/dsh-plugin` 还不支持 DSH Desktop**。Desktop 是大多数人日常使用的入口，所以我们需要一个能在本机 Desktop profile 里真正跑起来的版本。
+做这个插件的直接动机是：**在我们开始的时候，官方 `@getnote/dsh-plugin` 还不支持 DSH Desktop**[[2]](#ref2)。Desktop 是大多数人日常使用的入口，所以我们需要一个能在本机 Desktop profile 里真正跑起来的版本。
 
 这不是要替代官方插件，而是补上 Desktop 这个入口。也正因为如此，项目优先处理 Desktop 的本地 bundle、locale/icon 展示、CLI 发现和 Plugin Manager 可见性。
 
@@ -222,7 +222,7 @@
 
 <https://github.com/leether/getnote-toolbox>
 
-源码已经公开，并已发布到 npm：`@leether/getnote-toolbox`。
+源码已经公开，并已发布到 npm：`@leether/getnote-toolbox`。[[1]](#ref1)
 
 - GitHub：<https://github.com/leether/getnote-toolbox>
 - npm：<https://www.npmjs.com/package/@leether/getnote-toolbox>
@@ -325,6 +325,14 @@
 - 先最小版本，再验证、再迭代。
 - 真实案例：先做能力审计与契约，再做隐私审查，最后公开。
 
+## 参考
+
+1. <a id="ref1"></a>[GetNote Toolbox 插件仓库](https://github.com/leether/getnote-toolbox)
+2. <a id="ref2"></a>[官方 GetNote DSH 插件](https://github.com/iswalle/getnote-dsh-plugin)
+3. <a id="ref3"></a>[DeepSeek Harness 插件开发](https://deepseek-harness.github.io/deepseek-harness/develop/basic/)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 第 10 章　排错、安全与继续学习
@@ -425,7 +433,7 @@ dsh --profile web --dump-config
 
 ## 10.4 成本与用量
 
-Agent 的成本主要来自 token：
+Agent 的成本主要来自 token：[[2]](#ref2)
 
 - 上下文越长，越贵；
 - 读大文件、长网页，会显著增加；
@@ -509,9 +517,20 @@ Preset  = 单 Agent 的能力组合
 - 学习路线：日常 → 工作区 → 工具/技能 → 插件。
 - 先会用，再扩展；不要一上来做很大的插件。
 
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 快速开始](https://deepseek-harness.github.io/deepseek-harness/guide/quickstart)
+2. <a id="ref2"></a>[DeepSeek API Token 用量](https://api-docs.deepseek.com/quick_start/token_usage)
+3. <a id="ref3"></a>[Git 文档](https://git-scm.com/docs)
+4. <a id="ref4"></a>[npm publish 文档](https://docs.npmjs.com/cli/v11/commands/npm-publish)
+
+> 链接均为公开来源；产品行为可能随版本变化。
+
 ---
 
 # 附录
+
+本附录的工具名和产品行为以官方文档和本书案例仓库为准。[[1]](#ref1)[[2]](#ref2)[[3]](#ref3)
 
 ## A. 术语表
 
@@ -669,3 +688,12 @@ DSH 不难用，难的是**在它变强之前，先学会控制它**。
 3. **密钥不进对话，破坏性操作先备份。**
 
 当你熟悉了这些，再去碰 Preset、Plugin、Bundle、Creator。那时你看到的不再是一堆名词，而是一套可以按需组合的工作台。
+
+## 参考
+
+1. <a id="ref1"></a>[DeepSeek Harness 官方网站](https://www.deepseek.com/harness/)
+2. <a id="ref2"></a>[DeepSeek Harness GitHub 仓库](https://github.com/deepseek-ai/deepseek-harness)
+3. <a id="ref3"></a>[GetNote Toolbox 插件仓库](https://github.com/leether/getnote-toolbox)
+4. <a id="ref4"></a>[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+> 链接均为公开来源；产品行为可能随版本变化。
