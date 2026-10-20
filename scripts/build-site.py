@@ -407,10 +407,14 @@ def landing_page(lang: dict, chapters: list[dict], total_value: int, total_minut
   </div>
   <div class="hero-cover" aria-hidden="true">
     <div class="cover">
-      <span class="cover-label">DSH Field Guide</span>
-      <span class="cover-title">DeepSeek<br>Harness<br><em>{html.escape(lang['cover_word'])}</em></span>
-      <span class="cover-sub">{lang['cover_sub']}</span>
-      <span class="cover-foot">{html.escape(cover_foot)}</span>
+      <div class="cover-art">
+        <span class="cover-label">DSH Field Guide</span>
+      </div>
+      <div class="cover-copy">
+        <span class="cover-title">DeepSeek<br>Harness<br><em>{html.escape(lang['cover_word'])}</em></span>
+        <span class="cover-sub">{lang['cover_sub']}</span>
+        <span class="cover-foot">{html.escape(cover_foot)}</span>
+      </div>
     </div>
   </div>
 </header>
