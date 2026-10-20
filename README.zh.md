@@ -12,7 +12,8 @@
 
 版本：2026-10  
 参考环境：DeepSeek Harness Desktop 0.2.1-rc.2  
-正文：[dsh-book.md](dsh-book.md) · [English edition](en/dsh-book.md) · 站点构建脚本：[scripts/build-site.py](scripts/build-site.py)
+正文：[dsh-book.md](dsh-book.md) · [English edition](en/dsh-book.md) · 站点构建脚本：[scripts/build-site.py](scripts/build-site.py)  
+书中案例插件：[GetNote Toolbox](https://github.com/leether/getnote-toolbox)
 
 ---
 

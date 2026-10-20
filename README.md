@@ -12,7 +12,8 @@
 
 Version: 2026-10  
 Reference environment: DeepSeek Harness Desktop 0.2.1-rc.2  
-Full text: [English edition](en/dsh-book.md) · [Chinese edition](dsh-book.md) · Site builder: [scripts/build-site.py](scripts/build-site.py)
+Full text: [English edition](en/dsh-book.md) · [Chinese edition](dsh-book.md) · Site builder: [scripts/build-site.py](scripts/build-site.py)  
+Case-study plugin: [GetNote Toolbox](https://github.com/leether/getnote-toolbox)
 
 ---
 
