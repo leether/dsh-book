@@ -228,7 +228,9 @@ No JavaScript, cookies, analytics, external fonts, or third-party asset requests
 ├── PUBLISHING.md          # release / Pages notes (Chinese)
 ├── CONTRIBUTING.md        # contribution notes (Chinese)
 ├── requirements.txt
-└── LICENSE                # MIT
+├── NOTICE.md              # copyright and license scope
+├── LICENSE                # CC BY-NC-ND 4.0 (book text)
+└── LICENSE-CODE           # MIT (code examples)
 ```
 
 `dsh-book.md` is `00-front.md` + `part1.md` … `part4.md`.  
@@ -270,6 +272,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full notes (Chinese).
 
 ## License
 
-This book is released under the **MIT License**. See [LICENSE](LICENSE).
+**Book text:** [CC BY-NC-ND 4.0](LICENSE)  
+**Code examples:** [MIT](LICENSE-CODE)  
+**Scope and commercial licensing:** [NOTICE.md](NOTICE.md)
 
-You may copy, modify, and distribute it, including commercially, as long as the copyright and license notice are retained. The DSH / DeepSeek trademarks are not granted by this license.
+You may read, share, and redistribute the book text verbatim for noncommercial purposes with attribution. You may not use the text commercially, and you may not publish modified, abridged, or translated versions without written permission. Commercial publication rights are reserved by the copyright holder; for a commercial license, open an issue.
+
+The DSH / DeepSeek names and trademarks are not granted by these licenses.

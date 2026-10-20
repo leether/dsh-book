@@ -67,7 +67,7 @@ LANGUAGES = [
         ],
         "about_title": "关于这本书",
         "about_text": "这是一本非官方的 DSH 入门书，写给第一次让 Agent 读写文件、执行任务的人。它不追求讲完所有 API，而是先帮你建立正确的工作方式：小工作区、先只读、先计划、再验收。",
-        "about_meta": "基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License",
+        "about_meta": "基于 DeepSeek Harness Desktop 0.2.1-rc.2 · 正文 CC BY-NC-ND 4.0 · 代码 MIT",
         "blurbs": [
             "先分清模型、Harness 和 Agent，知道 DSH 到底在做什么。",
             "从桌面入口、模型连接和一个小工作区开始。",
@@ -89,7 +89,7 @@ LANGUAGES = [
         "cover_sub": "从第一次对话<br>到自己的插件",
         "footer": [
             "非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。",
-            "基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求",
+            "基于 DeepSeek Harness Desktop 0.2.1-rc.2 · 正文 CC BY-NC-ND 4.0 · 代码 MIT · 无 JavaScript / 无 Cookie / 无第三方请求",
         ],
     },
     {
@@ -134,7 +134,7 @@ LANGUAGES = [
         ],
         "about_title": "About this book",
         "about_text": "An unofficial, practical introduction to DSH for people who are about to let an Agent read files, run tasks, and change real things. It does not try to document every API. It builds the right habits first: use a small workspace, start read-only, plan before executing, and ask for evidence before accepting. This English edition was edited for natural English usage; corrections are welcome.",
-        "about_meta": "Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License",
+        "about_meta": "Based on DeepSeek Harness Desktop 0.2.1-rc.2 · Text CC BY-NC-ND 4.0 · Code MIT",
         "blurbs": [
             "Separate the model, the harness, and the Agent.",
             "Connect a model, pick a workspace, and start your first conversation.",
@@ -156,7 +156,7 @@ LANGUAGES = [
         "cover_sub": "From your first conversation<br>to your own plugin",
         "footer": [
             "An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.",
-            "Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests",
+            "Based on DeepSeek Harness Desktop 0.2.1-rc.2 · Text CC BY-NC-ND 4.0 · Code MIT · No JavaScript / cookies / third-party requests",
         ],
     },
 ]
@@ -255,6 +255,7 @@ def head(lang: dict, title: str, description: str, slug: str) -> str:
 <link rel="alternate" hreflang="en" href="{en_url}">
 <link rel="alternate" hreflang="x-default" href="{zh_url}">
 <meta name="twitter:card" content="summary">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
 <link rel="icon" href="{lang['asset_prefix']}favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="{lang['asset_prefix']}{STYLE_FILE}">
 </head>
@@ -284,7 +285,7 @@ def footer(lang: dict, slug: str) -> str:
     return f"""<footer>
   <p>{html.escape(lang['footer'][0])}</p>
   <p>{html.escape(lang['footer'][1])}</p>
-  <p><a href="{REPO_URL}">GitHub</a> · <a href="{url}">GitHub Pages</a></p>
+  <p><a href="{REPO_URL}">GitHub</a> · <a href="{url}">GitHub Pages</a> · <a href="{REPO_URL}/blob/main/LICENSE">License</a> · <a href="{REPO_URL}/blob/main/LICENSE-CODE">Code license</a></p>
 </footer>
 <a class="top-link" href="#top" aria-label="{html.escape(lang['top_label'])}">↑</a>
 </body>

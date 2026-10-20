@@ -223,7 +223,9 @@ Pages 会在一两分钟内自动更新。
 ├── PUBLISHING.md        # 发布与 Pages 设置记录
 ├── CONTRIBUTING.md      # 纠错与贡献
 ├── requirements.txt     # 站点构建依赖
-└── LICENSE              # MIT
+├── NOTICE.md            # 版权与许可范围
+├── LICENSE              # CC BY-NC-ND 4.0（书稿正文）
+└── LICENSE-CODE         # MIT（代码示例）
 ```
 
 `dsh-book.md` 是 `00-front.md` + `part1.md` … `part4.md` 的合并稿；英文版是 `en/` 下同名文件的合并稿。  
@@ -257,6 +259,10 @@ python3 scripts/build-site.py
 
 ## 许可证
 
-本书采用 **MIT License**，见 [LICENSE](LICENSE)。  
-你可以复制、修改、分发，包括商业用途，但需保留版权与许可声明。  
-书中的 DSH / DeepSeek 商标不随本许可证授予。
+**书稿正文**：[CC BY-NC-ND 4.0](LICENSE)  
+**代码示例**：[MIT](LICENSE-CODE)  
+**范围与商业授权**：[NOTICE.md](NOTICE.md)
+
+你可以在非商业目的下署名转发本书原文，但不得用于商业用途，也不得未经书面许可发布修改版、删节版或翻译版。商业出版权由版权人保留；如需商业授权，请通过 GitHub issue 联系。
+
+书中的 DSH / DeepSeek 名称与商标不随这些许可证授予。
