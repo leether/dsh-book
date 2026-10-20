@@ -3,10 +3,11 @@
 ## 仓库
 
 - 仓库：`https://github.com/leether/dsh-book`
-- 站点：`https://leether.github.io/dsh-book/`
+- 站点（中文）：`https://leether.github.io/dsh-book/`
+- 站点（English）：`https://leether.github.io/dsh-book/en/`
 - 默认分支：`main`
 - Pages 来源：`main` 分支的 `/docs` 目录
-- 站点类型：纯静态 HTML，无服务端、无 JavaScript、无第三方资源
+- 站点类型：纯静态 HTML 双语站点，无服务端、无 JavaScript、无第三方资源
 
 ---
 
@@ -17,6 +18,7 @@ cd ~/workspace/dsh-book
 
 # 1. 生成正文与站点
 cat 00-front.md part1.md part2.md part3.md part4.md > dsh-book.md
+cat en/00-front.md en/part1.md en/part2.md en/part3.md en/part4.md > en/dsh-book.md
 python3 scripts/build-site.py
 
 # 2. 本地检查
@@ -100,7 +102,8 @@ curl -I https://leether.github.io/dsh-book/
 - 首次启用通常需要 1–3 分钟；
 - 如果返回 404，先等一分钟，再查 Pages 状态；
 - `status: built` 表示构建完成；
-- 页面内容来自 `docs/index.html`，不需要 Jekyll 构建。
+- 中文入口 `/`，英文入口 `/en/`，右上角可切换；
+- 页面内容来自 `docs/index.html` 与 `docs/en/index.html`，不需要 Jekyll 构建。
 
 `docs/.nojekyll` 已存在，用于跳过 Jekyll 处理。
 
@@ -114,6 +117,7 @@ vim part2.md
 
 # 重新合并 + 生成站点
 cat 00-front.md part1.md part2.md part3.md part4.md > dsh-book.md
+cat en/00-front.md en/part1.md en/part2.md en/part3.md en/part4.md > en/dsh-book.md
 python3 scripts/build-site.py
 
 # 本地打开检查
@@ -142,6 +146,8 @@ Pages 会在推送后自动更新；通常 1–2 分钟。
 [ ] 没有把 DeepSeek/DSH 说成“官方”
 [ ] 示例中的项目名、文件名、对话均为虚构
 [ ] 站点无 JavaScript、无统计、无外部字体/CDN
+[ ] 中英页面可互相切换，hreflang / canonical 正确
+[ ] 英文页除语言切换外没有残留中文
 [ ] LICENSE 已包含，商标声明已写清
 ```
 

@@ -4,12 +4,13 @@
 
 **给 0 基础用户的实用指南**
 
-> **在线阅读**：<https://leether.github.io/dsh-book/>  
-> **非官方指南**：本书不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。
+> **在线阅读（中文）**：<https://leether.github.io/dsh-book/>  
+> **Read online (English)**: <https://leether.github.io/dsh-book/en/>  
+> **非官方指南 / Unofficial guide**：本书不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。
 
 版本：2026-10  
 参考环境：DeepSeek Harness Desktop 0.2.1-rc.2  
-正文：[dsh-book.md](dsh-book.md) · 站点构建脚本：[scripts/build-site.py](scripts/build-site.py)
+正文：[dsh-book.md](dsh-book.md) · [English edition](en/dsh-book.md) · 站点构建脚本：[scripts/build-site.py](scripts/build-site.py)
 
 ---
 
@@ -158,7 +159,8 @@
 
 ## 在线阅读与仓库
 
-- **GitHub Pages**：<https://leether.github.io/dsh-book/>
+- **GitHub Pages（中文）**：<https://leether.github.io/dsh-book/>
+- **GitHub Pages（English）**：<https://leether.github.io/dsh-book/en/>
 - **GitHub 仓库**：<https://github.com/leether/dsh-book>
 - **问题反馈**：<https://github.com/leether/dsh-book/issues>
 
@@ -166,8 +168,10 @@ GitHub Pages 使用 `main` 分支的 `docs/` 目录，纯静态 HTML，不需要
 修改书稿后，运行：
 
 ```bash
+cat 00-front.md part1.md part2.md part3.md part4.md > dsh-book.md
+cat en/00-front.md en/part1.md en/part2.md en/part3.md en/part4.md > en/dsh-book.md
 python3 scripts/build-site.py
-git add dsh-book.md docs/index.html
+git add dsh-book.md en/dsh-book.md docs/index.html docs/en/index.html
 git commit -m "docs: refresh site"
 git push
 ```
@@ -176,6 +180,7 @@ Pages 会在一两分钟内自动更新。
 
 ## 站点版式
 
+- **双语切换**：右上角 `English / 中文`，两套独立静态页（`/` 与 `/en/`）；
 - **封面式 Hero**：标题、副标题、阅读量、封面卡片和“开始阅读”入口；
 - **桌面侧边目录**：章节导航随页面滚动保持可见；
 - **移动端单列**：目录、正文、章节导航自动堆叠；
@@ -195,11 +200,16 @@ Pages 会在一两分钟内自动更新。
 .
 ├── README.md            # 本文件：提纲、阅读路线、公开说明
 ├── dsh-book.md          # 完整正文（10 章 + 附录）
-├── 00-front.md          # 标题页与目录
-├── part1.md … part4.md  # 分章节源文件
-├── scripts/build-site.py # Markdown → 静态站点
+├── 00-front.md          # 中文标题页与目录
+├── part1.md … part4.md  # 中文分章节源文件
+├── en/                  # English edition sources
+│   ├── 00-front.md
+│   ├── part1.md … part4.md
+│   └── dsh-book.md
+├── scripts/build-site.py # Markdown → 双语静态站点
 ├── docs/                # GitHub Pages 站点（main /docs）
-│   ├── index.html
+│   ├── index.html       # 中文
+│   ├── en/index.html    # English
 │   ├── favicon.svg
 │   └── .nojekyll
 ├── PUBLISHING.md        # 发布与 Pages 设置记录
@@ -213,6 +223,7 @@ Pages 会在一两分钟内自动更新。
 
 ```bash
 cat 00-front.md part1.md part2.md part3.md part4.md > dsh-book.md
+cat en/00-front.md en/part1.md en/part2.md en/part3.md en/part4.md > en/dsh-book.md
 python3 -m pip install -r requirements.txt
 python3 scripts/build-site.py
 ```
@@ -225,7 +236,7 @@ python3 scripts/build-site.py
 
 - **不包含**任何真实 API Key、密码、Token、私人文件、个人笔记或本机绝对路径；
 - 书中的项目名、文件名、对话示例均为虚构；
-- 站点是**纯静态 HTML**：无 JavaScript、无 Cookie、无统计、无第三方字体或 CDN 请求；
+- 中英站点都是**纯静态 HTML**：无 JavaScript、无 Cookie、无统计、无第三方字体或 CDN 请求；
 - 页面只链接到 GitHub 仓库与 Pages 自身，不加载外部追踪资源；
 - 本书是**非官方**学习材料，不代表 DeepSeek 官方文档或产品承诺；
 - DSH / DeepSeek 的名称与商标归其权利人；本书仅作说明与教学用途；

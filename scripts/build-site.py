@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the static GitHub Pages site from dsh-book.md.
+"""Build the bilingual static GitHub Pages site from dsh-book.md and en/dsh-book.md.
 
 The site is intentionally static and self-contained:
 - no JavaScript
@@ -33,9 +33,14 @@ TEMPLATE = """<!doctype html>
 <meta property="og:title" content="DeepSeek Harness 入门">
 <meta property="og:description" content="给 0 基础用户的 DeepSeek Harness 使用指南。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="{site_url}">
+<meta property="og:url" content="{page_url}">
+<meta property="og:locale" content="{og_locale}">
+<link rel="canonical" href="{page_url}">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/">
 <meta name="twitter:card" content="summary">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{asset_prefix}favicon.svg" type="image/svg+xml">
 <style>
 :root {
   --bg: #f7f4ed;
@@ -592,6 +597,7 @@ footer a:hover { color: var(--accent); }
       <a href="#toc">目录</a>
       <a href="#start">开始阅读</a>
       <a href="{repo_url}">GitHub</a>
+      {language_switch}
     </nav>
   </div>
 </header>
@@ -640,7 +646,7 @@ footer a:hover { color: var(--accent); }
 <footer>
   <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
   <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
-  <p><a href="{repo_url}">GitHub</a> · <a href="{site_url}">GitHub Pages</a></p>
+  <p><a href="{repo_url}">GitHub</a> · <a href="{page_url}">GitHub Pages</a></p>
 </footer>
 </body>
 </html>
@@ -655,12 +661,107 @@ def short_title(value: str, limit: int = 18) -> str:
     value = value.strip()
     return value if len(value) <= limit else value[:limit].rstrip() + "…"
 
+LANGUAGES = [
+    {
+        "key": "zh",
+        "source": "dsh-book.md",
+        "output": "docs/index.html",
+        "lang": "zh-CN",
+        "page_url": SITE_URL,
+        "asset_prefix": "",
+        "og_locale": "zh_CN",
+        "strip_title": re.compile(r"^第\s*\d+\s*章\s*[　\s]*"),
+        "appendix_prefix": "附录",
+        "appendix_number": "附",
+        "meta": "约 {minutes} 分钟 · {value:,} 字 · {sections} 个小节",
+        "count_mode": "chars",
+        "divisor": 500,
+        "short_limit": 18,
+        "prev_small": "上一章",
+        "next_small": "下一章",
+        "back_small": "返回",
+        "end_small": "结束",
+        "contents": "目录",
+        "chapter_nav": "章节导航",
+        "top": "回到顶部",
+        "switch": '<a href="en/" hreflang="en" lang="en">English</a>',
+        "static": {},
+    },
+    {
+        "key": "en",
+        "source": "en/dsh-book.md",
+        "output": "docs/en/index.html",
+        "lang": "en",
+        "page_url": f"{SITE_URL}en/",
+        "asset_prefix": "../",
+        "og_locale": "en_US",
+        "strip_title": re.compile(r"^Chapter\s+\d+\s*[—–-]\s*", re.IGNORECASE),
+        "appendix_prefix": "appendix",
+        "appendix_number": "A",
+        "meta": "{minutes} min read · {value:,} words · {sections} sections",
+        "count_mode": "words",
+        "divisor": 220,
+        "short_limit": 26,
+        "prev_small": "Previous",
+        "next_small": "Next",
+        "back_small": "Back",
+        "end_small": "End",
+        "contents": "Contents",
+        "chapter_nav": "Chapter navigation",
+        "top": "Back to top",
+        "switch": '<a href="../" hreflang="zh-CN" lang="zh-CN">中文</a>',
+        "static": {
+            '<html lang="zh-CN">': '<html lang="en">',
+            "<title>DeepSeek Harness 入门 · 从第一次对话到自己的插件</title>":
+                "<title>DeepSeek Harness: A Beginner's Guide</title>",
+            '<meta name="description" content="给 0 基础用户的 DeepSeek Harness 使用指南：模型、工作区、权限、会话、工具、技能、Preset、插件与创造模式。">':
+                '<meta name="description" content="A practical, beginner-friendly guide to DeepSeek Harness: models, workspaces, permissions, sessions, tools, skills, presets, plugins, and Creator mode.">',
+            '<meta property="og:title" content="DeepSeek Harness 入门">':
+                '<meta property="og:title" content="DeepSeek Harness: A Beginner\'s Guide">',
+            '<meta property="og:description" content="给 0 基础用户的 DeepSeek Harness 使用指南。">':
+                '<meta property="og:description" content="A practical, beginner-friendly guide to DeepSeek Harness.">',
+            "<span>入门</span>": "<span>Guide</span>",
+            'aria-label="快速导航"': 'aria-label="Quick navigation"',
+            '<a href="#toc">目录</a>': '<a href="#toc">Contents</a>',
+            '<a href="#start">开始阅读</a>': '<a href="#start">Start reading</a>',
+            '<p class="badge">非官方指南 · 无 Cookie · 无统计</p>':
+                '<p class="badge">Unofficial guide · No cookies · No tracking</p>',
+            "<h1>DeepSeek Harness 入门</h1>": "<h1>DeepSeek Harness</h1>",
+            '<p class="subtitle">从第一次对话到自己的插件</p>':
+                '<p class="subtitle">A Beginner\'s Guide</p>',
+            '<p class="lede">给 0 基础用户的实用指南。先学会用，再理解原理，最后扩展它。</p>':
+                '<p class="lede">A practical guide for complete beginners. Learn to use it, understand it, then extend it.</p>',
+            "<li>{chapter_count} 章 + 附录</li>": "<li>{chapter_count} chapters + appendix</li>",
+            "<li>约 {total_words} 万字</li>": "<li>~{total_words} words</li>",
+            "<li>约 {total_minutes} 分钟</li>": "<li>~{total_minutes} min read</li>",
+            '<a class="button primary" href="#start">开始阅读</a>':
+                '<a class="button primary" href="#start">Start reading</a>',
+            '<a class="button" href="{repo_url}">GitHub 仓库</a>':
+                '<a class="button" href="{repo_url}">GitHub repository</a>',
+            "<em>入门</em>": "<em>Guide</em>",
+            '<span class="cover-sub">从第一次对话<br>到自己的插件</span>':
+                '<span class="cover-sub">From your first conversation<br>to your own plugin</span>',
+            '<span class="cover-foot">0 基础 · {chapter_count} 章 + 附录</span>':
+                '<span class="cover-foot">Beginner-friendly · {chapter_count} chapters + appendix</span>',
+            "<h2>本书地图</h2>": "<h2>Book map</h2>",
+            '<p class="sidebar-note">非官方学习材料 · MIT License<br>无 JavaScript / 无 Cookie / 无第三方请求</p>':
+                '<p class="sidebar-note">An unofficial guide · MIT License<br>No JavaScript / cookies / third-party requests</p>',
+            'aria-label="回到顶部"': 'aria-label="Back to top"',
+            "<p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>":
+                "<p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>",
+            "<p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>":
+                "<p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>",
+        },
+    },
+]
 
-def main() -> None:
-    text = SOURCE.read_text(encoding="utf-8")
-    start = text.find("# 第 1 章")
+
+def build_site(cfg: dict) -> None:
+    text = (ROOT / cfg["source"]).read_text(encoding="utf-8")
+    start_marker = "# 第 1 章" if cfg["key"] == "zh" else "# Chapter 1"
+    start = text.find(start_marker)
     if start == -1:
-        raise SystemExit("cannot find '# 第 1 章' in dsh-book.md")
+        raise SystemExit(f"cannot find {start_marker!r} in {cfg['source']}")
     body_md = text[start:]
 
     parser = markdown.Markdown(
@@ -671,25 +772,28 @@ def main() -> None:
 
     matches = list(re.finditer(r'<h1 id="([^"]+)">(.*?)</h1>', body_html, flags=re.S))
     if not matches:
-        raise SystemExit("no chapter headings found in generated HTML")
+        raise SystemExit(f"no chapter headings found in {cfg['source']}")
 
     chapters = []
     for index, match in enumerate(matches):
         end = matches[index + 1].start() if index + 1 < len(matches) else len(body_html)
         chunk = body_html[match.start():end]
         raw_title = strip_tags(match.group(2))
-        title = re.sub(r"^第\s*\d+\s*章\s*[　\s]*", "", raw_title).strip() or raw_title
+        title = cfg["strip_title"].sub("", raw_title).strip() or raw_title
         plain = re.sub(r"\s+", "", strip_tags(chunk))
-        chars = len(plain)
+        if cfg["count_mode"] == "words":
+            value = len(re.findall(r"[A-Za-z0-9][A-Za-z0-9'’_-]*", strip_tags(chunk)))
+        else:
+            value = len(plain)
         sections = len(re.findall(r"<h2\b", chunk))
-        minutes = max(1, round(chars / 500))
-        is_appendix = title.startswith("附录")
-        number = "附" if is_appendix else f"{index + 1:02d}"
+        minutes = max(1, round(value / cfg["divisor"]))
+        is_appendix = title.lower().startswith(cfg["appendix_prefix"])
+        number = cfg["appendix_number"] if is_appendix else f"{index + 1:02d}"
         chapters.append({
             "anchor": match.group(1),
             "title": title,
             "number": number,
-            "chars": chars,
+            "value": value,
             "minutes": minutes,
             "sections": sections,
             "html": chunk,
@@ -698,28 +802,33 @@ def main() -> None:
 
     body_parts = []
     for index, chapter in enumerate(chapters):
-        meta = (
-            f'<p class="chapter-meta">约 {chapter["minutes"]} 分钟 · '
-            f'{chapter["chars"]:,} 字 · {chapter["sections"]} 个小节</p>'
+        meta = cfg["meta"].format(
+            minutes=chapter["minutes"],
+            value=chapter["value"],
+            sections=chapter["sections"],
         )
-        chunk = chapter["html"].replace("</h1>", "</h1>\n" + meta, 1)
+        chunk = chapter["html"].replace(
+            "</h1>",
+            f'</h1>\n<p class="chapter-meta">{meta}</p>',
+            1,
+        )
 
         if index == 0:
-            prev_href, prev_small, prev_label = "#toc", "返回", "目录"
+            prev_href, prev_small, prev_label = "#toc", cfg["back_small"], cfg["contents"]
         else:
             previous = chapters[index - 1]
             prev_href = f'#{previous["anchor"]}'
-            prev_small, prev_label = "上一章", short_title(previous["title"])
+            prev_small, prev_label = cfg["prev_small"], short_title(previous["title"], cfg["short_limit"])
 
         if index + 1 < len(chapters):
             following = chapters[index + 1]
             next_href = f'#{following["anchor"]}'
-            next_small, next_label = "下一章", short_title(following["title"])
+            next_small, next_label = cfg["next_small"], short_title(following["title"], cfg["short_limit"])
         else:
-            next_href, next_small, next_label = "#top", "结束", "回到顶部"
+            next_href, next_small, next_label = "#top", cfg["end_small"], cfg["top"]
 
         pager = (
-            '<nav class="pager" aria-label="章节导航">\n'
+            f'<nav class="pager" aria-label="{cfg["chapter_nav"]}">\n'
             f'  <a class="prev" href="{prev_href}"><small>{prev_small}</small><span>{html.escape(prev_label)}</span></a>\n'
             f'  <a class="next" href="{next_href}"><small>{next_small}</small><span>{html.escape(next_label)}</span></a>\n'
             "</nav>"
@@ -733,34 +842,68 @@ def main() -> None:
         for chapter in chapters
     )
 
-    total_chars = sum(chapter["chars"] for chapter in chapters)
+    total_value = sum(chapter["value"] for chapter in chapters)
     total_minutes = sum(chapter["minutes"] for chapter in chapters)
     main_chapters = sum(1 for chapter in chapters if not chapter["is_appendix"])
+    total_words = (
+        f"{total_value / 10000:.1f}"
+        if cfg["count_mode"] == "chars"
+        else f"{total_value:,}"
+    )
 
     page = (
-        TEMPLATE.replace("{site_url}", SITE_URL)
-        .replace("{repo_url}", REPO_URL)
-        .replace("{chapter_count}", str(main_chapters))
-        .replace("{total_chars}", f"{total_chars:,}")
-        .replace("{total_words}", f"{total_chars / 10000:.1f}")
+        TEMPLATE.replace("{language_switch}", cfg["switch"])
+        .replace("{asset_prefix}", cfg["asset_prefix"])
+        .replace("{page_url}", cfg["page_url"])
+        .replace("{og_locale}", cfg["og_locale"])
+    )
+    for old, new in cfg["static"].items():
+        page = page.replace(old, new)
+    page = page.replace("{repo_url}", REPO_URL)
+
+    page = (
+        page.replace("{chapter_count}", str(main_chapters))
+        .replace("{total_words}", total_words)
         .replace("{total_minutes}", str(total_minutes))
         .replace("{toc}", toc)
         .replace("{body}", "\n".join(body_parts))
     )
+
+    unresolved = [token for token in (
+        "{repo_url}", "{language_switch}", "{asset_prefix}", "{page_url}",
+        "{og_locale}", "{chapter_count}", "{total_words}", "{total_minutes}",
+        "{toc}", "{body}",
+    ) if token in page]
+    if unresolved:
+        raise SystemExit(f"unresolved placeholders in {cfg['output']}: {unresolved}")
 
     # Privacy guard: the Pages build must stay static and self-contained.
     lowered = page.lower()
     forbidden = ("<script", "google-analytics", "googletagmanager", "plausible.io", "umami")
     for token in forbidden:
         if token in lowered:
-            raise SystemExit(f"refusing to write site containing {token!r}")
+            raise SystemExit(f"refusing to write {cfg['output']} containing {token!r}")
 
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(page, encoding="utf-8")
+    # Keep the English page English: the only Han characters allowed are the
+    # language-switch label "中文".
+    if cfg["lang"] == "en":
+        check = page.replace("中文", "")
+        if re.search(r"[\u4e00-\u9fff]", check):
+            found = sorted(set(re.findall(r"[\u4e00-\u9fff]+", check)))[:12]
+            raise SystemExit(f"untranslated Chinese in English page: {found}")
+
+    output = ROOT / cfg["output"]
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(page, encoding="utf-8")
     print(
-        f"wrote {OUTPUT.relative_to(ROOT)} "
-        f"({len(page):,} chars, {len(chapters)} chapters, {total_chars:,} chars of text)"
+        f"wrote {cfg['output']} "
+        f"({len(page):,} chars, {len(chapters)} chapters, {total_value:,} {cfg['count_mode']})"
     )
+
+
+def main() -> None:
+    for cfg in LANGUAGES:
+        build_site(cfg)
 
 
 if __name__ == "__main__":
