@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 5 · Sessions, Context, and Memory · DeepSeek Harness</title>
+<meta name="description" content="Chapter 5: Sessions, Context, and Memory — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 5 · Sessions, Context, and Memory · DeepSeek Harness">
+<meta property="og:description" content="Chapter 5: Sessions, Context, and Memory — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch05.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch05.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch05.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch05.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch05.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch05.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html" aria-current="page"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 5</p>
+    <section class="chapter">
+<h1 id="chapter-5-sessions-context-and-memory">Chapter 5 — Sessions, Context, and Memory</h1>
+<p class="chapter-meta">4 min read · 792 words · 11 sections</p>
+<h2 id="what-you-will-learn_4">What You Will Learn</h2>
+<ul>
+<li>Understand Session and Context Window;</li>
+<li>Know why the Agent forgets;</li>
+<li>Separate in-session memory from cross-session memory;</li>
+<li>Use files, <code>AGENTS.md</code>, and Skills as long-term memory;</li>
+<li>Manage context so the conversation does not become slow or expensive.</li>
+</ul>
+<hr />
+<h2 id="51-what-a-session-is">5.1 What a Session Is</h2>
+<p>A Session is one continuous conversation.</p>
+<p>Within a Session:</p>
+<ul>
+<li>Your messages, the Agent's replies, and tool results form a history;</li>
+<li>The Agent can refer to earlier content;</li>
+<li>The history is not infinite.</li>
+</ul>
+<p>A new Session usually does not inherit the full chat history. It may read the workspace, <code>AGENTS.md</code>, and available Skills, but it starts a new meeting.</p>
+<p>Think of a Session as one meeting. A new meeting does not remember every sentence unless you leave notes.</p>
+<hr />
+<h2 id="52-context-window-the-agents-working-memory">5.2 Context Window: The Agent's Working Memory</h2>
+<p>A model can process only a limited amount of text at once. That limit is the <strong>Context Window</strong>.</p>
+<p>Context includes:</p>
+<ul>
+<li>System prompt;</li>
+<li>Tool definitions;</li>
+<li>Skill content;</li>
+<li>Your messages;</li>
+<li>Previous replies;</li>
+<li>Tool results;</li>
+<li>File contents that were read.</li>
+</ul>
+<p>When the context fills up:</p>
+<ul>
+<li>Responses slow down;</li>
+<li>Cost rises;</li>
+<li>Early information is forgotten;</li>
+<li>Compaction or truncation may occur;</li>
+<li>The Agent may confidently continue with incomplete information.</li>
+</ul>
+<h3 id="warning-signs">Warning signs</h3>
+<ul>
+<li>It repeats questions;</li>
+<li>It cites the wrong file;</li>
+<li>It forgets a rule you set;</li>
+<li>Replies become long and unfocused.</li>
+</ul>
+<hr />
+<h2 id="53-dsh-does-not-automatically-remember-everything">5.3 DSH Does Not Automatically Remember Everything</h2>
+<p>This is the most common beginner misconception.</p>
+<p>DSH keeps a session log, but that is not the same as cross-session long-term memory.</p>
+<ul>
+<li>Within a Session: it remembers the chat;</li>
+<li>A new Session: it usually does not remember every previous message;</li>
+<li>It may read workspace files, <code>AGENTS.md</code>, or Skills;</li>
+<li>If you install a memory plugin, you may get extra cross-session recall.</li>
+</ul>
+<p>Important information should be written to files:</p>
+<ul>
+<li>Project background → <code>PROJECT.md</code>;</li>
+<li>Rules → <code>AGENTS.md</code>;</li>
+<li>Progress → <code>TODO.md</code> or a task list;</li>
+<li>Decisions → <code>DECISIONS.md</code>;</li>
+<li>Deliverables → output files.</li>
+</ul>
+<blockquote>
+<p><strong>If a file can remember it, do not rely on the chat to remember it.</strong></p>
+</blockquote>
+<hr />
+<h2 id="54-new-session-vs-continue">5.4 New Session vs. Continue</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A completely new task</td>
+<td>New Session</td>
+</tr>
+<tr>
+<td>Continuing the same task</td>
+<td>Continue the current Session</td>
+</tr>
+<tr>
+<td>The Session is long and confused</td>
+<td>Summarize to a file, then start a new one</td>
+</tr>
+<tr>
+<td>A different project</td>
+<td>Change workspace and start a new Session</td>
+</tr>
+<tr>
+<td>A quick independent question</td>
+<td>New Session, to avoid polluting context</td>
+</tr>
+</tbody>
+</table>
+<h3 id="for-long-tasks">For long tasks</h3>
+<ol>
+<li>Ask the Agent to write progress to <code>PROGRESS.md</code>;</li>
+<li>List done / not done / next;</li>
+<li>Start a new Session;</li>
+<li>Ask it to read <code>PROGRESS.md</code> and <code>AGENTS.md</code> first.</li>
+</ol>
+<p>This is more reliable than stretching one Session forever.</p>
+<hr />
+<h2 id="55-use-files-as-long-term-memory">5.5 Use Files as Long-Term Memory</h2>
+<p>A simple structure:</p>
+<pre><code class="language-text">project/
+  AGENTS.md        # rules
+  PROJECT.md       # background
+  DECISIONS.md     # key decisions
+  PROGRESS.md      # progress
+  TODO.md          # tasks
+  notes/           # source material
+  output/          # deliverables
+</code></pre>
+<p>At the start of a new Session:</p>
+<pre><code class="language-text">Read AGENTS.md, PROJECT.md, and PROGRESS.md first.
+Then summarize the current state in three sentences.
+Do not modify anything before that summary.
+</code></pre>
+<p>Now the Agent does not need to remember the entire chat.</p>
+<hr />
+<h2 id="56-context-hygiene">5.6 Context Hygiene</h2>
+<ul>
+<li>Do not read large amounts of unrelated material;</li>
+<li>Search first, then read only what is needed;</li>
+<li>Read long documents in sections;</li>
+<li>Ask for summaries when tool output is large;</li>
+<li>Write conclusions into files;</li>
+<li>Do not mix unrelated tasks in one Session.</li>
+</ul>
+<p>Useful prompt:</p>
+<pre><code class="language-text">Read only the three files most relevant to the task.
+If you need more, explain why first.
+Do not read the entire directory at once.
+</code></pre>
+<hr />
+<h2 id="57-memory-plugins-are-not-magic">5.7 Memory Plugins Are Not Magic</h2>
+<p>Some plugins provide cross-session memory:</p>
+<ul>
+<li>Extract facts automatically;</li>
+<li>Store them locally or in the cloud;</li>
+<li>Recall them in later conversations.</li>
+</ul>
+<p>They are useful, but:</p>
+<ul>
+<li>They can recall the wrong thing;</li>
+<li>They can treat old information as current;</li>
+<li>They add context and cost;</li>
+<li>They require privacy and permission review.</li>
+</ul>
+<p>For beginners, start with files and <code>AGENTS.md</code>. Add a memory plugin only when you have a clear need.</p>
+<hr />
+<h2 id="try-it_2">Try It</h2>
+<ol>
+<li>Ask the Agent to write <code>PROJECT.md</code> with the current goal and constraints;</li>
+<li>Start a new Session;</li>
+<li>Ask it to read <code>PROJECT.md</code> and restate the goal;</li>
+<li>Observe whether it can continue without the old chat history.</li>
+</ol>
+<hr />
+<h2 id="common-pitfalls_4">Common Pitfalls</h2>
+<ul>
+<li><strong>Expecting a new Session to remember the old one</strong>: it usually does not.</li>
+<li><strong>Dumping all material into context</strong>: slow and expensive.</li>
+<li><strong>Changing requirements endlessly in one Session</strong>: context pollution.</li>
+<li><strong>Saying "remember this" without writing it down</strong>: it will be gone.</li>
+<li><strong>Trusting memory recall as truth</strong>: recall can be wrong.</li>
+</ul>
+<hr />
+<h2 id="summary_4">Summary</h2>
+<ul>
+<li>Session = one conversation; Context Window = working memory.</li>
+<li>Context fills up; when it does, the Agent forgets, slows down, and costs more.</li>
+<li>DSH does not automatically remember everything across Sessions.</li>
+<li>Write important information to files; summarize long tasks before starting a new Session.</li>
+<li>Memory plugins are a supplement, not a replacement.</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="ch04.html"><small>Previous</small><span>Workspaces, Files, and Per…</span></a>
+  <a class="next" href="ch06.html"><small>Next</small><span>Tools and Skills: The Agen…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch05.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

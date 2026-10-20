@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 10 · Troubleshooting, Safety, and Next Steps · DeepSeek Harness</title>
+<meta name="description" content="Chapter 10: Troubleshooting, Safety, and Next Steps — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 10 · Troubleshooting, Safety, and Next Steps · DeepSeek Harness">
+<meta property="og:description" content="Chapter 10: Troubleshooting, Safety, and Next Steps — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch10.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch10.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch10.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch10.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch10.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch10.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html" aria-current="page"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 10</p>
+    <section class="chapter">
+<h1 id="chapter-10-troubleshooting-safety-and-next-steps">Chapter 10 — Troubleshooting, Safety, and Next Steps</h1>
+<p class="chapter-meta">3 min read · 660 words · 8 sections</p>
+<h2 id="what-you-will-learn_9">What You Will Learn</h2>
+<ul>
+<li>Locate common problems with a table;</li>
+<li>Know where to look for diagnostics;</li>
+<li>Build your own safety checklist;</li>
+<li>Control cost;</li>
+<li>Plan your next practice steps.</li>
+</ul>
+<hr />
+<h2 id="101-common-problems">10.1 Common Problems</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check first</th>
+<th>Common cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cannot connect to a model</td>
+<td>Settings → Models</td>
+<td>Wrong key, Base URL, or no credit</td>
+</tr>
+<tr>
+<td><code>401 Invalid API key</code></td>
+<td>API key</td>
+<td>Incomplete, expired, or wrong service</td>
+</tr>
+<tr>
+<td>Agent does not reply / spins</td>
+<td>Model, network, session</td>
+<td>Timeout, huge context</td>
+</tr>
+<tr>
+<td>Agent says it has no tools</td>
+<td>Current mode, plugins</td>
+<td>Minimal mode, plugin disabled</td>
+</tr>
+<tr>
+<td>Plugin installed but no tools</td>
+<td>Plugin Manager, reload</td>
+<td>Not enabled, restart needed, missing dependency</td>
+</tr>
+<tr>
+<td>Skill does not load</td>
+<td>Skill directory, version</td>
+<td>Wrong path, description mismatch, conflict</td>
+</tr>
+<tr>
+<td>File edit denied</td>
+<td>Permission/workspace</td>
+<td>Outside workspace, sandbox</td>
+</tr>
+<tr>
+<td>File not found</td>
+<td>Workspace, relative path</td>
+<td>Wrong current directory, missing file</td>
+</tr>
+<tr>
+<td>Slower and more expensive over time</td>
+<td>Context</td>
+<td>Long history, too many files</td>
+</tr>
+<tr>
+<td>Agent repeats or forgets</td>
+<td>Context</td>
+<td>Window full, compaction, stale info</td>
+</tr>
+<tr>
+<td>Tool name conflict</td>
+<td>Plugin list</td>
+<td>Two plugins registered the same name</td>
+</tr>
+<tr>
+<td>Version error</td>
+<td>Versions</td>
+<td>DSH/CLI/plugin mismatch</td>
+</tr>
+<tr>
+<td>Command hangs</td>
+<td>The command</td>
+<td>Interactive command, no timeout, network</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="102-reading-diagnostics">10.2 Reading Diagnostics</h2>
+<h3 id="start-with-the-ui">Start with the UI</h3>
+<ul>
+<li>Red errors;</li>
+<li>Failed tool cards;</li>
+<li>Plugin Manager warnings;</li>
+<li>Model connection status.</li>
+</ul>
+<h3 id="then-check-context">Then check context</h3>
+<ul>
+<li>Is the workspace correct?</li>
+<li>Is the mode correct?</li>
+<li>Is the plugin enabled?</li>
+<li>Is the Session too long?</li>
+</ul>
+<h3 id="then-check-logs">Then check logs</h3>
+<p>Desktop/CLI usually has a log or diagnostics entry. CLI users can run:</p>
+<pre><code class="language-bash">dsh --profile web --dump-config
+</code></pre>
+<p>Do not edit profile files until you understand the layer order.</p>
+<h3 id="a-general-troubleshooting-order">A general troubleshooting order</h3>
+<pre><code class="language-text">1. Minimal reproduction
+2. New Session
+3. Standard mode
+4. Disable the most recently installed plugin
+5. Check model/network
+6. Check workspace/permissions
+7. Read logs/diagnostics
+8. Reinstall/roll back only after that
+</code></pre>
+<hr />
+<h2 id="103-safety-checklist">10.3 Safety Checklist</h2>
+<p>Before an important task:</p>
+<pre><code class="language-text">[ ] Does the workspace contain only what is needed?
+[ ] Are important files backed up or committed?
+[ ] Can I start read-only?
+[ ] Will it delete, overwrite, push, or upload?
+[ ] Am I about to expose keys, passwords, or private data?
+[ ] Is the plugin source trustworthy?
+[ ] Do I really need full access?
+[ ] How do I roll back?
+</code></pre>
+<h3 id="three-bottom-lines">Three bottom lines</h3>
+<ol>
+<li><strong>Secrets never go into chat</strong>;</li>
+<li><strong>Back up before destructive actions</strong>;</li>
+<li><strong>Do not give untrusted plugins high permissions</strong>.</li>
+</ol>
+<hr />
+<h2 id="104-cost-and-usage">10.4 Cost and Usage</h2>
+<p>Agent cost is mostly tokens:</p>
+<ul>
+<li>Longer context costs more;</li>
+<li>Large files and long pages cost more;</li>
+<li>Subagents and workflows add model calls;</li>
+<li>Retries add cost.</li>
+</ul>
+<h3 id="habits-that-save-money">Habits that save money</h3>
+<ul>
+<li>Read only what is needed;</li>
+<li>Read long documents in sections;</li>
+<li>Summarize to files and start a new Session;</li>
+<li>Do not use subagents when one Agent is enough;</li>
+<li>Choose the right model for the task.</li>
+</ul>
+<hr />
+<h2 id="105-next-steps">10.5 Next Steps</h2>
+<h3 id="week-1-everyday-use">Week 1: Everyday use</h3>
+<ul>
+<li>Complete three real tasks in Standard;</li>
+<li>Practice goal + input + constraints + acceptance;</li>
+<li>Learn to read tool cards and approvals.</li>
+</ul>
+<h3 id="week-2-workspace-and-context">Week 2: Workspace and context</h3>
+<ul>
+<li>Write an <code>AGENTS.md</code>;</li>
+<li>Use <code>PROJECT.md</code> and <code>PROGRESS.md</code>;</li>
+<li>Practice resuming in a new Session.</li>
+</ul>
+<h3 id="week-3-tools-and-skills">Week 3: Tools and Skills</h3>
+<ul>
+<li>Use todos for a multi-step task;</li>
+<li>Try one subagent;</li>
+<li>Read a <code>SKILL.md</code>;</li>
+<li>Deliver a file with <code>present</code>.</li>
+</ul>
+<h3 id="week-4-extension">Week 4: Extension</h3>
+<ul>
+<li>Read Chapter 8 and understand Plugin/Bundle/Profile;</li>
+<li>Build one small tool in Creator;</li>
+<li>Install, verify, and uninstall;</li>
+<li>Write your own plugin notes.</li>
+</ul>
+<hr />
+<h2 id="106-one-page-cheat-sheet">10.6 One-Page Cheat Sheet</h2>
+<pre><code class="language-text">Agent = Model + Harness
+
+Everyday work  → Standard
+Extending DSH  → Creator
+Batch tools    → PTC
+Small tasks    → Minimal
+
+Workspace = folder + permission boundary
+Session   = one conversation
+Context   = working memory; it fills up
+Skill     = knowledge/procedure
+Tool      = action
+Plugin    = runtime capability
+Bundle    = installer package
+Profile   = installation environment
+Preset    = capability composition for one Agent
+
+Good task = goal + input + constraints + acceptance
+Read-only first, then write
+Plan first, then execute
+Back up before destructive actions
+Secrets never go into chat
+</code></pre>
+<hr />
+<h2 id="summary_9">Summary</h2>
+<ul>
+<li>Troubleshoot from minimal reproduction + new Session + Standard + disable new plugins.</li>
+<li>Three safety rules: secrets, backups, permissions.</li>
+<li>Cost comes from context and model calls.</li>
+<li>Learning path: daily use → workspace → tools/Skills → plugins.</li>
+<li>Use first; extend later. Do not start with a huge plugin.</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="ch09.html"><small>Previous</small><span>Creator Mode: From User to…</span></a>
+  <a class="next" href="appendix.html"><small>Next</small><span>Appendix</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch10.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

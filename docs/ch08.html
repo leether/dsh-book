@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>第 8 章 · 插件、Bundle 与 Profile：给 DSH 装能力 · DeepSeek Harness 入门</title>
+<meta name="description" content="第 8 章: 插件、Bundle 与 Profile：给 DSH 装能力 — 从第一次对话到自己的插件">
+<meta property="og:title" content="第 8 章 · 插件、Bundle 与 Profile：给 DSH 装能力 · DeepSeek Harness 入门">
+<meta property="og:description" content="第 8 章: 插件、Bundle 与 Profile：给 DSH 装能力 — 从第一次对话到自己的插件">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/ch08.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://leether.github.io/dsh-book/ch08.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch08.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch08.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch08.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="index.html#contents">目录</a>
+      <a href="ch01.html">开始阅读</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="en/ch08.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>认识 DSH：模型、Harness、Agent</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>第一次启动：桌面、模型、工作区</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>第一次任务：把需求说清楚</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>工作区、文件与权限</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>会话、上下文与记忆</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>工具与技能：Agent 的手和脑</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>模式与 Preset：同一个模型，不同工作方式</span></a></li>
+        <li><a href="ch08.html" aria-current="page"><span class="num">08</span><span>插件、Bundle 与 Profile：给 DSH 装能力</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>创造模式：从使用者到扩展者</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>排错、安全与继续学习</span></a></li>
+        <li><a href="appendix.html"><span class="num">附</span><span>附录</span></a></li>
+      </ol>
+      <p class="sidebar-note">非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。<br>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 8 章</p>
+    <section class="chapter">
+<h1 id="8-bundle-profile-dsh">第 8 章　插件、Bundle 与 Profile：给 DSH 装能力</h1>
+<p class="chapter-meta">约 5 分钟 · 2,482 字 · 12 个小节</p>
+<h2 id="_60">本章你会学会</h2>
+<ul>
+<li>分清 Plugin、Bundle、Profile 三个词；</li>
+<li>知道一个插件是怎么被“装进去”的；</li>
+<li>用 Plugin Manager 安装、启用、停用、卸载；</li>
+<li>理解第三方插件的信任边界；</li>
+<li>遇到“装了但不生效”时怎么排查。</li>
+</ul>
+<hr />
+<h2 id="81">8.1 三个词，三个层级</h2>
+<p>先记住一句话：</p>
+<blockquote>
+<p><strong>Plugin 是能力，Bundle 是安装包，Profile 是工作环境。</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>词</th>
+<th>你可以理解成</th>
+<th>回答的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Plugin</strong></td>
+<td>一个可插拔的能力模块</td>
+<td>运行的时候执行什么？</td>
+</tr>
+<tr>
+<td><strong>Bundle</strong></td>
+<td>一个可安装的“补丁包”</td>
+<td>哪些配置和代码一起分发？</td>
+</tr>
+<tr>
+<td><strong>Profile</strong></td>
+<td>一套安装环境</td>
+<td>这个环境装了哪些 Bundle？</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plugin">Plugin</h3>
+<p>Plugin 是运行时单元。它可以：</p>
+<ul>
+<li>注册工具；</li>
+<li>注册服务；</li>
+<li>注册 Skill；</li>
+<li>添加界面；</li>
+<li>监听事件；</li>
+<li>改变 Agent 的行为。</li>
+</ul>
+<p>例如，一个笔记类插件可以注册一组笔记工具、一个 Config 和一个 Skill。</p>
+<h3 id="bundle">Bundle</h3>
+<p>Bundle 是一个 npm 包，里面通常有：</p>
+<ul>
+<li>一个 <code>cordis.patch.yml</code>（或一组 patch 文件）；</li>
+<li>要挂载的插件代码；</li>
+<li>可能还有 Skill、界面资源、图标。</li>
+</ul>
+<p>它的作用是：</p>
+<ul>
+<li>把“要加哪些插件、怎么配置”打包；</li>
+<li>让用户一条命令安装；</li>
+<li>安装后，它的配置行仍然可以被上层覆盖。</li>
+</ul>
+<p>一个 Bundle 可以挂载多个 Plugin；一个 Plugin 也可以被不同的 Bundle 引用。</p>
+<h3 id="profile">Profile</h3>
+<p>Profile 是安装环境，通常对应：</p>
+<ul>
+<li><code>desktop</code>：桌面应用；</li>
+<li><code>web</code>：浏览器；</li>
+<li><code>headless</code>：命令行一次性执行。</li>
+</ul>
+<p>它里面有：</p>
+<ul>
+<li>已安装的 Bundle 列表；</li>
+<li>自己的 <code>cordis.patch.yml</code>；</li>
+<li>第三方插件依赖。</li>
+</ul>
+<p>Profile 决定“这个环境装了什么”，Bundle 决定“装的东西包含什么”，Plugin 决定“实际运行什么”。</p>
+<hr />
+<h2 id="82-preset">8.2 它们和 Preset 的关系</h2>
+<pre><code class="language-text">Profile（desktop）
+ ├─ Bundle A（dsh-base）
+ ├─ Bundle B（dsh-web-app）
+ │    └─ 声明 Preset: standard / creator / ...
+ └─ Bundle C（你的插件）
+      └─ 挂载 Plugin: 你的工具
+
+Preset（standard / creator）
+ └─ 给某个 Agent 选择一组 Plugin
+</code></pre>
+<ul>
+<li>Bundle 可以声明 Preset；</li>
+<li>Preset 是“给哪个 Agent 用哪些 Plugin”；</li>
+<li>Profile 是“这个环境装了哪些 Bundle”；</li>
+<li>Plugin 是“真正执行的能力”。</li>
+</ul>
+<hr />
+<h2 id="83-plugin-manager">8.3 用 Plugin Manager 安装</h2>
+<p>在 Desktop 里，通常有 <strong>Plugin Manager / 插件</strong>页面。</p>
+<p>基本流程：</p>
+<ol>
+<li>打开插件页面；</li>
+<li>搜索或选择要安装的 Bundle；</li>
+<li>阅读说明、权限、依赖；</li>
+<li>确认安装；</li>
+<li>按提示重启/重载；</li>
+<li>检查工具、Skill、界面是否出现。</li>
+</ol>
+<h3 id="_61">安装前要看的</h3>
+<ul>
+<li>作者/来源是否可信；</li>
+<li>它要求什么权限；</li>
+<li>是否依赖外部 CLI/服务；</li>
+<li>是否会执行安装脚本；</li>
+<li>是否和已有插件重名/冲突；</li>
+<li>有没有卸载方式。</li>
+</ul>
+<h3 id="_62">安装后要检查</h3>
+<ul>
+<li>插件是否显示“已启用”；</li>
+<li>工具列表里有没有新工具；</li>
+<li>Skill 列表里有没有新 Skill；</li>
+<li>有没有报错/警告；</li>
+<li>是否需要重启。</li>
+</ul>
+<hr />
+<h2 id="84">8.4 为什么“装了但不生效”</h2>
+<p>常见原因：</p>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>可能原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>插件列表里有，但工具没有</td>
+<td>没启用；需要重启/重载；依赖缺失</td>
+</tr>
+<tr>
+<td>启动报错</td>
+<td>版本不兼容；缺 peer 依赖；配置错误</td>
+</tr>
+<tr>
+<td>工具名冲突</td>
+<td>和另一个插件用了同一个名字</td>
+</tr>
+<tr>
+<td>需要登录/CLI</td>
+<td>外部依赖没装/没登录</td>
+</tr>
+<tr>
+<td>只在某个模式里有</td>
+<td>工具被挂在某个 Preset 里，不是全局</td>
+</tr>
+<tr>
+<td>改了代码不生效</td>
+<td>服务端插件需要重载；不是热更新</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_63">排查顺序</h3>
+<ol>
+<li>看 Plugin Manager 的状态和错误；</li>
+<li>看是否需要重启；</li>
+<li>看依赖/版本；</li>
+<li>看是否和已有插件冲突；</li>
+<li>看工具是否只在某个 Preset 中；</li>
+<li>看日志/诊断。</li>
+</ol>
+<hr />
+<h2 id="85">8.5 配置插件</h2>
+<p>很多插件有配置项，例如：</p>
+<ul>
+<li>可执行文件路径；</li>
+<li>API 地址；</li>
+<li>超时；</li>
+<li>输出上限。</li>
+</ul>
+<p>在 DSH 里，插件通常用 Config schema 声明这些字段，Plugin Manager 会显示成表单。</p>
+<p>原则：</p>
+<ul>
+<li>优先用界面配置；</li>
+<li>不要手动改 profile 的 <code>package.json</code>；</li>
+<li>不要手动改 <code>cordis.patch.yml</code>，除非你知道层顺序；</li>
+<li>改完要重载/重启；</li>
+<li>配置里的密钥要放在安全位置。</li>
+</ul>
+<hr />
+<h2 id="86">8.6 第三方插件的信任边界</h2>
+<p>这是最重要的一节。</p>
+<blockquote>
+<p><strong>插件不是“配置文件”，它可能执行代码。</strong></p>
+</blockquote>
+<p>安装第三方插件，相当于让别人的代码在你的 DSH 进程里运行。它可能：</p>
+<ul>
+<li>读取你的文件；</li>
+<li>调用网络；</li>
+<li>执行命令；</li>
+<li>修改配置；</li>
+<li>安装依赖；</li>
+<li>运行安装脚本。</li>
+</ul>
+<p>所以：</p>
+<ul>
+<li>只装可信来源；</li>
+<li>看权限和代码；</li>
+<li>不要给不必要的 full access；</li>
+<li>先在测试工作区试；</li>
+<li>出问题能卸载/回滚；</li>
+<li>不要把密钥交给不信任的插件。</li>
+</ul>
+<hr />
+<h2 id="87">8.7 卸载与回滚</h2>
+<p>安装前就要想好怎么卸载：</p>
+<ul>
+<li>Plugin Manager 里能否停用/移除；</li>
+<li>是否会留下配置/数据；</li>
+<li>是否会改 profile 的 bundle 列表；</li>
+<li>是否需要重启；</li>
+<li>有没有版本回退。</li>
+</ul>
+<p>重要环境先备份 profile，或至少记录安装前的状态。</p>
+<hr />
+<h2 id="_64">马上试试</h2>
+<ol>
+<li>打开 Plugin Manager，看看当前装了哪些 Bundle；</li>
+<li>找到“已启用/已停用”的区别；</li>
+<li>不要急着安装新插件，先读一个插件的说明和权限；</li>
+<li>找一个你已经在用的插件，看看它注册了哪些工具/Skill；</li>
+<li>写下：如果它出问题，你怎么停用它？</li>
+</ol>
+<hr />
+<h2 id="_65">常见坑</h2>
+<ul>
+<li><strong>把 Plugin 和 Bundle 混为一谈</strong>：一个是能力，一个是安装包。</li>
+<li><strong>以为装了 Bundle 就一定启用</strong>：还要看选择/重载/依赖。</li>
+<li><strong>手动改 profile 配置</strong>：容易破坏层顺序。</li>
+<li><strong>不看权限就装</strong>：插件可以执行代码。</li>
+<li><strong>装完不重启</strong>：很多插件需要重载才生效。</li>
+</ul>
+<hr />
+<h2 id="_66">小结</h2>
+<ul>
+<li>Plugin = 能力，Bundle = 安装包，Profile = 工作环境。</li>
+<li>Preset 决定“给哪个 Agent 用哪些 Plugin”。</li>
+<li>用 Plugin Manager 安装/启用/卸载；不要手改 profile。</li>
+<li>第三方插件是代码，不是纯配置；信任和权限第一。</li>
+<li>装了不生效，先查状态、重载、依赖、冲突、Preset 范围。</li>
+</ul>
+<hr />
+<h2 id="_67">第三部分练习</h2>
+<ol>
+<li>用一句话向你朋友解释 Plugin、Bundle、Profile 的区别。</li>
+<li>打开 Plugin Manager，记录当前启用的 Bundle 数量。</li>
+<li>找一个插件，阅读它的权限/依赖，判断你是否愿意安装。</li>
+<li>解释为什么“Preset 不是安全沙箱”。</li>
+<li>写下一个“插件装坏了怎么回滚”的步骤清单。</li>
+</ol>
+
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="ch07.html"><small>上一章</small><span>模式与 Preset：同一个模型，不…</span></a>
+  <a class="next" href="ch09.html"><small>下一章</small><span>创造模式：从使用者到扩展者</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/ch08.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>

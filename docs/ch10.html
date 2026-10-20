@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>第 10 章 · 排错、安全与继续学习 · DeepSeek Harness 入门</title>
+<meta name="description" content="第 10 章: 排错、安全与继续学习 — 从第一次对话到自己的插件">
+<meta property="og:title" content="第 10 章 · 排错、安全与继续学习 · DeepSeek Harness 入门">
+<meta property="og:description" content="第 10 章: 排错、安全与继续学习 — 从第一次对话到自己的插件">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/ch10.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://leether.github.io/dsh-book/ch10.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch10.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch10.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch10.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="index.html#contents">目录</a>
+      <a href="ch01.html">开始阅读</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="en/ch10.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>认识 DSH：模型、Harness、Agent</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>第一次启动：桌面、模型、工作区</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>第一次任务：把需求说清楚</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>工作区、文件与权限</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>会话、上下文与记忆</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>工具与技能：Agent 的手和脑</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>模式与 Preset：同一个模型，不同工作方式</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>插件、Bundle 与 Profile：给 DSH 装能力</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>创造模式：从使用者到扩展者</span></a></li>
+        <li><a href="ch10.html" aria-current="page"><span class="num">10</span><span>排错、安全与继续学习</span></a></li>
+        <li><a href="appendix.html"><span class="num">附</span><span>附录</span></a></li>
+      </ol>
+      <p class="sidebar-note">非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。<br>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 10 章</p>
+    <section class="chapter">
+<h1 id="10">第 10 章　排错、安全与继续学习</h1>
+<p class="chapter-meta">约 3 分钟 · 1,638 字 · 8 个小节</p>
+<h2 id="_71">本章你会学会</h2>
+<ul>
+<li>用一张表定位常见问题；</li>
+<li>知道去哪里看诊断信息；</li>
+<li>建立自己的安全清单；</li>
+<li>控制成本；</li>
+<li>规划继续练习的路线。</li>
+</ul>
+<hr />
+<h2 id="101">10.1 常见问题对照表</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>先检查什么</th>
+<th>常见原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>打不开/连不上模型</td>
+<td>设置 → 模型</td>
+<td>Key 错、Base URL 错、没余额</td>
+</tr>
+<tr>
+<td><code>401 Invalid API key</code></td>
+<td>API Key</td>
+<td>复制不完整、过期、服务不匹配</td>
+</tr>
+<tr>
+<td>Agent 不回复/一直转</td>
+<td>模型、网络、会话</td>
+<td>服务超时、上下文过大</td>
+</tr>
+<tr>
+<td>Agent 说没有工具</td>
+<td>当前模式、插件状态</td>
+<td>选了极简模式、插件没启用</td>
+</tr>
+<tr>
+<td>插件装了但没工具</td>
+<td>Plugin Manager、重载</td>
+<td>没启用、需要重启、依赖缺失</td>
+</tr>
+<tr>
+<td>Skill 不加载</td>
+<td>Skill 目录、版本</td>
+<td>路径不对、描述不匹配、版本冲突</td>
+</tr>
+<tr>
+<td>改文件被拒绝</td>
+<td>权限/工作区</td>
+<td>不在工作区、沙箱限制</td>
+</tr>
+<tr>
+<td>找不到文件</td>
+<td>工作区、相对路径</td>
+<td>当前目录不对、文件不存在</td>
+</tr>
+<tr>
+<td>越聊越慢/越贵</td>
+<td>上下文</td>
+<td>历史太长、读了太多文件</td>
+</tr>
+<tr>
+<td>Agent 重复/忘事</td>
+<td>上下文</td>
+<td>窗口满、压缩、旧信息干扰</td>
+</tr>
+<tr>
+<td>工具名冲突</td>
+<td>插件列表</td>
+<td>两个插件注册了同名工具</td>
+</tr>
+<tr>
+<td>插件报版本错误</td>
+<td>版本</td>
+<td>DSH/CLI/插件版本不匹配</td>
+</tr>
+<tr>
+<td>运行命令卡住</td>
+<td>命令本身</td>
+<td>交互式命令、无超时、网络阻塞</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="102">10.2 怎么读诊断信息</h2>
+<h3 id="_72">先看界面</h3>
+<ul>
+<li>红色错误；</li>
+<li>工具卡片的失败原因；</li>
+<li>Plugin Manager 的 warnings；</li>
+<li>模型设置的状态。</li>
+</ul>
+<h3 id="_73">再看上下文</h3>
+<ul>
+<li>当前工作区对不对；</li>
+<li>当前模式对不对；</li>
+<li>当前插件是否启用；</li>
+<li>当前 Session 是否太长。</li>
+</ul>
+<h3 id="_74">最后看日志</h3>
+<p>Desktop/CLI 通常会有日志或诊断入口。CLI 用户可以：</p>
+<pre><code class="language-bash">dsh --profile web --dump-config
+</code></pre>
+<p>查看实际组合的配置。不要在不理解的情况下直接改 profile 文件。</p>
+<h3 id="_75">一个通用排查顺序</h3>
+<pre><code class="language-text">1. 最小复现
+2. 换新 Session
+3. 换标准模式
+4. 停用最近装的插件
+5. 检查模型/网络
+6. 检查工作区/权限
+7. 看日志/诊断
+8. 再考虑重装/回滚
+</code></pre>
+<hr />
+<h2 id="103">10.3 安全清单</h2>
+<p>每次开始重要任务前，问自己：</p>
+<pre><code class="language-text">[ ] 工作区是不是只包含需要的文件？
+[ ] 重要文件有没有备份/git 提交？
+[ ] 是否只需要只读？能不能先只读？
+[ ] 是否要执行删除/覆盖/推送/上传？
+[ ] 是否要把密钥/密码/隐私数据给它看？
+[ ] 插件来源是否可信？
+[ ] 是否真的需要 full access？
+[ ] 出问题怎么回滚？
+</code></pre>
+<h3 id="_76">三条底线</h3>
+<ol>
+<li><strong>密钥不进对话</strong>；</li>
+<li><strong>破坏性操作先备份、先确认</strong>；</li>
+<li><strong>不信任的插件不给高权限</strong>。</li>
+</ol>
+<hr />
+<h2 id="104">10.4 成本与用量</h2>
+<p>Agent 的成本主要来自 token：</p>
+<ul>
+<li>上下文越长，越贵；</li>
+<li>读大文件、长网页，会显著增加；</li>
+<li>子代理/工作流会额外调用模型；</li>
+<li>频繁重试也会增加。</li>
+</ul>
+<h3 id="_77">省钱习惯</h3>
+<ul>
+<li>只读需要的文件；</li>
+<li>长文档分段；</li>
+<li>任务完成就总结成文件，换新 Session；</li>
+<li>不用子代理时不要开；</li>
+<li>选合适的模型，不要所有任务都用最贵的。</li>
+</ul>
+<hr />
+<h2 id="105">10.5 继续学习路线</h2>
+<h3 id="1_2">第 1 周：日常使用</h3>
+<ul>
+<li>用标准模式完成 3 个真实任务；</li>
+<li>练习“目标 + 输入 + 约束 + 验收”；</li>
+<li>学会看工具卡片和审批。</li>
+</ul>
+<h3 id="2_3">第 2 周：工作区与上下文</h3>
+<ul>
+<li>给项目写 <code>AGENTS.md</code>；</li>
+<li>用 <code>PROJECT.md</code> / <code>PROGRESS.md</code> 管理长任务；</li>
+<li>练习新 Session 恢复。</li>
+</ul>
+<h3 id="3_3">第 3 周：工具与技能</h3>
+<ul>
+<li>用 todo 管理多步任务；</li>
+<li>试一个子代理；</li>
+<li>读一个 Skill 的 <code>SKILL.md</code>；</li>
+<li>用 <code>present</code> 交付文件。</li>
+</ul>
+<h3 id="4_2">第 4 周：扩展</h3>
+<ul>
+<li>读第 8 章，理解 Plugin/Bundle/Profile；</li>
+<li>在创造模式里做一个小工具；</li>
+<li>学会安装、验证、卸载；</li>
+<li>写一份自己的插件说明。</li>
+</ul>
+<hr />
+<h2 id="106">10.6 一页纸速查</h2>
+<pre><code class="language-text">Agent = Model + Harness
+
+日常任务 → 标准模式
+扩展 DSH → 创造模式
+批量工具 → PTC
+小任务   → 极简模式
+
+工作区 = 文件夹 + 权限边界
+Session = 一次对话
+Context = 工作内存，会满
+Skill   = 知识/流程
+Tool    = 动作
+Plugin  = 运行时能力
+Bundle  = 安装包
+Profile = 安装环境
+Preset  = 单 Agent 的能力组合
+
+好任务 = 目标 + 输入 + 约束 + 验收
+先只读，再写入
+先计划，再执行
+破坏性操作先备份
+密钥不进对话
+</code></pre>
+<hr />
+<h2 id="_78">小结</h2>
+<ul>
+<li>排错从“最小复现 + 新 Session + 标准模式 + 停用新插件”开始。</li>
+<li>安全三条底线：密钥、备份、权限。</li>
+<li>成本主要来自上下文和模型调用。</li>
+<li>学习路线：日常 → 工作区 → 工具/技能 → 插件。</li>
+<li>先会用，再扩展；不要一上来做很大的插件。</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="ch09.html"><small>上一章</small><span>创造模式：从使用者到扩展者</span></a>
+  <a class="next" href="appendix.html"><small>下一章</small><span>附录</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/ch10.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>

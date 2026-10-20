@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 1 · Meet DSH: Models, Harnesses, and Agents · DeepSeek Harness</title>
+<meta name="description" content="Chapter 1: Meet DSH: Models, Harnesses, and Agents — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 1 · Meet DSH: Models, Harnesses, and Agents · DeepSeek Harness">
+<meta property="og:description" content="Chapter 1: Meet DSH: Models, Harnesses, and Agents — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch01.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch01.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch01.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch01.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch01.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch01.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html" aria-current="page"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 1</p>
+    <section class="chapter">
+<h1 id="chapter-1-meet-dsh-models-harnesses-and-agents">Chapter 1 — Meet DSH: Models, Harnesses, and Agents</h1>
+<p class="chapter-meta">4 min read · 845 words · 10 sections</p>
+<h2 id="what-you-will-learn">What You Will Learn</h2>
+<ul>
+<li>Explain DSH in one sentence;</li>
+<li>Tell the difference between a model, a harness, and an agent;</li>
+<li>Understand Session, Workspace, Tool, and Skill;</li>
+<li>Choose between Desktop, Web, and Headless.</li>
+</ul>
+<hr />
+<h2 id="11-a-useful-formula-agent-model-harness">1.1 A Useful Formula: Agent = Model + Harness</h2>
+<p>Start with one formula:</p>
+<blockquote>
+<p><strong>Agent = Model + Harness</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Think of it as</th>
+<th>It handles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Model</strong></td>
+<td>The brain</td>
+<td>Understanding, reasoning, writing, coding</td>
+</tr>
+<tr>
+<td><strong>Harness</strong></td>
+<td>Hands, eyes, workbench, rulebook</td>
+<td>Files, commands, web access, sessions, permissions</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td>The assistant at work</td>
+<td>Model + Harness + current context</td>
+</tr>
+</tbody>
+</table>
+<p>A model alone is like a brilliant person locked in a room. It can think and talk, but it cannot see your files or run your programs.</p>
+<p>The harness opens the room. It gives the model files, a terminal, a browser, tools, memory, and rules. That is when chatting becomes doing.</p>
+<p>DeepSeek Harness, or <strong>DSH</strong>, is that harness.</p>
+<hr />
+<h2 id="12-what-dsh-is-and-is-not">1.2 What DSH Is — and Is Not</h2>
+<h3 id="it-is">It is</h3>
+<ul>
+<li>A workbench for running Agents;</li>
+<li>A host that composes models, tools, skills, and plugins;</li>
+<li>A platform with Desktop, Web, and Headless entry points;</li>
+<li>An extensible system where almost everything is a plugin.</li>
+</ul>
+<h3 id="it-is-not">It is not</h3>
+<ul>
+<li><strong>A model.</strong> DSH does not contain the model's brain; you connect a model service.</li>
+<li><strong>Just a chat app.</strong> Its focus is reading, writing, executing, and delivering.</li>
+<li><strong>Only for programmers.</strong> Everyday tasks can be done in natural language.</li>
+<li><strong>Safe by default.</strong> It can take real actions; permissions and review matter.</li>
+</ul>
+<p>In one sentence:</p>
+<blockquote>
+<p><strong>DSH is the Agent's workbench, not its brain.</strong></p>
+</blockquote>
+<hr />
+<h2 id="13-five-words-you-will-see-everywhere">1.3 Five Words You Will See Everywhere</h2>
+<h3 id="agent">Agent</h3>
+<p>An Agent is not just a model. It combines the model, the current workspace, the current session, available tools, and the current mode.</p>
+<p>The same model can behave differently in a different workspace or mode.</p>
+<h3 id="session">Session</h3>
+<p>A Session is one continuous conversation.</p>
+<ul>
+<li>Within a Session, the Agent remembers what was said;</li>
+<li>A new Session does not automatically inherit every previous message;</li>
+<li>One workspace can have many Sessions.</li>
+</ul>
+<p>Think of a Session as the minutes of one meeting.</p>
+<h3 id="workspace">Workspace</h3>
+<p>A Workspace is a folder. The Agent reads, writes, and runs commands inside it by default.</p>
+<ul>
+<li>It is the project boundary;</li>
+<li>Many permissions are scoped to it;</li>
+<li>Do not start by pointing it at your entire home directory.</li>
+</ul>
+<h3 id="tool">Tool</h3>
+<p>A Tool is an action the Agent can take:</p>
+<ul>
+<li>Read a file;</li>
+<li>Write a file;</li>
+<li>Edit a file;</li>
+<li>Run a terminal command;</li>
+<li>Search the web;</li>
+<li>Start a subagent;</li>
+<li>Present a deliverable.</li>
+</ul>
+<p>Tools are the Agent's hands.</p>
+<h3 id="skill">Skill</h3>
+<p>A Skill is an instruction manual. It tells the Agent:</p>
+<ul>
+<li>When to use a certain approach;</li>
+<li>What steps to follow;</li>
+<li>What pitfalls to avoid;</li>
+<li>Which references or scripts are available.</li>
+</ul>
+<p>A Skill is knowledge. It does not execute actions itself; it helps the Agent use tools reliably.</p>
+<blockquote>
+<p>Model is the brain, Tool is the hand, Skill is the procedure, Harness is the workbench.</p>
+</blockquote>
+<p>You will meet Preset, Plugin, Bundle, and Profile later. Chapters 7 and 8 cover them.</p>
+<hr />
+<h2 id="14-why-a-harness-is-necessary">1.4 Why a Harness Is Necessary</h2>
+<p>A model is smart, but real work needs three things a model does not have by itself:</p>
+<ol>
+<li><strong>Perception</strong>: seeing files, folders, web pages, and errors;</li>
+<li><strong>Action</strong>: writing files, running commands, calling tools;</li>
+<li><strong>Constraints</strong>: knowing what is allowed and how to verify the result.</li>
+</ol>
+<p>Suppose you say:</p>
+<blockquote>
+<p>"Combine the three articles in <code>notes/</code> into one summary."</p>
+</blockquote>
+<p>The model can write a summary, but it needs the harness to:</p>
+<ul>
+<li>Find <code>notes/</code>;</li>
+<li>Read the three files;</li>
+<li>Write <code>summary.md</code>;</li>
+<li>Verify that the file exists;</li>
+<li>Stay inside the permissions you granted.</li>
+</ul>
+<p>Without a harness, none of those actions happen.</p>
+<hr />
+<h2 id="15-three-entry-points-desktop-web-headless">1.5 Three Entry Points: Desktop, Web, Headless</h2>
+<table>
+<thead>
+<tr>
+<th>Entry point</th>
+<th>Best for</th>
+<th>What it feels like</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Desktop</strong></td>
+<td>Almost everyone</td>
+<td>A graphical app; easiest to start</td>
+</tr>
+<tr>
+<td><strong>Web</strong></td>
+<td>Browser access, remote servers</td>
+<td>A web page with a similar interface</td>
+</tr>
+<tr>
+<td><strong>Headless</strong></td>
+<td>Automation, scripts, batch jobs</td>
+<td>A one-shot command-line run, no GUI</td>
+</tr>
+</tbody>
+</table>
+<p>All three share the same core ideas: Agent, Session, Workspace, Tool, Skill, Preset, and Plugin.</p>
+<p>This book is Desktop-first. Web and Headless differences appear in small sidebars.</p>
+<hr />
+<h2 id="16-how-to-read-this-book">1.6 How to Read This Book</h2>
+<ul>
+<li><strong>Everyday user</strong>: Chapters 1–7 cover most needs.</li>
+<li><strong>Installing plugins and skills</strong>: add Chapter 8.</li>
+<li><strong>Building plugins</strong>: add Chapter 9.</li>
+<li><strong>Troubleshooting</strong>: go straight to Chapter 10.</li>
+</ul>
+<p>Do not try to memorize every term. Use first; understand later.</p>
+<hr />
+<h2 id="try-it">Try It</h2>
+<p>Write down three things you would like an Agent to do. For each, note:</p>
+<ol>
+<li>Which files it needs to read;</li>
+<li>Which files it needs to write;</li>
+<li>Which commands it needs to run;</li>
+<li>Which actions should ask you first.</li>
+</ol>
+<p>If you cannot answer yet, Chapter 3 will help.</p>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+<ul>
+<li><strong>Treating DSH as a model</strong>: it is a workbench; connect a model separately.</li>
+<li><strong>Expecting the Agent to remember everything</strong>: memory outside a Session must be designed.</li>
+<li><strong>Giving it your whole disk on day one</strong>: start with a small folder.</li>
+</ul>
+<hr />
+<h2 id="summary">Summary</h2>
+<ul>
+<li>Agent = Model + Harness.</li>
+<li>DSH is the harness, not the model.</li>
+<li>Session is a conversation; Workspace is a folder; Tool is an action; Skill is knowledge.</li>
+<li>Desktop is the easiest entry point; Web and Headless are different surfaces, not different products.</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="index.html#contents"><small>Back</small><span>Contents</span></a>
+  <a class="next" href="ch02.html"><small>Next</small><span>First Launch: Desktop, Mod…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch01.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

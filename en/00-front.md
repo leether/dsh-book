@@ -11,6 +11,8 @@ Reference environment: DeepSeek Harness Desktop 0.2.1-rc.2
 
 ## Before You Start
 
+This English edition was edited for natural English usage rather than translated word-for-word. It is still an unofficial guide; corrections from native readers are welcome.
+
 This book does not assume you can program.
 
 It aims to help you do three things:

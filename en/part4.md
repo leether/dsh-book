@@ -5,7 +5,7 @@
 - What Creator mode is and is not;
 - What it adds beyond Standard;
 - When to use it, and when not to;
-- A complete "build a plugin" loop;
+- A complete plugin-building loop;
 - How non-programmers can participate;
 - How to avoid breaking DSH.
 

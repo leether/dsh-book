@@ -43,7 +43,7 @@ DeepSeek Harness, or **DSH**, is that harness.
 - **A model.** DSH does not contain the model's brain; you connect a model service.
 - **Just a chat app.** Its focus is reading, writing, executing, and delivering.
 - **Only for programmers.** Everyday tasks can be done in natural language.
-- **Automatically safe.** It can take real actions; permissions and review matter.
+- **Safe by default.** It can take real actions; permissions and review matter.
 
 In one sentence:
 
@@ -67,7 +67,7 @@ A Session is one continuous conversation.
 - A new Session does not automatically inherit every previous message;
 - One workspace can have many Sessions.
 
-Think of a Session as one meeting record.
+Think of a Session as the minutes of one meeting.
 
 ### Workspace
 
@@ -138,7 +138,7 @@ Without a harness, none of those actions happen.
 | --- | --- | --- |
 | **Desktop** | Almost everyone | A graphical app; easiest to start |
 | **Web** | Browser access, remote servers | A web page with a similar interface |
-| **Headless** | Automation, scripts, batch jobs | One-shot command line, no GUI |
+| **Headless** | Automation, scripts, batch jobs | A one-shot command-line run, no GUI |
 
 All three share the same core ideas: Agent, Session, Workspace, Tool, Skill, Preset, and Plugin.
 
@@ -296,7 +296,7 @@ Do not start with **Creator mode**. Creator is for extending DSH itself. It adds
 
 ## 2.5 A Map of the Interface
 
-You do not need every button, but you should know where four kinds of information appear:
+You do not need to know every button, but you should know where four kinds of information appear:
 
 | Area | What you will see |
 | --- | --- |
@@ -501,9 +501,9 @@ Specific feedback = location + problem + standard.
 
 ---
 
-## 3.5 Verify — Do Not Trust "Done"
+## 3.5 Verify — Do Not Trust "done"
 
-"Done" is not "correct." Check:
+"Done" is not the same as "correct." Check:
 
 - Does the file exist?
 - Does the content meet the requirements?

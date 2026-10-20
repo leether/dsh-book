@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Build the bilingual static GitHub Pages site from dsh-book.md and en/dsh-book.md.
+"""Build the bilingual, per-chapter GitHub Pages site.
+
+Sources:
+  dsh-book.md      -> Chinese pages under docs/
+  en/dsh-book.md   -> English pages under docs/en/
 
 The site is intentionally static and self-contained:
 - no JavaScript
@@ -16,752 +20,175 @@ from pathlib import Path
 import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "dsh-book.md"
-OUTPUT = ROOT / "docs" / "index.html"
-REPO_URL = "https://github.com/leether/dsh-book"
 SITE_URL = "https://leether.github.io/dsh-book/"
+REPO_URL = "https://github.com/leether/dsh-book"
+STYLE_FILE = "style.css"
 
-TEMPLATE = """<!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#b45309">
-<title>DeepSeek Harness 入门 · 从第一次对话到自己的插件</title>
-<meta name="description" content="给 0 基础用户的 DeepSeek Harness 使用指南：模型、工作区、权限、会话、工具、技能、Preset、插件与创造模式。">
-<meta property="og:title" content="DeepSeek Harness 入门">
-<meta property="og:description" content="给 0 基础用户的 DeepSeek Harness 使用指南。">
-<meta property="og:type" content="website">
-<meta property="og:url" content="{page_url}">
-<meta property="og:locale" content="{og_locale}">
-<link rel="canonical" href="{page_url}">
-<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/">
-<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/">
-<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/">
-<meta name="twitter:card" content="summary">
-<link rel="icon" href="{asset_prefix}favicon.svg" type="image/svg+xml">
-<style>
-:root {
-  --bg: #f7f4ed;
-  --paper: #fffefa;
-  --ink: #20211f;
-  --muted: #6b6a63;
-  --line: #e3ded2;
-  --accent: #b45309;
-  --accent-2: #0f766e;
-  --accent-soft: #fff3e0;
-  --code: #f2eee5;
-  --shadow: 0 24px 60px rgba(60, 40, 20, .12);
-  --max: 1120px;
-  --prose: 760px;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #111214;
-    --paper: #1a1b1e;
-    --ink: #f1efe9;
-    --muted: #a7a49b;
-    --line: #303136;
-    --accent: #f2a35e;
-    --accent-2: #5eead4;
-    --accent-soft: #2a2118;
-    --code: #24252a;
-    --shadow: 0 24px 60px rgba(0, 0, 0, .35);
-  }
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-html, body { max-width: 100%; overflow-x: hidden; }
-body {
-  margin: 0;
-  background:
-    radial-gradient(900px 520px at 8% -8%, rgba(180, 83, 9, .10), transparent 62%),
-    radial-gradient(800px 520px at 100% 0%, rgba(15, 118, 110, .08), transparent 62%),
-    var(--bg);
-  color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
-  font-size: 17px;
-  line-height: 1.85;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: var(--accent); text-underline-offset: 3px; }
-a:hover { text-decoration-thickness: 2px; }
-a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-::selection { background: var(--accent); color: #fff; }
+LANGUAGES = [
+    {
+        "key": "zh",
+        "source": "dsh-book.md",
+        "out_dir": "docs",
+        "lang": "zh-CN",
+        "locale": "zh_CN",
+        "asset_prefix": "",
+        "source_start": "# 第 1 章",
+        "strip_title": re.compile(r"^第\s*\d+\s*章\s*[　\s]*"),
+        "appendix_prefix": "附录",
+        "appendix_number": "附",
+        "count_mode": "chars",
+        "divisor": 500,
+        "short_limit": 18,
+        "book_title": "DeepSeek Harness 入门",
+        "book_short": "DSH 入门",
+        "subtitle": "从第一次对话到自己的插件",
+        "badge": "非官方指南 · 无 Cookie · 无统计",
+        "lede": "给 0 基础用户的实用指南。先学会用，再理解原理，最后扩展它。",
+        "start": "开始阅读",
+        "github": "GitHub 仓库",
+        "contents": "目录",
+        "contents_kicker": "Contents",
+        "book_map": "本书地图",
+        "contents_intro": "10 章 + 附录。可以按顺序读，也可以直接跳到需要的一章。",
+        "chapter_label": "第 {n} 章",
+        "appendix_label": "附录",
+        "appendix_short": "附",
+        "meta": "约 {minutes} 分钟 · {value:,} 字 · {sections} 个小节",
+        "prev_small": "上一章",
+        "next_small": "下一章",
+        "back_small": "返回",
+        "end_small": "结束",
+        "top_label": "回到顶部",
+        "paths_title": "三条阅读路线",
+        "paths": [
+            ("日常使用", "第 1–7 章：先把工作区、权限、上下文和工具用熟。"),
+            ("装插件/技能", "第 1–8 章：理解 Plugin、Bundle、Profile 和 Preset。"),
+            ("做插件", "第 1–9 章：进入创造模式，完成一次最小扩展。"),
+        ],
+        "about_title": "关于这本书",
+        "about_text": "这是一本非官方的 DSH 入门书，写给第一次让 Agent 读写文件、执行任务的人。它不追求讲完所有 API，而是先帮你建立正确的工作方式：小工作区、先只读、先计划、再验收。",
+        "about_meta": "基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License",
+        "blurbs": [
+            "先分清模型、Harness 和 Agent，知道 DSH 到底在做什么。",
+            "从桌面入口、模型连接和一个小工作区开始。",
+            "用“目标 + 输入 + 约束 + 验收”完成第一个任务。",
+            "看懂工作区边界、审批和破坏性操作。",
+            "理解 Session、上下文窗口，以及为什么它会忘事。",
+            "认识工具、计划、子代理和 Skill 的分工。",
+            "标准、创造、PTC、极简，什么时候用哪个。",
+            "Plugin、Bundle、Profile 三层，以及怎么安装。",
+            "创造模式能做什么，以及它的安全边界。",
+            "常见错误、成本控制和安全清单。",
+            "术语表、提示词模板和速查表。",
+        ],
+        "nav_quick": "快速导航",
+        "chapter_nav": "章节导航",
+        "switch_label": "English",
+        "switch_lang": "en",
+        "cover_word": "入门",
+        "cover_sub": "从第一次对话<br>到自己的插件",
+        "footer": [
+            "非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。",
+            "基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求",
+        ],
+    },
+    {
+        "key": "en",
+        "source": "en/dsh-book.md",
+        "out_dir": "docs/en",
+        "lang": "en",
+        "locale": "en_US",
+        "asset_prefix": "../",
+        "source_start": "# Chapter 1",
+        "strip_title": re.compile(r"^Chapter\s+\d+\s*[—–-]\s*", re.IGNORECASE),
+        "appendix_prefix": "appendix",
+        "appendix_number": "A",
+        "count_mode": "words",
+        "divisor": 220,
+        "short_limit": 26,
+        "book_title": "DeepSeek Harness",
+        "book_short": "DSH Guide",
+        "subtitle": "A Beginner's Guide",
+        "badge": "Unofficial guide · No cookies · No tracking",
+        "lede": "A practical guide for complete beginners. Learn to use it, understand it, then extend it.",
+        "start": "Start reading",
+        "github": "GitHub repository",
+        "contents": "Contents",
+        "contents_kicker": "Contents",
+        "book_map": "Book map",
+        "contents_intro": "10 chapters + appendix. Read in order, or jump straight to the chapter you need.",
+        "chapter_label": "Chapter {n}",
+        "appendix_label": "Appendix",
+        "appendix_short": "A",
+        "meta": "{minutes} min read · {value:,} words · {sections} sections",
+        "prev_small": "Previous",
+        "next_small": "Next",
+        "back_small": "Back",
+        "end_small": "End",
+        "top_label": "Back to top",
+        "paths_title": "Three reading paths",
+        "paths": [
+            ("Everyday use", "Chapters 1–7: get comfortable with workspaces, permissions, context, and tools."),
+            ("Plugins and skills", "Chapters 1–8: understand Plugin, Bundle, Profile, and Preset."),
+            ("Build a plugin", "Chapters 1–9: enter Creator mode and build one small extension."),
+        ],
+        "about_title": "About this book",
+        "about_text": "An unofficial, practical introduction to DSH for people who are about to let an Agent read files, run tasks, and change real things. It does not try to document every API. It builds the right habits first: use a small workspace, start read-only, plan before executing, and ask for evidence before accepting. This English edition was edited for natural English usage; corrections are welcome.",
+        "about_meta": "Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License",
+        "blurbs": [
+            "Separate the model, the harness, and the Agent.",
+            "Connect a model, pick a workspace, and start your first conversation.",
+            "Turn a vague request into a verifiable task.",
+            "Understand workspace boundaries, approvals, and destructive actions.",
+            "Learn why the Agent forgets, and how to work with context.",
+            "Tools, plans, subagents, and Skills — who does what.",
+            "Standard, Creator, PTC, and Minimal — when to use each.",
+            "Plugin, Bundle, Profile, and how installation works.",
+            "What Creator mode can do, and where its safety boundary is.",
+            "Common failures, cost control, and a safety checklist.",
+            "Glossary, prompt templates, and a one-page cheat sheet.",
+        ],
+        "nav_quick": "Quick navigation",
+        "chapter_nav": "Chapter navigation",
+        "switch_label": "中文",
+        "switch_lang": "zh-CN",
+        "cover_word": "Guide",
+        "cover_sub": "From your first conversation<br>to your own plugin",
+        "footer": [
+            "An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.",
+            "Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests",
+        ],
+    },
+]
 
-.progress {
-  display: none;
-  position: fixed;
-  inset: 0 0 auto 0;
-  height: 3px;
-  z-index: 100;
-  background: linear-gradient(90deg, var(--accent), #f59e0b, var(--accent-2));
-  transform-origin: 0 50%;
-  transform: scaleX(0);
-}
-@supports (animation-timeline: scroll()) {
-  .progress {
-    display: block;
-    animation: reading-progress linear;
-    animation-timeline: scroll(root block);
-  }
-}
-@keyframes reading-progress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 80;
-  border-bottom: 1px solid var(--line);
-  background: var(--bg);
-}
-@supports (background: color-mix(in srgb, #fff 80%, transparent)) {
-  .topbar {
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  }
-}
-.topbar-inner {
-  max-width: var(--max);
-  flex-wrap: wrap;
-  margin: 0 auto;
-  padding: 13px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--ink);
-  text-decoration: none;
-  font-weight: 700;
-  letter-spacing: .01em;
-}
-.brand-mark {
-  display: inline-grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: var(--ink);
-  color: var(--bg);
-  font-size: 9px;
-  letter-spacing: .08em;
-}
-.topbar-links { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; min-width: 0; font-size: 14px; }
-.topbar-links a { color: var(--muted); text-decoration: none; }
-.topbar-links a:hover { color: var(--accent); }
-
-.hero {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 82px 24px 54px;
-  display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(260px, .88fr);
-  gap: 56px;
-  align-items: center;
-}
-.hero-copy { min-width: 0; }
-.badge {
-  display: inline-block;
-  margin: 0 0 18px;
-  padding: 5px 11px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--paper);
-  color: var(--muted);
-  font-size: 12px;
-  letter-spacing: .06em;
-}
-.hero h1 {
-  margin: 0;
-  font-size: clamp(42px, 6.4vw, 76px);
-  line-height: 1.04;
-  letter-spacing: -.045em;
-  font-weight: 800;
-  text-wrap: balance;
-}
-.subtitle {
-  margin: 16px 0 0;
-  color: var(--muted);
-  font-size: clamp(20px, 2.3vw, 28px);
-  line-height: 1.35;
-}
-.lede {
-  max-width: 34em;
-  margin: 20px 0 0;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.8;
-}
-.chips {
-  max-width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 24px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.chips li {
-  padding: 5px 10px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--paper);
-  color: var(--muted);
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-.actions { max-width: 100%; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 18px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: var(--paper);
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: transform .16s ease, border-color .16s ease;
-}
-.button:hover { transform: translateY(-1px); border-color: var(--accent); }
-.button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-.button.primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-.hero-cover { display: flex; justify-content: center; }
-.cover {
-  position: relative;
-  width: min(100%, 330px);
-  aspect-ratio: 3 / 4;
-  display: flex;
-  flex-direction: column;
-  padding: 30px 28px 26px 36px;
-  border-radius: 5px 18px 18px 5px;
-  background:
-    radial-gradient(300px 240px at 100% 0%, rgba(242, 163, 94, .20), transparent 65%),
-    linear-gradient(148deg, #2b241d 0%, #151310 58%, #0b0a09 100%);
-  color: #f8f1e7;
-  box-shadow: var(--shadow), 0 2px 0 rgba(255,255,255,.18) inset;
-  transform: rotate(2.4deg);
-  overflow: hidden;
-}
-.cover::before {
-  content: "";
-  position: absolute;
-  left: 15px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: rgba(255, 255, 255, .16);
-}
-.cover::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(0deg, transparent 0 27px, rgba(255,255,255,.035) 28px),
-    radial-gradient(240px 200px at 85% 85%, rgba(15, 118, 110, .22), transparent 70%);
-  pointer-events: none;
-}
-.cover-label {
-  position: relative;
-  z-index: 1;
-  color: #d9a66e;
-  font-size: 10px;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-}
-.cover-title {
-  position: relative;
-  z-index: 1;
-  margin-top: auto;
-  font-size: clamp(34px, 4.3vw, 48px);
-  line-height: 1.05;
-  letter-spacing: -.035em;
-  font-weight: 800;
-}
-.cover-title em { color: #f0b47b; font-style: normal; }
-.cover-sub {
-  position: relative;
-  z-index: 1;
-  margin-top: 16px;
-  color: #c9b8a6;
-  font-size: 12px;
-  line-height: 1.7;
-}
-.cover-foot {
-  position: relative;
-  z-index: 1;
-  margin-top: 22px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, .16);
-  color: #a99988;
-  font-size: 10px;
-  letter-spacing: .08em;
-}
-
-.layout {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 18px 24px 72px;
-  display: grid;
-  grid-template-columns: 250px minmax(0, 1fr);
-  gap: 58px;
-  align-items: start;
-}
-.sidebar {
-  position: sticky;
-  top: 84px;
-  min-width: 0;
-}
-.sidebar-inner {
-  max-height: calc(100vh - 108px);
-  overflow: auto;
-  padding: 4px 16px 18px 0;
-  border-right: 1px solid var(--line);
-  scrollbar-width: thin;
-}
-.sidebar-kicker {
-  margin: 0 0 4px;
-  color: var(--accent);
-  font-size: 10px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-.sidebar h2 {
-  margin: 0 0 14px;
-  font-size: 17px;
-  letter-spacing: -.01em;
-}
-.chapter-list { margin: 0; padding: 0; list-style: none; }
-.chapter-list li { margin: 2px 0; }
-.chapter-list a {
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  padding: 6px 8px;
-  border-radius: 7px;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
-  text-decoration: none;
-}
-.chapter-list a:hover { background: var(--accent-soft); color: var(--ink); }
-.chapter-list .num {
-  flex: 0 0 1.7em;
-  color: var(--accent);
-  font-size: 10px;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: .04em;
-}
-.sidebar-note {
-  margin: 18px 0 0;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.6;
-}
-
-.book {
-  min-width: 0;
-  max-width: var(--prose);
-  font-size: 17.5px;
-  line-height: 1.92;
-}
-.book h1 {
-  position: relative;
-  margin: 4.2rem 0 1rem;
-  padding: 1.5rem 0 0 20px;
-  border-top: 1px solid var(--line);
-  font-size: clamp(28px, 3.8vw, 38px);
-  line-height: 1.3;
-  letter-spacing: -.025em;
-  scroll-margin-top: 96px;
-}
-.book h1::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 1.55rem;
-  bottom: .2rem;
-  width: 4px;
-  border-radius: 2px;
-  background: var(--accent);
-}
-.book h1:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
-.book h1:first-child::before { top: .2rem; }
-.book h2 {
-  margin: 2.6rem 0 .8rem;
-  font-size: clamp(22px, 2.6vw, 27px);
-  line-height: 1.35;
-  letter-spacing: -.015em;
-  scroll-margin-top: 96px;
-}
-.book h3 { margin: 1.8rem 0 .6rem; font-size: 19px; line-height: 1.45; }
-.book p { margin: .9rem 0; }
-.book ul, .book ol { padding-left: 1.55em; }
-.book li { margin: .35rem 0; }
-.book strong { font-weight: 700; }
-.book blockquote {
-  margin: 1.3rem 0;
-  padding: 12px 18px;
-  border-left: 4px solid var(--accent);
-  border-radius: 0 9px 9px 0;
-  background: var(--accent-soft);
-}
-.book blockquote p { margin: .3rem 0; }
-.book code {
-  padding: .15em .35em;
-  border-radius: 5px;
-  background: var(--code);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: .88em;
-}
-.book pre {
-  margin: 1.15rem 0;
-  padding: 17px 18px;
-  overflow-x: auto;
-  background: var(--code);
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  line-height: 1.55;
-}
-.book pre code { padding: 0; background: transparent; font-size: 13.5px; }
-.book pre, .book table { max-width: 100%; }
-.book table {
-  display: block;
-  width: 100%;
-  margin: 1.25rem 0;
-  overflow-x: auto;
-  border-collapse: collapse;
-  font-size: 14.5px;
-  line-height: 1.65;
-}
-.book th, .book td {
-  padding: 9px 11px;
-  border: 1px solid var(--line);
-  text-align: left;
-  vertical-align: top;
-}
-.book th { background: var(--code); white-space: nowrap; font-weight: 600; }
-.book tr:nth-child(even) td { background: color-mix(in srgb, var(--code) 42%, transparent); }
-.book hr { margin: 2.8rem 0; border: 0; border-top: 1px solid var(--line); }
-.book img { max-width: 100%; height: auto; border-radius: 8px; }
-.chapter-meta {
-  margin: 8px 0 1.5rem 20px;
-  color: var(--muted);
-  font-size: 12px;
-  letter-spacing: .03em;
-}
-.chapter { margin-bottom: 1.8rem; }
-.pager {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 40px 0 0;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-}
-.pager a {
-  display: block;
-  min-width: 0;
-  padding: 13px 15px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--paper);
-  color: var(--ink);
-  text-decoration: none;
-  font-size: 13px;
-  line-height: 1.45;
-  transition: border-color .16s ease, transform .16s ease;
-}
-.pager a:hover { border-color: var(--accent); transform: translateY(-1px); }
-.pager small { display: block; margin-bottom: 3px; color: var(--muted); font-size: 10px; letter-spacing: .08em; }
-.pager .next { text-align: right; grid-column: 2; }
-.pager .next span { display: block; }
-.pager .prev span { display: block; }
-.chapter-list a span:last-child { min-width: 0; overflow-wrap: anywhere; }
-
-footer {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 28px 24px 56px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.7;
-}
-footer p { margin: .35rem 0; }
-footer a { color: var(--muted); }
-footer a:hover { color: var(--accent); }
-
-.top-link {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--paper);
-  color: var(--ink);
-  text-decoration: none;
-  font-size: 19px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
-  z-index: 60;
-}
-.top-link:hover { border-color: var(--accent); color: var(--accent); }
-
-@media (max-width: 980px) {
-  .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 56px; }
-  .hero-cover { display: none; }
-  .layout { grid-template-columns: 1fr; gap: 34px; }
-  .sidebar { position: static; }
-  .sidebar-inner {
-    max-height: none;
-    overflow: visible;
-    padding: 0 0 18px;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .chapter-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2px 14px;
-  }
-  .sidebar-note { display: none; }
-}
-@media (max-width: 620px) {
-  body { font-size: 16px; }
-  .topbar-inner { padding: 11px 16px; }
-  .topbar-links { gap: 12px; }
-  .topbar-links a:nth-child(2) { display: none; }
-  .hero { padding: 40px 16px 38px; }
-  .hero h1 { font-size: clamp(36px, 11vw, 54px); }
-  .layout { padding: 8px 16px 48px; }
-  .book { font-size: 16.5px; }
-  .chapter-list { grid-template-columns: 1fr; }
-  .book table { font-size: 13.5px; }
-  .pager { grid-template-columns: 1fr; }
-  .pager .next { grid-column: auto; }
-  .top-link { right: 12px; bottom: 12px; width: 38px; height: 38px; }
-  footer { padding-left: 16px; padding-right: 16px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-  .progress { display: none; }
-}
-@media print {
-  :root {
-    --bg: #fff; --paper: #fff; --ink: #000; --muted: #444;
-    --line: #ccc; --code: #f2f2f2; --accent: #000;
-  }
-  body { background: #fff; font-size: 11pt; }
-  .topbar, .progress, .sidebar, .hero-cover, .top-link, .pager { display: none; }
-  .hero { display: block; padding: 0 0 12mm; }
-  .hero h1 { font-size: 28pt; }
-  .layout { display: block; padding: 0; }
-  .book { max-width: none; font-size: 11pt; }
-  .book h1 { break-before: page; }
-  .book h1:first-child { break-before: auto; }
-  .book h1::before { display: none; }
-  .book a { color: #000; text-decoration: none; }
-  .book pre, .book table { break-inside: avoid; }
-}
-</style>
-</head>
-<body id="top">
-<div class="progress" aria-hidden="true"></div>
-<header class="topbar">
-  <div class="topbar-inner">
-    <a class="brand" href="#top"><span class="brand-mark">DSH</span><span>入门</span></a>
-    <nav class="topbar-links" aria-label="快速导航">
-      <a href="#toc">目录</a>
-      <a href="#start">开始阅读</a>
-      <a href="{repo_url}">GitHub</a>
-      {language_switch}
-    </nav>
-  </div>
-</header>
-<header class="hero">
-  <div class="hero-copy">
-    <p class="badge">非官方指南 · 无 Cookie · 无统计</p>
-    <h1>DeepSeek Harness 入门</h1>
-    <p class="subtitle">从第一次对话到自己的插件</p>
-    <p class="lede">给 0 基础用户的实用指南。先学会用，再理解原理，最后扩展它。</p>
-    <ul class="chips">
-      <li>{chapter_count} 章 + 附录</li>
-      <li>约 {total_words} 万字</li>
-      <li>约 {total_minutes} 分钟</li>
-      <li>DSH Desktop 0.2.1-rc.2</li>
-    </ul>
-    <div class="actions">
-      <a class="button primary" href="#start">开始阅读</a>
-      <a class="button" href="{repo_url}">GitHub 仓库</a>
-    </div>
-  </div>
-  <div class="hero-cover" aria-hidden="true">
-    <div class="cover">
-      <span class="cover-label">DSH Field Guide</span>
-      <span class="cover-title">DeepSeek<br>Harness<br><em>入门</em></span>
-      <span class="cover-sub">从第一次对话<br>到自己的插件</span>
-      <span class="cover-foot">0 基础 · {chapter_count} 章 + 附录</span>
-    </div>
-  </div>
-</header>
-<main class="layout" id="start">
-  <aside class="sidebar">
-    <div class="sidebar-inner" id="toc">
-      <p class="sidebar-kicker">Contents</p>
-      <h2>本书地图</h2>
-      <ol class="chapter-list">
-{toc}
-      </ol>
-      <p class="sidebar-note">非官方学习材料 · MIT License<br>无 JavaScript / 无 Cookie / 无第三方请求</p>
-    </div>
-  </aside>
-  <article class="book">
-{body}
-  </article>
-</main>
-<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
-<footer>
-  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
-  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
-  <p><a href="{repo_url}">GitHub</a> · <a href="{page_url}">GitHub Pages</a></p>
-</footer>
-</body>
-</html>
-"""
+LANG_BY_KEY = {lang["key"]: lang for lang in LANGUAGES}
 
 
 def strip_tags(value: str) -> str:
     return html.unescape(re.sub(r"<[^>]+>", "", value)).strip()
 
 
-def short_title(value: str, limit: int = 18) -> str:
+def short_title(value: str, limit: int) -> str:
     value = value.strip()
     return value if len(value) <= limit else value[:limit].rstrip() + "…"
 
-LANGUAGES = [
-    {
-        "key": "zh",
-        "source": "dsh-book.md",
-        "output": "docs/index.html",
-        "lang": "zh-CN",
-        "page_url": SITE_URL,
-        "asset_prefix": "",
-        "og_locale": "zh_CN",
-        "strip_title": re.compile(r"^第\s*\d+\s*章\s*[　\s]*"),
-        "appendix_prefix": "附录",
-        "appendix_number": "附",
-        "meta": "约 {minutes} 分钟 · {value:,} 字 · {sections} 个小节",
-        "count_mode": "chars",
-        "divisor": 500,
-        "short_limit": 18,
-        "prev_small": "上一章",
-        "next_small": "下一章",
-        "back_small": "返回",
-        "end_small": "结束",
-        "contents": "目录",
-        "chapter_nav": "章节导航",
-        "top": "回到顶部",
-        "switch": '<a href="en/" hreflang="en" lang="en">English</a>',
-        "static": {},
-    },
-    {
-        "key": "en",
-        "source": "en/dsh-book.md",
-        "output": "docs/en/index.html",
-        "lang": "en",
-        "page_url": f"{SITE_URL}en/",
-        "asset_prefix": "../",
-        "og_locale": "en_US",
-        "strip_title": re.compile(r"^Chapter\s+\d+\s*[—–-]\s*", re.IGNORECASE),
-        "appendix_prefix": "appendix",
-        "appendix_number": "A",
-        "meta": "{minutes} min read · {value:,} words · {sections} sections",
-        "count_mode": "words",
-        "divisor": 220,
-        "short_limit": 26,
-        "prev_small": "Previous",
-        "next_small": "Next",
-        "back_small": "Back",
-        "end_small": "End",
-        "contents": "Contents",
-        "chapter_nav": "Chapter navigation",
-        "top": "Back to top",
-        "switch": '<a href="../" hreflang="zh-CN" lang="zh-CN">中文</a>',
-        "static": {
-            '<html lang="zh-CN">': '<html lang="en">',
-            "<title>DeepSeek Harness 入门 · 从第一次对话到自己的插件</title>":
-                "<title>DeepSeek Harness: A Beginner's Guide</title>",
-            '<meta name="description" content="给 0 基础用户的 DeepSeek Harness 使用指南：模型、工作区、权限、会话、工具、技能、Preset、插件与创造模式。">':
-                '<meta name="description" content="A practical, beginner-friendly guide to DeepSeek Harness: models, workspaces, permissions, sessions, tools, skills, presets, plugins, and Creator mode.">',
-            '<meta property="og:title" content="DeepSeek Harness 入门">':
-                '<meta property="og:title" content="DeepSeek Harness: A Beginner\'s Guide">',
-            '<meta property="og:description" content="给 0 基础用户的 DeepSeek Harness 使用指南。">':
-                '<meta property="og:description" content="A practical, beginner-friendly guide to DeepSeek Harness.">',
-            "<span>入门</span>": "<span>Guide</span>",
-            'aria-label="快速导航"': 'aria-label="Quick navigation"',
-            '<a href="#toc">目录</a>': '<a href="#toc">Contents</a>',
-            '<a href="#start">开始阅读</a>': '<a href="#start">Start reading</a>',
-            '<p class="badge">非官方指南 · 无 Cookie · 无统计</p>':
-                '<p class="badge">Unofficial guide · No cookies · No tracking</p>',
-            "<h1>DeepSeek Harness 入门</h1>": "<h1>DeepSeek Harness</h1>",
-            '<p class="subtitle">从第一次对话到自己的插件</p>':
-                '<p class="subtitle">A Beginner\'s Guide</p>',
-            '<p class="lede">给 0 基础用户的实用指南。先学会用，再理解原理，最后扩展它。</p>':
-                '<p class="lede">A practical guide for complete beginners. Learn to use it, understand it, then extend it.</p>',
-            "<li>{chapter_count} 章 + 附录</li>": "<li>{chapter_count} chapters + appendix</li>",
-            "<li>约 {total_words} 万字</li>": "<li>~{total_words} words</li>",
-            "<li>约 {total_minutes} 分钟</li>": "<li>~{total_minutes} min read</li>",
-            '<a class="button primary" href="#start">开始阅读</a>':
-                '<a class="button primary" href="#start">Start reading</a>',
-            '<a class="button" href="{repo_url}">GitHub 仓库</a>':
-                '<a class="button" href="{repo_url}">GitHub repository</a>',
-            "<em>入门</em>": "<em>Guide</em>",
-            '<span class="cover-sub">从第一次对话<br>到自己的插件</span>':
-                '<span class="cover-sub">From your first conversation<br>to your own plugin</span>',
-            '<span class="cover-foot">0 基础 · {chapter_count} 章 + 附录</span>':
-                '<span class="cover-foot">Beginner-friendly · {chapter_count} chapters + appendix</span>',
-            "<h2>本书地图</h2>": "<h2>Book map</h2>",
-            '<p class="sidebar-note">非官方学习材料 · MIT License<br>无 JavaScript / 无 Cookie / 无第三方请求</p>':
-                '<p class="sidebar-note">An unofficial guide · MIT License<br>No JavaScript / cookies / third-party requests</p>',
-            'aria-label="回到顶部"': 'aria-label="Back to top"',
-            "<p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>":
-                "<p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>",
-            "<p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>":
-                "<p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>",
-        },
-    },
-]
+
+def page_url(lang: dict, slug: str) -> str:
+    base = SITE_URL if lang["key"] == "zh" else f"{SITE_URL}en/"
+    return base if slug == "index.html" else f"{base}{slug}"
 
 
-def build_site(cfg: dict) -> None:
-    text = (ROOT / cfg["source"]).read_text(encoding="utf-8")
-    start_marker = "# 第 1 章" if cfg["key"] == "zh" else "# Chapter 1"
-    start = text.find(start_marker)
+def switch_href(lang: dict, slug: str) -> str:
+    if lang["key"] == "zh":
+        return "en/" if slug == "index.html" else f"en/{slug}"
+    return "../" if slug == "index.html" else f"../{slug}"
+
+
+def parse_chapters(lang: dict) -> list[dict]:
+    text = (ROOT / lang["source"]).read_text(encoding="utf-8")
+    start = text.find(lang["source_start"])
     if start == -1:
-        raise SystemExit(f"cannot find {start_marker!r} in {cfg['source']}")
+        raise SystemExit(f"cannot find {lang['source_start']!r} in {lang['source']}")
     body_md = text[start:]
 
     parser = markdown.Markdown(
@@ -769,141 +196,341 @@ def build_site(cfg: dict) -> None:
         extension_configs={"toc": {"permalink": False}},
     )
     body_html = parser.convert(body_md)
-
     matches = list(re.finditer(r'<h1 id="([^"]+)">(.*?)</h1>', body_html, flags=re.S))
     if not matches:
-        raise SystemExit(f"no chapter headings found in {cfg['source']}")
+        raise SystemExit(f"no chapter headings found in {lang['source']}")
 
     chapters = []
     for index, match in enumerate(matches):
         end = matches[index + 1].start() if index + 1 < len(matches) else len(body_html)
         chunk = body_html[match.start():end]
         raw_title = strip_tags(match.group(2))
-        title = cfg["strip_title"].sub("", raw_title).strip() or raw_title
+        title = lang["strip_title"].sub("", raw_title).strip() or raw_title
         plain = re.sub(r"\s+", "", strip_tags(chunk))
-        if cfg["count_mode"] == "words":
+        if lang["count_mode"] == "words":
             value = len(re.findall(r"[A-Za-z0-9][A-Za-z0-9'’_-]*", strip_tags(chunk)))
         else:
             value = len(plain)
         sections = len(re.findall(r"<h2\b", chunk))
-        minutes = max(1, round(value / cfg["divisor"]))
-        is_appendix = title.lower().startswith(cfg["appendix_prefix"])
-        number = cfg["appendix_number"] if is_appendix else f"{index + 1:02d}"
+        minutes = max(1, round(value / lang["divisor"]))
+        is_appendix = title.lower().startswith(lang["appendix_prefix"])
+        number = lang["appendix_number"] if is_appendix else f"{index + 1:02d}"
+        slug = "appendix.html" if is_appendix else f"ch{index + 1:02d}.html"
+        label = lang["appendix_label"] if is_appendix else lang["chapter_label"].format(n=index + 1)
         chapters.append({
             "anchor": match.group(1),
             "title": title,
+            "label": label,
             "number": number,
             "value": value,
             "minutes": minutes,
             "sections": sections,
             "html": chunk,
             "is_appendix": is_appendix,
+            "slug": slug,
         })
+    return chapters
 
-    body_parts = []
-    for index, chapter in enumerate(chapters):
-        meta = cfg["meta"].format(
-            minutes=chapter["minutes"],
-            value=chapter["value"],
-            sections=chapter["sections"],
+
+def head(lang: dict, title: str, description: str, slug: str) -> str:
+    canonical = page_url(lang, slug)
+    zh_url = page_url(LANG_BY_KEY["zh"], slug)
+    en_url = page_url(LANG_BY_KEY["en"], slug)
+    return f"""<!doctype html>
+<html lang="{lang['lang']}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>{html.escape(title)}</title>
+<meta name="description" content="{html.escape(description)}">
+<meta property="og:title" content="{html.escape(title)}">
+<meta property="og:description" content="{html.escape(description)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{canonical}">
+<meta property="og:locale" content="{lang['locale']}">
+<link rel="canonical" href="{canonical}">
+<link rel="alternate" hreflang="zh-CN" href="{zh_url}">
+<link rel="alternate" hreflang="en" href="{en_url}">
+<link rel="alternate" hreflang="x-default" href="{zh_url}">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="{lang['asset_prefix']}favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="{lang['asset_prefix']}{STYLE_FILE}">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+"""
+
+
+def topbar(lang: dict, slug: str, contents_href: str, start_href: str) -> str:
+    switch = switch_href(lang, slug)
+    return f"""<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>{html.escape(lang['book_short'].replace('DSH ', ''))}</span></a>
+    <nav class="topbar-links" aria-label="{html.escape(lang['nav_quick'])}">
+      <a href="{contents_href}">{html.escape(lang['contents'])}</a>
+      <a href="{start_href}">{html.escape(lang['start'])}</a>
+      <a href="{REPO_URL}">GitHub</a>
+      <a class="lang-switch" href="{switch}" hreflang="{lang['switch_lang']}" lang="{lang['switch_lang']}">{html.escape(lang['switch_label'])}</a>
+    </nav>
+  </div>
+</header>
+"""
+
+
+def footer(lang: dict, slug: str) -> str:
+    url = page_url(lang, slug)
+    return f"""<footer>
+  <p>{html.escape(lang['footer'][0])}</p>
+  <p>{html.escape(lang['footer'][1])}</p>
+  <p><a href="{REPO_URL}">GitHub</a> · <a href="{url}">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="{html.escape(lang['top_label'])}">↑</a>
+</body>
+</html>
+"""
+
+
+def chapter_list(lang: dict, chapters: list[dict], current_slug: str) -> str:
+    rows = []
+    for chapter in chapters:
+        current = ' aria-current="page"' if chapter["slug"] == current_slug else ""
+        rows.append(
+            f'        <li><a href="{chapter["slug"]}"{current}>'
+            f'<span class="num">{chapter["number"]}</span>'
+            f'<span>{html.escape(chapter["title"])}</span></a></li>'
         )
-        chunk = chapter["html"].replace(
-            "</h1>",
-            f'</h1>\n<p class="chapter-meta">{meta}</p>',
-            1,
-        )
+    return "\n".join(rows)
 
-        if index == 0:
-            prev_href, prev_small, prev_label = "#toc", cfg["back_small"], cfg["contents"]
-        else:
-            previous = chapters[index - 1]
-            prev_href = f'#{previous["anchor"]}'
-            prev_small, prev_label = cfg["prev_small"], short_title(previous["title"], cfg["short_limit"])
 
-        if index + 1 < len(chapters):
-            following = chapters[index + 1]
-            next_href = f'#{following["anchor"]}'
-            next_small, next_label = cfg["next_small"], short_title(following["title"], cfg["short_limit"])
-        else:
-            next_href, next_small, next_label = "#top", cfg["end_small"], cfg["top"]
-
-        pager = (
-            f'<nav class="pager" aria-label="{cfg["chapter_nav"]}">\n'
-            f'  <a class="prev" href="{prev_href}"><small>{prev_small}</small><span>{html.escape(prev_label)}</span></a>\n'
-            f'  <a class="next" href="{next_href}"><small>{next_small}</small><span>{html.escape(next_label)}</span></a>\n'
-            "</nav>"
-        )
-        body_parts.append(f'<section class="chapter">\n{chunk}{pager}\n</section>')
-
-    toc = "\n".join(
-        f'        <li><a href="#{html.escape(chapter["anchor"])}">'
-        f'<span class="num">{chapter["number"]}</span>'
-        f'<span>{html.escape(chapter["title"])}</span></a></li>'
-        for chapter in chapters
+def chapter_meta(lang: dict, chapter: dict) -> str:
+    return lang["meta"].format(
+        minutes=chapter["minutes"],
+        value=chapter["value"],
+        sections=chapter["sections"],
     )
 
-    total_value = sum(chapter["value"] for chapter in chapters)
-    total_minutes = sum(chapter["minutes"] for chapter in chapters)
-    main_chapters = sum(1 for chapter in chapters if not chapter["is_appendix"])
+
+def landing_page(lang: dict, chapters: list[dict], total_value: int, total_minutes: int) -> str:
+    main_chapters = [chapter for chapter in chapters if not chapter["is_appendix"]]
+    chapter_count = len(main_chapters)
     total_words = (
         f"{total_value / 10000:.1f}"
-        if cfg["count_mode"] == "chars"
+        if lang["count_mode"] == "chars"
         else f"{total_value:,}"
     )
+    cards = []
+    for index, chapter in enumerate(chapters):
+        extra = " appendix" if chapter["is_appendix"] else ""
+        blurb = lang["blurbs"][index] if index < len(lang["blurbs"]) else ""
+        cards.append(
+            f"""      <a class="chapter-card{extra}" href="{chapter["slug"]}">
+        <span class="num">{chapter["number"]}</span>
+        <h3>{html.escape(chapter["title"])}</h3>
+        <p>{html.escape(blurb)}</p>
+        <span class="meta">{html.escape(chapter_meta(lang, chapter))}</span>
+      </a>"""
+        )
+
+    paths = "\n".join(
+        f"""      <div class="path">
+        <strong>{html.escape(title)}</strong>
+        <span>{html.escape(description)}</span>
+      </div>"""
+        for title, description in lang["paths"]
+    )
+
+    chip_chapters = (
+        f"{chapter_count} 章 + 附录"
+        if lang["key"] == "zh"
+        else f"{chapter_count} chapters + appendix"
+    )
+    chip_words = (
+        f"约 {total_words} 万字"
+        if lang["key"] == "zh"
+        else f"~{total_words} words"
+    )
+    chip_minutes = (
+        f"约 {total_minutes} 分钟"
+        if lang["key"] == "zh"
+        else f"~{total_minutes} min read"
+    )
+    cover_foot = (
+        f"0 基础 · {chapter_count} 章 + 附录"
+        if lang["key"] == "zh"
+        else f"Beginner-friendly · {chapter_count} chapters + appendix"
+    )
+
+    title = f"{lang['book_title']} · {lang['subtitle']}" if lang["key"] == "zh" else f"{lang['book_title']}: {lang['subtitle']}"
+    description = lang["lede"]
+
+    body = f"""<header class="hero">
+  <div class="hero-copy">
+    <p class="badge">{html.escape(lang['badge'])}</p>
+    <h1>{html.escape(lang['book_title'])}</h1>
+    <p class="subtitle">{html.escape(lang['subtitle'])}</p>
+    <p class="lede">{html.escape(lang['lede'])}</p>
+    <ul class="chips">
+      <li>{html.escape(chip_chapters)}</li>
+      <li>{html.escape(chip_words)}</li>
+      <li>{html.escape(chip_minutes)}</li>
+      <li>DSH Desktop 0.2.1-rc.2</li>
+    </ul>
+    <div class="actions">
+      <a class="button primary" href="ch01.html">{html.escape(lang['start'])}</a>
+      <a class="button" href="{REPO_URL}">{html.escape(lang['github'])}</a>
+    </div>
+  </div>
+  <div class="hero-cover" aria-hidden="true">
+    <div class="cover">
+      <span class="cover-label">DSH Field Guide</span>
+      <span class="cover-title">DeepSeek<br>Harness<br><em>{html.escape(lang['cover_word'])}</em></span>
+      <span class="cover-sub">{lang['cover_sub']}</span>
+      <span class="cover-foot">{html.escape(cover_foot)}</span>
+    </div>
+  </div>
+</header>
+<main class="landing">
+  <section class="landing-section" id="contents">
+    <div class="section-heading">
+      <h2>{html.escape(lang['book_map'])}</h2>
+      <p>{html.escape(lang['contents_intro'])}</p>
+    </div>
+    <div class="book-map">
+{chr(10).join(cards)}
+    </div>
+  </section>
+
+  <section class="landing-section">
+    <div class="section-heading"><h2>{html.escape(lang['paths_title'])}</h2></div>
+    <div class="reading-paths">
+{paths}
+    </div>
+  </section>
+
+  <section class="landing-section">
+    <div class="about-book">
+      <div>
+        <h2>{html.escape(lang['about_title'])}</h2>
+        <p>{html.escape(lang['about_text'])}</p>
+      </div>
+      <p class="about-meta">{html.escape(lang['about_meta'])}<br><a href="{REPO_URL}">GitHub</a> · <a href="{page_url(lang, 'index.html')}">GitHub Pages</a></p>
+    </div>
+  </section>
+</main>
+"""
 
     page = (
-        TEMPLATE.replace("{language_switch}", cfg["switch"])
-        .replace("{asset_prefix}", cfg["asset_prefix"])
-        .replace("{page_url}", cfg["page_url"])
-        .replace("{og_locale}", cfg["og_locale"])
+        head(lang, title, description, "index.html")
+        + topbar(lang, "index.html", "#contents", "ch01.html")
+        + body
+        + footer(lang, "index.html")
     )
-    for old, new in cfg["static"].items():
-        page = page.replace(old, new)
-    page = page.replace("{repo_url}", REPO_URL)
+    return page
 
+
+def chapter_page(lang: dict, chapters: list[dict], index: int) -> str:
+    chapter = chapters[index]
+    meta = chapter_meta(lang, chapter)
+    content = chapter["html"].replace(
+        "</h1>",
+        f'</h1>\n<p class="chapter-meta">{html.escape(meta)}</p>',
+        1,
+    )
+
+    if index == 0:
+        prev_href, prev_small, prev_label = "index.html#contents", lang["back_small"], lang["contents"]
+    else:
+        previous = chapters[index - 1]
+        prev_href = previous["slug"]
+        prev_small = lang["prev_small"]
+        prev_label = short_title(previous["title"], lang["short_limit"])
+
+    if index + 1 < len(chapters):
+        following = chapters[index + 1]
+        next_href = following["slug"]
+        next_small = lang["next_small"]
+        next_label = short_title(following["title"], lang["short_limit"])
+    else:
+        next_href, next_small, next_label = "index.html#contents", lang["end_small"], lang["contents"]
+
+    pager = f"""<nav class="pager" aria-label="{html.escape(lang['chapter_nav'])}">
+  <a class="prev" href="{prev_href}"><small>{html.escape(prev_small)}</small><span>{html.escape(prev_label)}</span></a>
+  <a class="next" href="{next_href}"><small>{html.escape(next_small)}</small><span>{html.escape(next_label)}</span></a>
+</nav>"""
+
+    toc = chapter_list(lang, chapters, chapter["slug"])
+    body = f"""<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">{html.escape(lang['contents_kicker'])}</p>
+      <h2>{html.escape(lang['book_map'])}</h2>
+      <ol class="chapter-list">
+{toc}
+      </ol>
+      <p class="sidebar-note">{html.escape(lang['footer'][0])}<br>{html.escape(lang['footer'][1])}</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">{html.escape(lang['contents'])}</a> / {html.escape(chapter['label'])}</p>
+    <section class="chapter">
+{content}
+{pager}
+    </section>
+  </article>
+</main>
+"""
+
+    label = chapter["label"]
+    title = f"{label} · {chapter['title']} · {lang['book_title']}"
+    description = f"{label}: {chapter['title']} — {lang['subtitle']}"
     page = (
-        page.replace("{chapter_count}", str(main_chapters))
-        .replace("{total_words}", total_words)
-        .replace("{total_minutes}", str(total_minutes))
-        .replace("{toc}", toc)
-        .replace("{body}", "\n".join(body_parts))
+        head(lang, title, description, chapter["slug"])
+        + topbar(lang, chapter["slug"], "index.html#contents", "ch01.html")
+        + body
+        + footer(lang, chapter["slug"])
     )
+    return page
 
-    unresolved = [token for token in (
-        "{repo_url}", "{language_switch}", "{asset_prefix}", "{page_url}",
-        "{og_locale}", "{chapter_count}", "{total_words}", "{total_minutes}",
-        "{toc}", "{body}",
-    ) if token in page]
-    if unresolved:
-        raise SystemExit(f"unresolved placeholders in {cfg['output']}: {unresolved}")
 
-    # Privacy guard: the Pages build must stay static and self-contained.
-    lowered = page.lower()
-    forbidden = ("<script", "google-analytics", "googletagmanager", "plausible.io", "umami")
-    for token in forbidden:
-        if token in lowered:
-            raise SystemExit(f"refusing to write {cfg['output']} containing {token!r}")
+def build_language(lang: dict) -> None:
+    chapters = parse_chapters(lang)
+    total_value = sum(chapter["value"] for chapter in chapters)
+    total_minutes = sum(chapter["minutes"] for chapter in chapters)
+    out_dir = ROOT / lang["out_dir"]
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Keep the English page English: the only Han characters allowed are the
-    # language-switch label "中文".
-    if cfg["lang"] == "en":
-        check = page.replace("中文", "")
-        if re.search(r"[\u4e00-\u9fff]", check):
-            found = sorted(set(re.findall(r"[\u4e00-\u9fff]+", check)))[:12]
-            raise SystemExit(f"untranslated Chinese in English page: {found}")
+    landing = landing_page(lang, chapters, total_value, total_minutes)
+    (out_dir / "index.html").write_text(landing, encoding="utf-8")
 
-    output = ROOT / cfg["output"]
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(page, encoding="utf-8")
+    for index, chapter in enumerate(chapters):
+        page = chapter_page(lang, chapters, index)
+        (out_dir / chapter["slug"]).write_text(page, encoding="utf-8")
+
+    # Privacy guard: every page must stay static and self-contained.
+    pages = [out_dir / "index.html", *[out_dir / chapter["slug"] for chapter in chapters]]
+    for path in pages:
+        text = path.read_text(encoding="utf-8")
+        lowered = text.lower()
+        for token in ("<script", "google-analytics", "googletagmanager", "plausible.io", "umami"):
+            if token in lowered:
+                raise SystemExit(f"refusing to keep {path} containing {token!r}")
+        if lang["lang"] == "en":
+            check = text.replace("中文", "")
+            found = sorted(set(re.findall(r"[\u4e00-\u9fff]+", check)))
+            if found:
+                raise SystemExit(f"untranslated Chinese in {path}: {found[:8]}")
+
     print(
-        f"wrote {cfg['output']} "
-        f"({len(page):,} chars, {len(chapters)} chapters, {total_value:,} {cfg['count_mode']})"
+        f"wrote {lang['out_dir']}/index.html + {len(chapters)} chapter pages "
+        f"({total_value:,} {lang['count_mode']})"
     )
 
 
 def main() -> None:
-    for cfg in LANGUAGES:
-        build_site(cfg)
+    for lang in LANGUAGES:
+        build_language(lang)
 
 
 if __name__ == "__main__":

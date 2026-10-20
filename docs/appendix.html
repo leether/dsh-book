@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>附录 · 附录 · DeepSeek Harness 入门</title>
+<meta name="description" content="附录: 附录 — 从第一次对话到自己的插件">
+<meta property="og:title" content="附录 · 附录 · DeepSeek Harness 入门">
+<meta property="og:description" content="附录: 附录 — 从第一次对话到自己的插件">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/appendix.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://leether.github.io/dsh-book/appendix.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/appendix.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/appendix.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/appendix.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="index.html#contents">目录</a>
+      <a href="ch01.html">开始阅读</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="en/appendix.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>认识 DSH：模型、Harness、Agent</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>第一次启动：桌面、模型、工作区</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>第一次任务：把需求说清楚</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>工作区、文件与权限</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>会话、上下文与记忆</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>工具与技能：Agent 的手和脑</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>模式与 Preset：同一个模型，不同工作方式</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>插件、Bundle 与 Profile：给 DSH 装能力</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>创造模式：从使用者到扩展者</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>排错、安全与继续学习</span></a></li>
+        <li><a href="appendix.html" aria-current="page"><span class="num">附</span><span>附录</span></a></li>
+      </ol>
+      <p class="sidebar-note">非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。<br>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">目录</a> / 附录</p>
+    <section class="chapter">
+<h1 id="_79">附录</h1>
+<p class="chapter-meta">约 3 分钟 · 1,355 字 · 5 个小节</p>
+<h2 id="a">A. 术语表</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>一句话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Agent</strong></td>
+<td>正在工作的助手：模型 + Harness + 当前上下文</td>
+</tr>
+<tr>
+<td><strong>Harness</strong></td>
+<td>Agent 的工作台：工具、会话、权限、插件</td>
+</tr>
+<tr>
+<td><strong>Model</strong></td>
+<td>大脑：负责理解、推理、生成</td>
+</tr>
+<tr>
+<td><strong>Session</strong></td>
+<td>一次连续对话</td>
+</tr>
+<tr>
+<td><strong>Workspace</strong></td>
+<td>Agent 工作的文件夹</td>
+</tr>
+<tr>
+<td><strong>Context Window</strong></td>
+<td>模型一次能处理的内容上限</td>
+</tr>
+<tr>
+<td><strong>Compaction</strong></td>
+<td>上下文快满时的压缩</td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td>
+<td>Agent 能执行的动作</td>
+</tr>
+<tr>
+<td><strong>Skill</strong></td>
+<td>教 Agent 怎么做的知识/流程</td>
+</tr>
+<tr>
+<td><strong>Preset</strong></td>
+<td>单个 Agent 的能力组合</td>
+</tr>
+<tr>
+<td><strong>Plugin</strong></td>
+<td>运行时能力扩展</td>
+</tr>
+<tr>
+<td><strong>Bundle</strong></td>
+<td>可安装的插件/配置补丁包</td>
+</tr>
+<tr>
+<td><strong>Profile</strong></td>
+<td>一套安装环境</td>
+</tr>
+<tr>
+<td><strong>Sandbox</strong></td>
+<td>限制文件/命令访问范围的机制</td>
+</tr>
+<tr>
+<td><strong>Approval</strong></td>
+<td>敏感操作前的确认</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>连接外部工具/数据的协议</td>
+</tr>
+<tr>
+<td><strong>PTC</strong></td>
+<td>用代码组织工具调用的模式</td>
+</tr>
+<tr>
+<td><strong>Creator</strong></td>
+<td>扩展 DSH 的 Preset（内部 id <code>cordis</code>）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="b-10">B. 10 个提示词模板</h2>
+<h3 id="1_3">1. 只读盘点</h3>
+<pre><code class="language-text">请只读当前工作区，列出文件并按类型分组。
+不要修改任何文件，也不要运行会改变文件的命令。
+最后说明你用了哪些工具。
+</code></pre>
+<h3 id="2_4">2. 先计划</h3>
+<pre><code class="language-text">先不要执行。请给我一个 3–5 步计划：
+每步做什么、读/写哪些文件、怎么验证。
+我确认后你再开始。
+</code></pre>
+<h3 id="3_4">3. 生成文档</h3>
+<pre><code class="language-text">请阅读 [文件列表]，生成 [输出文件]。
+要求：[结构/长度/语言/链接]。
+不要修改原文件。
+完成后检查输出文件是否存在，并列出你读过的文件。
+</code></pre>
+<h3 id="4_3">4. 代码审查</h3>
+<pre><code class="language-text">请审查这次改动，优先找 bug、边界情况、测试缺口。
+按严重程度排序，指出文件和行号。
+先不要改代码，只给报告。
+</code></pre>
+<h3 id="5_2">5. 调试</h3>
+<pre><code class="language-text">请先复现问题，再提出最多 3 个假设。
+每次只验证一个假设，并给出证据。
+不要在没有验证的情况下大改代码。
+</code></pre>
+<h3 id="6_1">6. 资料调研</h3>
+<pre><code class="language-text">请调研 [主题]，优先使用一手来源。
+输出：结论、证据链接、反方观点、仍不确定的地方。
+不要编造来源。
+</code></pre>
+<h3 id="7">7. 数据整理</h3>
+<pre><code class="language-text">请读取 [输入]，按 [字段] 整理成 [输出格式]。
+不要修改原始数据。
+先给我字段映射和清洗规则，确认后再执行。
+</code></pre>
+<h3 id="8">8. 写作</h3>
+<pre><code class="language-text">请按 [读者/语气/长度/结构] 写一篇 [主题]。
+不要使用空泛套话；每个观点要有依据。
+先给提纲，确认后再写全文。
+</code></pre>
+<h3 id="9_1">9. 文件整理</h3>
+<pre><code class="language-text">请先只读列出 [目录] 的文件，给出整理方案。
+不要删除/移动任何文件，等我确认。
+方案要说明每个文件去哪、为什么。
+</code></pre>
+<h3 id="10_1">10. 插件需求</h3>
+<pre><code class="language-text">我想给 DSH 加一个能力：[描述]。
+先不要写代码。请检查：
+1. 应该挂在哪一层；
+2. 需要哪些 API/模板；
+3. 最小版本是什么；
+4. 怎么验证、怎么卸载。
+</code></pre>
+<hr />
+<h2 id="c">C. 开始任务前的检查清单</h2>
+<pre><code class="language-text">[ ] 目标一句话说清楚了吗？
+[ ] 输入文件/目录明确了吗？
+[ ] 输出位置和格式明确了吗？
+[ ] 有哪些禁止事项？
+[ ] 怎么验收？
+[ ] 需要备份/提交吗？
+[ ] 是否需要只读先行？
+[ ] 是否涉及密钥/隐私？
+[ ] 是否需要安装插件/开高权限？
+</code></pre>
+<hr />
+<h2 id="d">D. 任务完成检查清单</h2>
+<pre><code class="language-text">[ ] 输出文件真的存在吗？
+[ ] 内容符合要求吗？
+[ ] 原文件有没有被改？
+[ ] 有没有遗漏输入？
+[ ] 有没有编造事实/来源？
+[ ] 有没有测试/验证证据？
+[ ] 需要交付的文件 present 了吗？
+[ ] 临时文件清理了吗？
+[ ] 需要回滚时知道怎么做吗？
+</code></pre>
+<hr />
+<h2 id="_80">结语</h2>
+<p>DSH 不难用，难的是<strong>在它变强之前，先学会控制它</strong>。</p>
+<p>记住三句话：</p>
+<ol>
+<li><strong>先只读，再写入。</strong></li>
+<li><strong>先小步，再扩大。</strong></li>
+<li><strong>密钥不进对话，破坏性操作先备份。</strong></li>
+</ol>
+<p>当你熟悉了这些，再去碰 Preset、Plugin、Bundle、Creator。那时你看到的不再是一堆名词，而是一套可以按需组合的工作台。</p>
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="ch10.html"><small>上一章</small><span>排错、安全与继续学习</span></a>
+  <a class="next" href="index.html#contents"><small>结束</small><span>目录</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/appendix.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>

@@ -283,7 +283,7 @@ When the context fills up:
 
 ## 5.3 DSH Does Not Automatically Remember Everything
 
-This is the biggest beginner misconception.
+This is the most common beginner misconception.
 
 DSH keeps a session log, but that is not the same as cross-session long-term memory.
 

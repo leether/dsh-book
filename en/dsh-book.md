@@ -11,6 +11,8 @@ Reference environment: DeepSeek Harness Desktop 0.2.1-rc.2
 
 ## Before You Start
 
+This English edition was edited for natural English usage rather than translated word-for-word. It is still an unofficial guide; corrections from native readers are welcome.
+
 This book does not assume you can program.
 
 It aims to help you do three things:
@@ -101,7 +103,7 @@ DeepSeek Harness, or **DSH**, is that harness.
 - **A model.** DSH does not contain the model's brain; you connect a model service.
 - **Just a chat app.** Its focus is reading, writing, executing, and delivering.
 - **Only for programmers.** Everyday tasks can be done in natural language.
-- **Automatically safe.** It can take real actions; permissions and review matter.
+- **Safe by default.** It can take real actions; permissions and review matter.
 
 In one sentence:
 
@@ -125,7 +127,7 @@ A Session is one continuous conversation.
 - A new Session does not automatically inherit every previous message;
 - One workspace can have many Sessions.
 
-Think of a Session as one meeting record.
+Think of a Session as the minutes of one meeting.
 
 ### Workspace
 
@@ -196,7 +198,7 @@ Without a harness, none of those actions happen.
 | --- | --- | --- |
 | **Desktop** | Almost everyone | A graphical app; easiest to start |
 | **Web** | Browser access, remote servers | A web page with a similar interface |
-| **Headless** | Automation, scripts, batch jobs | One-shot command line, no GUI |
+| **Headless** | Automation, scripts, batch jobs | A one-shot command-line run, no GUI |
 
 All three share the same core ideas: Agent, Session, Workspace, Tool, Skill, Preset, and Plugin.
 
@@ -354,7 +356,7 @@ Do not start with **Creator mode**. Creator is for extending DSH itself. It adds
 
 ## 2.5 A Map of the Interface
 
-You do not need every button, but you should know where four kinds of information appear:
+You do not need to know every button, but you should know where four kinds of information appear:
 
 | Area | What you will see |
 | --- | --- |
@@ -559,9 +561,9 @@ Specific feedback = location + problem + standard.
 
 ---
 
-## 3.5 Verify — Do Not Trust "Done"
+## 3.5 Verify — Do Not Trust "done"
 
-"Done" is not "correct." Check:
+"Done" is not the same as "correct." Check:
 
 - Does the file exist?
 - Does the content meet the requirements?
@@ -956,7 +958,7 @@ When the context fills up:
 
 ## 5.3 DSH Does Not Automatically Remember Everything
 
-This is the biggest beginner misconception.
+This is the most common beginner misconception.
 
 DSH keeps a session log, but that is not the same as cross-session long-term memory.
 
@@ -1611,7 +1613,7 @@ A Profile is an installation environment:
 
 - `desktop`: the desktop app;
 - `web`: the browser;
-- `headless`: one-shot command line.
+- `headless`: a one-shot command-line run.
 
 It contains:
 
@@ -1619,7 +1621,7 @@ It contains:
 - Its own `cordis.patch.yml`;
 - Third-party plugin dependencies.
 
-Profile decides "what this environment installed"; Bundle decides "what is inside the installation"; Plugin decides "what actually runs."
+The Profile decides what this environment installs; the Bundle decides what the installation contains; the Plugin decides what actually runs.
 
 ---
 
@@ -1803,7 +1805,7 @@ Back up the profile, or at least record the state before installation.
 - What Creator mode is and is not;
 - What it adds beyond Standard;
 - When to use it, and when not to;
-- A complete "build a plugin" loop;
+- A complete plugin-building loop;
 - How non-programmers can participate;
 - How to avoid breaking DSH.
 

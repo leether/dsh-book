@@ -103,7 +103,7 @@ curl -I https://leether.github.io/dsh-book/
 - 如果返回 404，先等一分钟，再查 Pages 状态；
 - `status: built` 表示构建完成；
 - 中文入口 `/`，英文入口 `/en/`，右上角可切换；
-- 页面内容来自 `docs/index.html` 与 `docs/en/index.html`，不需要 Jekyll 构建。
+- 页面内容来自 `docs/index.html`、`docs/ch*.html`、`docs/appendix.html` 及对应的 `docs/en/` 页面；不需要 Jekyll 构建。
 
 `docs/.nojekyll` 已存在，用于跳过 Jekyll 处理。
 
@@ -146,7 +146,8 @@ Pages 会在推送后自动更新；通常 1–2 分钟。
 [ ] 没有把 DeepSeek/DSH 说成“官方”
 [ ] 示例中的项目名、文件名、对话均为虚构
 [ ] 站点无 JavaScript、无统计、无外部字体/CDN
-[ ] 中英页面可互相切换，hreflang / canonical 正确
+[ ] 中英页面可互相切换，切换后保留当前章节
+[ ] 每个章节页有上一章/下一章和正确的 canonical
 [ ] 英文页除语言切换外没有残留中文
 [ ] LICENSE 已包含，商标声明已写清
 ```

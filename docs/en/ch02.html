@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 2 · First Launch: Desktop, Model, Workspace · DeepSeek Harness</title>
+<meta name="description" content="Chapter 2: First Launch: Desktop, Model, Workspace — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 2 · First Launch: Desktop, Model, Workspace · DeepSeek Harness">
+<meta property="og:description" content="Chapter 2: First Launch: Desktop, Model, Workspace — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch02.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch02.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch02.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch02.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch02.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch02.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html" aria-current="page"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 2</p>
+    <section class="chapter">
+<h1 id="chapter-2-first-launch-desktop-model-workspace">Chapter 2 — First Launch: Desktop, Model, Workspace</h1>
+<p class="chapter-meta">4 min read · 811 words · 11 sections</p>
+<h2 id="what-you-will-learn_1">What You Will Learn</h2>
+<ul>
+<li>Open DSH Desktop;</li>
+<li>Connect a model;</li>
+<li>Choose a safe workspace;</li>
+<li>Complete a read-only first conversation;</li>
+<li>Read tool cards and approval prompts.</li>
+</ul>
+<hr />
+<h2 id="21-open-desktop">2.1 Open Desktop</h2>
+<p>After installation, open <strong>DeepSeek Harness</strong>.</p>
+<p>The first screen may show:</p>
+<ul>
+<li>A welcome page;</li>
+<li>Model or account setup;</li>
+<li>Workspace selection;</li>
+<li>A new-task input.</li>
+</ul>
+<p>The exact order varies by version, but the flow is usually:</p>
+<pre><code class="language-text">Open app → connect a model → choose a workspace → create a task → start talking
+</code></pre>
+<p>If you do not have a model service yet, read the next section.</p>
+<hr />
+<h2 id="22-connect-a-model">2.2 Connect a Model</h2>
+<p>DSH needs a model to think. There are usually two options:</p>
+<ol>
+<li><strong>DeepSeek official account/API</strong>: sign in or enter an API key;</li>
+<li><strong>An OpenAI-compatible provider</strong>: enter a Base URL, API key, and model name.</li>
+</ol>
+<p>The usual path is:</p>
+<pre><code class="language-text">Settings → Models → add or select a provider
+</code></pre>
+<p>Prepare:</p>
+<ul>
+<li>Provider;</li>
+<li>API key;</li>
+<li>Model name (for example <code>deepseek-chat</code> or <code>deepseek-flash</code>, depending on the provider);</li>
+<li>Optional Base URL.</li>
+</ul>
+<h3 id="how-to-know-it-worked">How to know it worked</h3>
+<ul>
+<li>The settings page shows the model as connected;</li>
+<li>A new task gets a reply;</li>
+<li>There is no <code>401</code> or <code>Invalid API key</code> error.</li>
+</ul>
+<h3 id="common-error-401">Common error: 401</h3>
+<p>A <code>401</code> almost always means <strong>the key is wrong or not active</strong>.</p>
+<p>Check:</p>
+<ul>
+<li>The key was copied completely;</li>
+<li>There are no extra spaces;</li>
+<li>The provider and Base URL match;</li>
+<li>The account has credit and permission;</li>
+<li>You did not paste a key from another service.</li>
+</ul>
+<blockquote>
+<p><strong>Never paste an API key into the chat for the Agent to inspect.</strong> Change it in Settings.</p>
+</blockquote>
+<hr />
+<h2 id="23-choose-a-workspace">2.3 Choose a Workspace</h2>
+<p>A workspace is the folder where the Agent works.</p>
+<p>For your first session:</p>
+<ol>
+<li>Create an empty folder such as <code>dsh-test</code>;</li>
+<li>Put one or two unimportant text files inside;</li>
+<li>Select that folder as the workspace.</li>
+</ol>
+<p>Why not use your whole home directory?</p>
+<ul>
+<li>The Agent can see too much and may touch the wrong thing;</li>
+<li>Context becomes noisy;</li>
+<li>Rolling back is harder.</li>
+</ul>
+<p>Once selected, the workspace is usually the Agent's current directory. Relative paths resolve from there.</p>
+<hr />
+<h2 id="24-choose-standard-mode">2.4 Choose Standard Mode</h2>
+<p>When creating a task, DSH usually asks you to choose an <strong>Agent Preset</strong>.</p>
+<p>For your first session, choose <strong>Standard</strong>.</p>
+<p>Standard mode includes the everyday tools: file read/write, terminal, web search, subagents, planning, todos, and file delivery.</p>
+<p>Do not start with <strong>Creator mode</strong>. Creator is for extending DSH itself. It adds plugin management and runtime inspection, along with more risk. Chapter 7 covers the difference.</p>
+<hr />
+<h2 id="25-a-map-of-the-interface">2.5 A Map of the Interface</h2>
+<p>You do not need to know every button, but you should know where four kinds of information appear:</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>What you will see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Conversation</strong></td>
+<td>Your task, the Agent's replies, questions, and explanations</td>
+</tr>
+<tr>
+<td><strong>Tool cards</strong></td>
+<td>What the Agent actually did: read, run, write</td>
+</tr>
+<tr>
+<td><strong>Approval prompts</strong></td>
+<td>Requests to allow or deny sensitive actions</td>
+</tr>
+<tr>
+<td><strong>Sidebar/settings</strong></td>
+<td>Sessions, workspace, model, plugins, skills, modes</td>
+</tr>
+</tbody>
+</table>
+<p>The most important habit:</p>
+<blockquote>
+<p><strong>Do not read only the final paragraph. Read what the Agent did in between.</strong></p>
+</blockquote>
+<p>Tool cards show which files it read, which commands it ran, and what it changed.</p>
+<hr />
+<h2 id="26-your-first-conversation-read-only">2.6 Your First Conversation: Read-Only</h2>
+<p>Do not change files on the first try. Start with two read-only exercises.</p>
+<h3 id="exercise-1-introduce-itself">Exercise 1: Introduce itself</h3>
+<pre><code class="language-text">Hello. In three sentences, tell me what you can and cannot do.
+Do not read or modify any files yet.
+</code></pre>
+<p>Check whether it:</p>
+<ul>
+<li>Describes itself as an Agent;</li>
+<li>Mentions workspace and permissions;</li>
+<li>Does not call tools without being asked.</li>
+</ul>
+<h3 id="exercise-2-read-only-inventory">Exercise 2: Read-only inventory</h3>
+<pre><code class="language-text">Read the current workspace and list its files grouped by type.
+Do not modify anything, and do not run commands that change files.
+At the end, tell me which tools you used.
+</code></pre>
+<p>You should see tool cards such as:</p>
+<pre><code class="language-text">list directory
+read file
+</code></pre>
+<p>If it tries to write, deny it and say:</p>
+<pre><code class="language-text">This step is read-only. Do not write anything.
+</code></pre>
+<hr />
+<h2 id="27-the-goal-of-the-first-conversation">2.7 The Goal of the First Conversation</h2>
+<p>It is not to finish a big task. It is to learn three things:</p>
+<ol>
+<li><strong>Where it works</strong>: the workspace;</li>
+<li><strong>How it works</strong>: tool calls;</li>
+<li><strong>How you control it</strong>: approvals, denials, and follow-up instructions.</li>
+</ol>
+<hr />
+<h2 id="sidebar-web-and-headless">Sidebar: Web and Headless</h2>
+<ul>
+<li><strong>Web</strong>: usually started with <code>dsh --profile web</code>; open the printed URL in a browser. The interface is similar; useful on a remote server.</li>
+<li><strong>Headless</strong>: run <code>dsh --profile headless "your task"</code> for one-shot execution. No GUI; useful for automation.</li>
+<li><strong>Desktop</strong>: the desktop app owns the <code>desktop</code> profile. Do not hand-edit that profile.</li>
+</ul>
+<p>This book stays Desktop-first.</p>
+<hr />
+<h2 id="common-pitfalls_1">Common Pitfalls</h2>
+<ul>
+<li><strong>Starting without a model</strong>: you will only get errors.</li>
+<li><strong>Choosing too large a workspace</strong>: start small.</li>
+<li><strong>Choosing Creator for everyday work</strong>: use Standard.</li>
+<li><strong>Pasting keys into chat</strong>: use Settings.</li>
+<li><strong>Reading only the final answer</strong>: tool calls tell the real story.</li>
+</ul>
+<hr />
+<h2 id="summary_1">Summary</h2>
+<ul>
+<li>Flow: open app → connect model → choose workspace → choose Standard → start.</li>
+<li>A <code>401</code> usually means a key problem.</li>
+<li>Keep the workspace small and reversible.</li>
+<li>Start read-only; watch tool cards.</li>
+<li>Standard is the daily default; Creator is a different job.</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="ch01.html"><small>Previous</small><span>Meet DSH: Models, Harnesse…</span></a>
+  <a class="next" href="ch03.html"><small>Next</small><span>Your First Task: Say What…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch02.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

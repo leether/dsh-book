@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 4 · Workspaces, Files, and Permissions · DeepSeek Harness</title>
+<meta name="description" content="Chapter 4: Workspaces, Files, and Permissions — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 4 · Workspaces, Files, and Permissions · DeepSeek Harness">
+<meta property="og:description" content="Chapter 4: Workspaces, Files, and Permissions — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch04.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch04.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch04.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch04.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch04.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch04.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html" aria-current="page"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 4</p>
+    <section class="chapter">
+<h1 id="chapter-4-workspaces-files-and-permissions">Chapter 4 — Workspaces, Files, and Permissions</h1>
+<p class="chapter-meta">4 min read · 830 words · 11 sections</p>
+<h2 id="what-you-will-learn_3">What You Will Learn</h2>
+<ul>
+<li>Why the workspace is a safety boundary;</li>
+<li>What the Agent can read and write;</li>
+<li>The difference between <code>workspace-write</code> and <code>danger-full-access</code>;</li>
+<li>How to avoid deletion, overwriting, and secret leaks;</li>
+<li>How to use <code>AGENTS.md</code> to set project rules.</li>
+</ul>
+<hr />
+<h2 id="41-what-a-workspace-really-is">4.1 What a Workspace Really Is</h2>
+<p>A workspace is a folder.</p>
+<p>The Agent's current directory is usually that folder. When you say "read <code>notes/a.md</code>", it looks for <code>notes/a.md</code> inside the workspace.</p>
+<p>A workspace does three jobs:</p>
+<ol>
+<li><strong>Scope</strong>: the Agent works here by default;</li>
+<li><strong>Context</strong>: files and instructions here shape its decisions;</li>
+<li><strong>Permission boundary</strong>: many safety policies are scoped to it.</li>
+</ol>
+<p>So a workspace is not "just any folder". It is the boundary you draw around the Agent's work.</p>
+<h3 id="recommendations">Recommendations</h3>
+<ul>
+<li>One project, one workspace;</li>
+<li>Do not include your entire home directory;</li>
+<li>Use <code>git init</code> for important projects;</li>
+<li>Use a scratch folder such as <code>dsh-test</code> for experiments.</li>
+</ul>
+<hr />
+<h2 id="42-what-the-agent-can-read-and-write">4.2 What the Agent Can Read and Write</h2>
+<p>The Agent acts through tools:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read file</td>
+<td>View content</td>
+<td>Low, but it may read sensitive data</td>
+</tr>
+<tr>
+<td>List/search</td>
+<td>Find files</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>Write file</td>
+<td>Create or overwrite</td>
+<td>High: may overwrite originals</td>
+</tr>
+<tr>
+<td>Edit file</td>
+<td>Replace a section</td>
+<td>Medium: may edit the wrong place</td>
+</tr>
+<tr>
+<td>Run command</td>
+<td>Execute programs</td>
+<td>Very high: delete, reset, upload</td>
+</tr>
+</tbody>
+</table>
+<p>Reading is not automatically safe. If the workspace contains <code>.env</code>, keys, or customer data, the Agent may read it, put it into context, or repeat it.</p>
+<h3 id="least-privilege">Least privilege</h3>
+<ul>
+<li>Give it only the folder needed for the task;</li>
+<li>Do not hand it your whole home or repository root;</li>
+<li>For sensitive data, redact or copy into an isolated folder first.</li>
+</ul>
+<hr />
+<h2 id="43-two-common-permission-modes">4.3 Two Common Permission Modes</h2>
+<h3 id="workspace-write"><code>workspace-write</code></h3>
+<ul>
+<li>Read and write inside the workspace;</li>
+<li>Outside the workspace, usually read-only or approval-required;</li>
+<li>The right default for most daily tasks.</li>
+</ul>
+<h3 id="danger-full-access"><code>danger-full-access</code></h3>
+<ul>
+<li>Broader access;</li>
+<li>Higher-risk operations;</li>
+<li>Use only when you know exactly what you are doing, such as installing plugins or system-level debugging.</li>
+</ul>
+<p><strong>Do not leave full access on just because it is convenient.</strong> More permission means a larger blast radius.</p>
+<h3 id="approval-prompts">Approval prompts</h3>
+<p>When the Agent wants a sensitive action, DSH may ask:</p>
+<pre><code class="language-text">Allow this operation?
+</code></pre>
+<p>You can:</p>
+<ul>
+<li><strong>Allow once</strong>;</li>
+<li><strong>Deny</strong>;</li>
+<li><strong>Stop the task</strong>.</li>
+</ul>
+<p>When you see delete, overwrite, reset, push, upload, or install, read the details before clicking.</p>
+<hr />
+<h2 id="44-destructive-operations-back-up-first">4.4 Destructive Operations: Back Up First</h2>
+<p>Possible dangerous actions:</p>
+<ul>
+<li>Delete files or directories;</li>
+<li>Overwrite existing files;</li>
+<li><code>git reset --hard</code>;</li>
+<li><code>git push --force</code>;</li>
+<li>Modify system configuration;</li>
+<li>Install or uninstall software;</li>
+<li>Upload files to an external service.</li>
+</ul>
+<h3 id="three-rules">Three rules</h3>
+<ol>
+<li><strong>Back up important files</strong>;</li>
+<li><strong>Use git when possible</strong>: commit before the Agent changes things;</li>
+<li><strong>Ask for the impact and rollback plan</strong> before approving.</li>
+</ol>
+<pre><code class="language-text">Before deleting or overwriting anything, list the affected files and tell me how to roll back.
+Do not execute until I confirm.
+</code></pre>
+<h3 id="git-is-your-undo-button">Git is your undo button</h3>
+<pre><code class="language-bash">git add -A
+git commit -m &quot;before agent changes&quot;
+</code></pre>
+<p>If the Agent breaks something:</p>
+<pre><code class="language-bash">git diff
+git restore .
+</code></pre>
+<p>Do not let an Agent make broad changes to important files without version control.</p>
+<hr />
+<h2 id="45-secrets-passwords-and-screenshots">4.5 Secrets, Passwords, and Screenshots</h2>
+<p>This is where most accidents happen.</p>
+<h3 id="do-not">Do not</h3>
+<ul>
+<li>Paste API keys, passwords, or tokens into chat;</li>
+<li>Copy <code>.env</code> contents to the Agent;</li>
+<li>Let it upload files containing secrets;</li>
+<li>Show it screenshots containing keys.</li>
+</ul>
+<h3 id="do">Do</h3>
+<ul>
+<li>Keep secrets in environment variables or a secret manager;</li>
+<li>Let the Agent change variable <em>names</em>, not values;</li>
+<li>Show redacted examples;</li>
+<li>If a secret was exposed, stop and rotate it.</li>
+</ul>
+<blockquote>
+<p>The Agent's context may be logged, replayed, or displayed. <strong>Treat anything pasted into chat as leaked.</strong></p>
+</blockquote>
+<hr />
+<h2 id="46-agentsmd-project-rules">4.6 <code>AGENTS.md</code>: Project Rules</h2>
+<p><code>AGENTS.md</code> is a project instruction file. The Agent reads it and tries to follow it.</p>
+<p>Example:</p>
+<pre><code class="language-markdown"># Project Rules
+
+- Reply in English.
+- Do not modify `dist/` or `node_modules/`.
+- Read related files before changing code.
+- Run `pnpm test` before committing.
+- Ask me before deleting any file.
+- Do not read `.env`.
+</code></pre>
+<p>Use it for:</p>
+<ul>
+<li>Code style;</li>
+<li>Directory rules;</li>
+<li>Forbidden actions;</li>
+<li>Test commands;</li>
+<li>Delivery format;</li>
+<li>Team conventions.</li>
+</ul>
+<p><code>AGENTS.md</code> is guidance, not a hard sandbox. It reduces mistakes but does not replace permission controls.</p>
+<hr />
+<h2 id="47-workspace-hygiene">4.7 Workspace Hygiene</h2>
+<ul>
+<li>One task per folder;</li>
+<li>Keep inputs, outputs, and temporary files separate;</li>
+<li>Delete temporary files when done;</li>
+<li>Do not mix test data with personal data;</li>
+<li>Confirm before reading very large files.</li>
+</ul>
+<hr />
+<h2 id="try-it_1">Try It</h2>
+<ol>
+<li>Create a <code>dsh-test</code> workspace;</li>
+<li>Add an <code>AGENTS.md</code> with three rules;</li>
+<li>Ask the Agent to read it and repeat what it will follow;</li>
+<li>Ask it to modify a file and observe the approval prompt;</li>
+<li>Deny once and see whether it stops.</li>
+</ol>
+<hr />
+<h2 id="common-pitfalls_3">Common Pitfalls</h2>
+<ul>
+<li><strong>Workspace too broad</strong>: larger blast radius.</li>
+<li><strong>Permanent full access</strong>: risk accumulates.</li>
+<li><strong>No backup before delete/change</strong>: no rollback.</li>
+<li><strong>Pasting keys into chat</strong>: immediate leak.</li>
+<li><strong>Treating <code>AGENTS.md</code> as a sandbox</strong>: it is guidance only.</li>
+</ul>
+<hr />
+<h2 id="summary_3">Summary</h2>
+<ul>
+<li>Workspace = scope + context + permission boundary.</li>
+<li>Reading can be risky; keep secrets out of chat.</li>
+<li><code>workspace-write</code> is the daily default; <code>danger-full-access</code> requires restraint.</li>
+<li>Back up and confirm before destructive operations.</li>
+<li><code>AGENTS.md</code> sets rules but does not enforce them by itself.</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="ch03.html"><small>Previous</small><span>Your First Task: Say What…</span></a>
+  <a class="next" href="ch05.html"><small>Next</small><span>Sessions, Context, and Mem…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch04.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

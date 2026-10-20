@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>第 3 章 · 第一次任务：把需求说清楚 · DeepSeek Harness 入门</title>
+<meta name="description" content="第 3 章: 第一次任务：把需求说清楚 — 从第一次对话到自己的插件">
+<meta property="og:title" content="第 3 章 · 第一次任务：把需求说清楚 · DeepSeek Harness 入门">
+<meta property="og:description" content="第 3 章: 第一次任务：把需求说清楚 — 从第一次对话到自己的插件">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/ch03.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://leether.github.io/dsh-book/ch03.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch03.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch03.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch03.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="index.html#contents">目录</a>
+      <a href="ch01.html">开始阅读</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="en/ch03.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>认识 DSH：模型、Harness、Agent</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>第一次启动：桌面、模型、工作区</span></a></li>
+        <li><a href="ch03.html" aria-current="page"><span class="num">03</span><span>第一次任务：把需求说清楚</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>工作区、文件与权限</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>会话、上下文与记忆</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>工具与技能：Agent 的手和脑</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>模式与 Preset：同一个模型，不同工作方式</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>插件、Bundle 与 Profile：给 DSH 装能力</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>创造模式：从使用者到扩展者</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>排错、安全与继续学习</span></a></li>
+        <li><a href="appendix.html"><span class="num">附</span><span>附录</span></a></li>
+      </ol>
+      <p class="sidebar-note">非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。<br>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 3 章</p>
+    <section class="chapter">
+<h1 id="3">第 3 章　第一次任务：把需求说清楚</h1>
+<p class="chapter-meta">约 4 分钟 · 1,789 字 · 11 个小节</p>
+<h2 id="_14">本章你会学会</h2>
+<ul>
+<li>用“目标 + 输入 + 约束 + 验收”描述任务；</li>
+<li>让 Agent 先计划、再执行；</li>
+<li>检查工具调用和文件改动；</li>
+<li>给出有效反馈；</li>
+<li>用 <code>present</code> 交付最终文件。</li>
+</ul>
+<hr />
+<h2 id="31">3.1 好任务的四个要素</h2>
+<p>很多人觉得 Agent“不好用”，其实是因为任务说得太模糊。</p>
+<p>一个好任务至少包含四件事：</p>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>回答什么问题</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>目标</strong></td>
+<td>最终要得到什么？</td>
+<td>一份 <code>summary.md</code></td>
+</tr>
+<tr>
+<td><strong>输入</strong></td>
+<td>从哪里拿材料？</td>
+<td><code>notes/</code> 下的三篇文章</td>
+</tr>
+<tr>
+<td><strong>约束</strong></td>
+<td>不能做什么？有什么规则？</td>
+<td>不改原文件；中文；保留链接</td>
+</tr>
+<tr>
+<td><strong>验收</strong></td>
+<td>怎么算完成？</td>
+<td>三个标题都在；每篇 3–5 句；能打开</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_15">反例</h3>
+<pre><code class="language-text">帮我整理一下笔记。
+</code></pre>
+<p>问题：</p>
+<ul>
+<li>哪些笔记？</li>
+<li>整理成什么？</li>
+<li>能不能改原文件？</li>
+<li>什么算整理好？</li>
+</ul>
+<h3 id="_16">正例</h3>
+<pre><code class="language-text">请阅读 notes/ 下的三篇 Markdown 文章，合并成一份 notes/summary.md。
+要求：
+1. 保留每篇的标题和原文链接；
+2. 每篇写 3–5 句摘要；
+3. 不要修改原文件；
+4. 先给我一个执行计划，我确认后再写。
+完成后告诉我你读了哪些文件、写了哪个文件，并检查 summary.md 是否存在。
+</code></pre>
+<p>区别不是“更长”，而是<strong>信息完整</strong>。</p>
+<hr />
+<h2 id="32">3.2 先计划，再执行</h2>
+<p>对稍微复杂一点的任务，建议先让 Agent 进入“计划”状态。</p>
+<p>你可以直接说：</p>
+<pre><code class="language-text">先不要改文件。请给我一个 3–5 步的计划，说明你准备读什么、写什么、怎么验证。
+</code></pre>
+<p>观察它的计划是否：</p>
+<ul>
+<li>覆盖了所有输入；</li>
+<li>说明了输出位置；</li>
+<li>包含验证步骤；</li>
+<li>没有偷偷扩大范围。</li>
+</ul>
+<p>如果计划不对，先改计划，不要让它直接开干。</p>
+<hr />
+<h2 id="33">3.3 看工具调用</h2>
+<p>Agent 执行时，会显示工具卡片。你要重点看：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>你要关注什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>读文件</td>
+<td>读的是不是正确的文件</td>
+</tr>
+<tr>
+<td>写文件</td>
+<td>写到了哪里，是否覆盖了原文件</td>
+</tr>
+<tr>
+<td>运行命令</td>
+<td>命令是否会删除/重置/推送</td>
+</tr>
+<tr>
+<td>搜索网页</td>
+<td>来源是否可靠</td>
+</tr>
+<tr>
+<td>子代理</td>
+<td>它派出去做了什么</td>
+</tr>
+</tbody>
+</table>
+<p>一个实用习惯：</p>
+<blockquote>
+<p><strong>看到“写入/删除/覆盖/重置/推送”这类词，先停一下。</strong></p>
+</blockquote>
+<hr />
+<h2 id="34">3.4 迭代：给具体反馈</h2>
+<p>Agent 第一版不完美很正常。有效反馈要具体：</p>
+<h3 id="_17">模糊反馈</h3>
+<pre><code class="language-text">不太好，重写。
+</code></pre>
+<h3 id="_18">具体反馈</h3>
+<pre><code class="language-text">第二段太长了，压缩到 3 句以内。
+保留原来的三个小标题，不要合并。
+把原文链接放到每段末尾，不要放在开头。
+</code></pre>
+<p>具体反馈 = 指出位置 + 指出问题 + 给出标准。</p>
+<hr />
+<h2 id="35">3.5 验收：不要只看“完成了”</h2>
+<p>Agent 说“完成了”，不等于真的完成。你要检查：</p>
+<ul>
+<li>文件是否存在；</li>
+<li>内容是否符合要求；</li>
+<li>原文件有没有被改；</li>
+<li>链接是否可点；</li>
+<li>有没有遗漏输入；</li>
+<li>有没有引入不存在的事实。</li>
+</ul>
+<p>可以要求它给出证据：</p>
+<pre><code class="language-text">请列出你实际读取的文件、写入的文件，以及你用来验证的检查项。
+不要只告诉我“已完成”。
+</code></pre>
+<hr />
+<h2 id="36-present">3.6 交付：<code>present</code> 是什么</h2>
+<p>当任务产出是一个文件时，Agent 可能会调用 <code>present</code>。</p>
+<p><code>present</code> 的准确含义是：</p>
+<blockquote>
+<p><strong>把已经存在的文件声明为本次任务的最终交付物，让界面生成文件卡片，用户可以预览或用默认应用打开。</strong></p>
+</blockquote>
+<p>它：</p>
+<ul>
+<li>不创建文件；</li>
+<li>不上传文件；</li>
+<li>不复制文件内容；</li>
+<li>只记录路径和说明；</li>
+<li>文件内容不会进入模型上下文。</li>
+</ul>
+<p>如果 Agent 直接说“文件在 <code>notes/summary.md</code>”，也可以；<code>present</code> 只是让交付更直观。</p>
+<hr />
+<h2 id="37">3.7 一个完整的第一次任务</h2>
+<h3 id="_19">第一步：准备</h3>
+<p>在工作区建：</p>
+<pre><code class="language-text">notes/
+  a.md
+  b.md
+  c.md
+</code></pre>
+<h3 id="_20">第二步：发任务</h3>
+<pre><code class="language-text">请阅读 notes/ 下的三篇文章，合并成 notes/summary.md。
+要求：
+1. 保留标题和原文链接；
+2. 每篇 3–5 句摘要；
+3. 不改原文件；
+4. 先给计划，我确认后再执行；
+5. 完成后检查 summary.md 是否存在，并告诉我你读了哪些文件。
+</code></pre>
+<h3 id="_21">第三步：看计划</h3>
+<p>确认它没有漏文件、没有要改原文件。</p>
+<h3 id="_22">第四步：批准执行</h3>
+<p>观察工具卡片：读了三个文件，写了一个新文件。</p>
+<h3 id="_23">第五步：验收</h3>
+<p>打开 <code>summary.md</code>，检查标题、链接、摘要长度。</p>
+<h3 id="_24">第六步：迭代</h3>
+<p>如果第二篇太短，直接说：</p>
+<pre><code class="language-text">第二篇摘要加到 4 句，保留原有链接，其他不动。
+</code></pre>
+<hr />
+<h2 id="_25">常见坑</h2>
+<ul>
+<li><strong>任务太大</strong>：一次只做一件可验收的事。</li>
+<li><strong>没有验收标准</strong>：Agent 不知道什么算好。</li>
+<li><strong>不看工具调用</strong>：它可能改了不该改的文件。</li>
+<li><strong>只说“重写”</strong>：给具体位置和标准。</li>
+<li><strong>把“完成”当“正确”</strong>：要检查证据。</li>
+</ul>
+<hr />
+<h2 id="_26">小结</h2>
+<ul>
+<li>好任务 = 目标 + 输入 + 约束 + 验收。</li>
+<li>复杂任务先计划，再执行。</li>
+<li>看工具卡片，尤其是写、删、跑命令。</li>
+<li>反馈要具体；验收要看证据。</li>
+<li><code>present</code> 是交付声明，不是上传。</li>
+</ul>
+<hr />
+<h2 id="_27">第一部分练习</h2>
+<ol>
+<li>用“目标 + 输入 + 约束 + 验收”重写一个你最近想让 AI 做的任务。</li>
+<li>在一个测试文件夹里，让 Agent 只读列出文件，并说明用了哪些工具。</li>
+<li>让它生成一个 <code>summary.md</code>，然后检查原文件是否被改动。</li>
+<li>用一句具体反馈让它修改摘要，而不是说“重做”。</li>
+</ol>
+
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="ch02.html"><small>上一章</small><span>第一次启动：桌面、模型、工作区</span></a>
+  <a class="next" href="ch04.html"><small>下一章</small><span>工作区、文件与权限</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/ch03.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 8 · Plugins, Bundles, and Profiles: Giving DSH New Powers · DeepSeek Harness</title>
+<meta name="description" content="Chapter 8: Plugins, Bundles, and Profiles: Giving DSH New Powers — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 8 · Plugins, Bundles, and Profiles: Giving DSH New Powers · DeepSeek Harness">
+<meta property="og:description" content="Chapter 8: Plugins, Bundles, and Profiles: Giving DSH New Powers — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch08.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch08.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch08.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch08.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch08.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch08.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html" aria-current="page"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 8</p>
+    <section class="chapter">
+<h1 id="chapter-8-plugins-bundles-and-profiles-giving-dsh-new-powers">Chapter 8 — Plugins, Bundles, and Profiles: Giving DSH New Powers</h1>
+<p class="chapter-meta">4 min read · 908 words · 12 sections</p>
+<h2 id="what-you-will-learn_7">What You Will Learn</h2>
+<ul>
+<li>Distinguish Plugin, Bundle, and Profile;</li>
+<li>Understand how a plugin gets installed;</li>
+<li>Use Plugin Manager to install, enable, disable, and remove;</li>
+<li>Understand the trust boundary of third-party plugins;</li>
+<li>Troubleshoot "installed but not working."</li>
+</ul>
+<hr />
+<h2 id="81-three-words-three-layers">8.1 Three Words, Three Layers</h2>
+<blockquote>
+<p><strong>Plugin is capability. Bundle is the installer package. Profile is the environment.</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Think of it as</th>
+<th>Answers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Plugin</strong></td>
+<td>A pluggable capability module</td>
+<td>What runs?</td>
+</tr>
+<tr>
+<td><strong>Bundle</strong></td>
+<td>An installable patch package</td>
+<td>What configuration and code ship together?</td>
+</tr>
+<tr>
+<td><strong>Profile</strong></td>
+<td>An installation environment</td>
+<td>Which Bundles are installed here?</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plugin">Plugin</h3>
+<p>A Plugin is the runtime unit. It can:</p>
+<ul>
+<li>Register tools;</li>
+<li>Register services;</li>
+<li>Register Skills;</li>
+<li>Add UI;</li>
+<li>Listen to events;</li>
+<li>Change Agent behavior.</li>
+</ul>
+<h3 id="bundle">Bundle</h3>
+<p>A Bundle is an npm package that usually contains:</p>
+<ul>
+<li>A <code>cordis.patch.yml</code>, or a list of patch files;</li>
+<li>Plugin code;</li>
+<li>Possibly Skills, UI assets, or icons.</li>
+</ul>
+<p>It packages "which plugins to add and how to configure them" so a user can install it in one step. Its rows remain patchable by higher layers.</p>
+<p>One Bundle can mount many Plugins; one Plugin can be referenced by different Bundles.</p>
+<h3 id="profile">Profile</h3>
+<p>A Profile is an installation environment:</p>
+<ul>
+<li><code>desktop</code>: the desktop app;</li>
+<li><code>web</code>: the browser;</li>
+<li><code>headless</code>: a one-shot command-line run.</li>
+</ul>
+<p>It contains:</p>
+<ul>
+<li>Installed Bundle list;</li>
+<li>Its own <code>cordis.patch.yml</code>;</li>
+<li>Third-party plugin dependencies.</li>
+</ul>
+<p>The Profile decides what this environment installs; the Bundle decides what the installation contains; the Plugin decides what actually runs.</p>
+<hr />
+<h2 id="82-how-they-relate-to-presets">8.2 How They Relate to Presets</h2>
+<pre><code class="language-text">Profile (desktop)
+ ├─ Bundle A (dsh-base)
+ ├─ Bundle B (dsh-web-app)
+ │    └─ declares Presets: standard / creator / ...
+ └─ Bundle C (your plugin)
+      └─ mounts Plugin: your tools
+
+Preset (standard / creator)
+ └─ selects a set of Plugins for one Agent
+</code></pre>
+<ul>
+<li>A Bundle can declare Presets;</li>
+<li>A Preset chooses which Plugins an Agent gets;</li>
+<li>A Profile chooses which Bundles the environment installs;</li>
+<li>A Plugin is the capability that runs.</li>
+</ul>
+<hr />
+<h2 id="83-installing-with-plugin-manager">8.3 Installing with Plugin Manager</h2>
+<p>In Desktop, open the <strong>Plugin Manager</strong> (or Plugins page).</p>
+<p>Typical flow:</p>
+<ol>
+<li>Open the plugin page;</li>
+<li>Search or select a Bundle;</li>
+<li>Read the description, permissions, and dependencies;</li>
+<li>Confirm install;</li>
+<li>Restart or reload if prompted;</li>
+<li>Check whether tools, Skills, or UI appeared.</li>
+</ol>
+<h3 id="before-installing">Before installing</h3>
+<ul>
+<li>Is the source trustworthy?</li>
+<li>What permissions does it request?</li>
+<li>Does it depend on an external CLI or service?</li>
+<li>Does it run install scripts?</li>
+<li>Does it conflict with an existing plugin?</li>
+<li>Can it be uninstalled?</li>
+</ul>
+<h3 id="after-installing">After installing</h3>
+<ul>
+<li>Is it enabled?</li>
+<li>Are the new tools present?</li>
+<li>Are the new Skills visible?</li>
+<li>Are there errors or warnings?</li>
+<li>Does it require a restart?</li>
+</ul>
+<hr />
+<h2 id="84-why-installed-but-not-working">8.4 Why "Installed but Not Working"</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Possible cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Listed but no tools</td>
+<td>Not enabled; restart required; missing dependency</td>
+</tr>
+<tr>
+<td>Startup error</td>
+<td>Version mismatch; missing peer dependency; bad config</td>
+</tr>
+<tr>
+<td>Tool name conflict</td>
+<td>Another plugin uses the same name</td>
+</tr>
+<tr>
+<td>Needs login/CLI</td>
+<td>External dependency missing or not authenticated</td>
+</tr>
+<tr>
+<td>Only in some modes</td>
+<td>Tool is preset-scoped, not global</td>
+</tr>
+<tr>
+<td>Code changes do nothing</td>
+<td>Server plugin needs a reload; HMR may not apply</td>
+</tr>
+</tbody>
+</table>
+<h3 id="troubleshooting-order">Troubleshooting order</h3>
+<ol>
+<li>Check Plugin Manager status and errors;</li>
+<li>Check whether a restart is needed;</li>
+<li>Check dependencies and versions;</li>
+<li>Check for conflicts;</li>
+<li>Check whether the tool is scoped to a Preset;</li>
+<li>Check logs and diagnostics.</li>
+</ol>
+<hr />
+<h2 id="85-configuring-a-plugin">8.5 Configuring a Plugin</h2>
+<p>Many plugins expose settings:</p>
+<ul>
+<li>Binary path;</li>
+<li>API URL;</li>
+<li>Timeout;</li>
+<li>Output limit.</li>
+</ul>
+<p>DSH plugins usually declare these with a Config schema; Plugin Manager renders a form.</p>
+<p>Rules:</p>
+<ul>
+<li>Prefer the UI;</li>
+<li>Do not hand-edit the profile's <code>package.json</code>;</li>
+<li>Do not hand-edit <code>cordis.patch.yml</code> unless you understand layer order;</li>
+<li>Reload/restart after changes;</li>
+<li>Store secrets safely.</li>
+</ul>
+<hr />
+<h2 id="86-the-trust-boundary">8.6 The Trust Boundary</h2>
+<p>This is the most important section.</p>
+<blockquote>
+<p><strong>A plugin is not just configuration. It may execute code.</strong></p>
+</blockquote>
+<p>Installing a third-party plugin means letting someone else's code run inside your DSH process. It may:</p>
+<ul>
+<li>Read files;</li>
+<li>Access the network;</li>
+<li>Execute commands;</li>
+<li>Modify configuration;</li>
+<li>Install dependencies;</li>
+<li>Run install scripts.</li>
+</ul>
+<p>Therefore:</p>
+<ul>
+<li>Install only trusted sources;</li>
+<li>Review permissions and code;</li>
+<li>Do not grant unnecessary full access;</li>
+<li>Test in a scratch workspace first;</li>
+<li>Make sure you can uninstall or roll back;</li>
+<li>Do not give secrets to an untrusted plugin.</li>
+</ul>
+<hr />
+<h2 id="87-uninstall-and-rollback">8.7 Uninstall and Rollback</h2>
+<p>Before installing, know how to remove it:</p>
+<ul>
+<li>Can Plugin Manager disable/remove it?</li>
+<li>Does it leave configuration or data?</li>
+<li>Does it change the profile's bundle list?</li>
+<li>Does it require a restart?</li>
+<li>Can you roll back the version?</li>
+</ul>
+<p>Back up the profile, or at least record the state before installation.</p>
+<hr />
+<h2 id="try-it_5">Try It</h2>
+<ol>
+<li>Open Plugin Manager and inspect the installed Bundles;</li>
+<li>Find the difference between enabled and disabled;</li>
+<li>Do not install anything yet; read one plugin's permissions;</li>
+<li>Pick a plugin you use and see which tools/Skills it registers;</li>
+<li>Write down how you would disable it if it broke.</li>
+</ol>
+<hr />
+<h2 id="common-pitfalls_5">Common Pitfalls</h2>
+<ul>
+<li><strong>Confusing Plugin and Bundle</strong>: capability vs. installer package.</li>
+<li><strong>Assuming a Bundle is enabled after install</strong>: check selection, reload, and dependencies.</li>
+<li><strong>Hand-editing profile config</strong>: easy to break layer order.</li>
+<li><strong>Ignoring permissions</strong>: plugins can execute code.</li>
+<li><strong>Not restarting</strong>: many plugins need a reload.</li>
+</ul>
+<hr />
+<h2 id="summary_7">Summary</h2>
+<ul>
+<li>Plugin = capability, Bundle = installer package, Profile = environment.</li>
+<li>A Preset chooses which Plugins an Agent uses.</li>
+<li>Install/enable/remove through Plugin Manager; do not hand-edit the profile.</li>
+<li>Third-party plugins are code, not pure configuration.</li>
+<li>If it does not work, check status, reload, dependencies, conflicts, and Preset scope.</li>
+</ul>
+<hr />
+<h2 id="part-iii-exercises">Part III Exercises</h2>
+<ol>
+<li>Explain Plugin, Bundle, and Profile to a friend in one sentence each.</li>
+<li>Open Plugin Manager and count the enabled Bundles.</li>
+<li>Read one plugin's permissions and dependencies; decide whether you would install it.</li>
+<li>Explain why a Preset is not a security sandbox.</li>
+<li>Write a rollback checklist for a broken plugin.</li>
+</ol>
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="ch07.html"><small>Previous</small><span>Modes and Presets: Same Mo…</span></a>
+  <a class="next" href="ch09.html"><small>Next</small><span>Creator Mode: From User to…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch08.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

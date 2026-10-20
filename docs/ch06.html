@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>第 6 章 · 工具与技能：Agent 的手和脑 · DeepSeek Harness 入门</title>
+<meta name="description" content="第 6 章: 工具与技能：Agent 的手和脑 — 从第一次对话到自己的插件">
+<meta property="og:title" content="第 6 章 · 工具与技能：Agent 的手和脑 · DeepSeek Harness 入门">
+<meta property="og:description" content="第 6 章: 工具与技能：Agent 的手和脑 — 从第一次对话到自己的插件">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/ch06.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://leether.github.io/dsh-book/ch06.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch06.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch06.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch06.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="index.html#contents">目录</a>
+      <a href="ch01.html">开始阅读</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="en/ch06.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>认识 DSH：模型、Harness、Agent</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>第一次启动：桌面、模型、工作区</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>第一次任务：把需求说清楚</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>工作区、文件与权限</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>会话、上下文与记忆</span></a></li>
+        <li><a href="ch06.html" aria-current="page"><span class="num">06</span><span>工具与技能：Agent 的手和脑</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>模式与 Preset：同一个模型，不同工作方式</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>插件、Bundle 与 Profile：给 DSH 装能力</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>创造模式：从使用者到扩展者</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>排错、安全与继续学习</span></a></li>
+        <li><a href="appendix.html"><span class="num">附</span><span>附录</span></a></li>
+      </ol>
+      <p class="sidebar-note">非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。<br>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 6 章</p>
+    <section class="chapter">
+<h1 id="6-agent">第 6 章　工具与技能：Agent 的手和脑</h1>
+<p class="chapter-meta">约 4 分钟 · 2,086 字 · 12 个小节</p>
+<h2 id="_46">本章你会学会</h2>
+<ul>
+<li>认识 Agent 常用工具的分类；</li>
+<li>看懂工具调用卡片和审批；</li>
+<li>用计划、待办、子代理处理多步任务；</li>
+<li>理解 Skill 是什么，和 Tool / Plugin 的区别；</li>
+<li>正确使用 <code>present</code>；</li>
+<li>避免“工具用太多”和“技能装太多”。</li>
+</ul>
+<hr />
+<h2 id="61">6.1 工具的分类</h2>
+<p>你不需要记住每个工具名，只要知道它们大概分成几类。</p>
+<table>
+<thead>
+<tr>
+<th>你想做什么</th>
+<th>工具类型</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>看文件</td>
+<td>读</td>
+<td>读文件、列目录、搜索内容</td>
+</tr>
+<tr>
+<td>改文件</td>
+<td>写</td>
+<td>新建、覆盖、局部编辑</td>
+</tr>
+<tr>
+<td>跑程序</td>
+<td>执行</td>
+<td>终端命令、测试、构建</td>
+</tr>
+<tr>
+<td>查资料</td>
+<td>搜索</td>
+<td>网页搜索、抓取网页</td>
+</tr>
+<tr>
+<td>拆任务</td>
+<td>协作</td>
+<td>子代理、工作流</td>
+</tr>
+<tr>
+<td>管理进度</td>
+<td>计划</td>
+<td>计划模式、待办清单、目标</td>
+</tr>
+<tr>
+<td>交付</td>
+<td>交付</td>
+<td><code>present</code></td>
+</tr>
+<tr>
+<td>问你</td>
+<td>交互</td>
+<td>提问、确认</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_47">一个原则</h3>
+<blockquote>
+<p><strong>能只读，就先只读；能小步，就不要大步。</strong></p>
+</blockquote>
+<hr />
+<h2 id="62">6.2 工具卡片与审批</h2>
+<p>每次工具调用，界面通常会显示：</p>
+<ul>
+<li>工具名；</li>
+<li>参数（例如文件路径、命令）；</li>
+<li>结果（成功/失败/输出）；</li>
+<li>有时会要求你批准。</li>
+</ul>
+<p>你要重点看：</p>
+<ul>
+<li>路径对不对；</li>
+<li>命令有没有破坏性；</li>
+<li>输出有没有异常；</li>
+<li>它有没有跳过你的约束。</li>
+</ul>
+<h3 id="_48">拒绝也是一种能力</h3>
+<p>如果它要做你没允许的事：</p>
+<pre><code class="language-text">停。这一步不要执行。
+先解释你为什么需要这个操作，以及有没有只读替代方案。
+</code></pre>
+<hr />
+<h2 id="63">6.3 计划与待办</h2>
+<p>复杂任务建议先计划。</p>
+<h3 id="_49">计划模式</h3>
+<p>让 Agent 先给出步骤，不执行：</p>
+<pre><code class="language-text">先进入计划模式。给我一个 5 步以内的计划，说明每步要读/写什么、怎么验证。
+我确认后再执行。
+</code></pre>
+<h3 id="_50">待办清单</h3>
+<p>执行阶段可以让它维护一个 todo：</p>
+<pre><code class="language-text">请把任务拆成 todo，完成一项就更新一项。
+不要一次开始所有项。
+</code></pre>
+<p>好处：</p>
+<ul>
+<li>你能看到进度；</li>
+<li>它不容易漏步骤；</li>
+<li>长任务更容易恢复。</li>
+</ul>
+<hr />
+<h2 id="64">6.4 子代理与工作流</h2>
+<h3 id="subagent">子代理（subagent）</h3>
+<p>子代理是一个独立的 Agent，有自己的上下文。适合：</p>
+<ul>
+<li>独立的调研；</li>
+<li>并行的资料整理；</li>
+<li>让主 Agent 不被大量中间结果淹没。</li>
+</ul>
+<p>你可以说：</p>
+<pre><code class="language-text">派一个子代理去调研这三个链接，只返回要点和来源。
+主任务继续做本地文件整理。
+</code></pre>
+<p>注意：</p>
+<ul>
+<li>子代理也要消耗模型调用；</li>
+<li>它的结果可能不准确；</li>
+<li>父 Agent 要负责验收。</li>
+</ul>
+<h3 id="workflow">工作流（workflow）</h3>
+<p>工作流是用脚本编排多个子代理，适合批量、并行、多阶段任务。</p>
+<p>对 0 基础用户，先不用碰。等你熟悉子代理，再考虑。</p>
+<hr />
+<h2 id="65-skill">6.5 Skill 是什么</h2>
+<p>Skill 是一份“操作手册”，通常是一个文件夹，里面有 <code>SKILL.md</code>。</p>
+<p>它告诉 Agent：</p>
+<ul>
+<li>什么时候用这个技能；</li>
+<li>步骤是什么；</li>
+<li>有哪些坑；</li>
+<li>可以读哪些参考资料；</li>
+<li>可以运行哪些脚本。</li>
+</ul>
+<h3 id="skill-tool">Skill 和 Tool 的区别</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Tool</th>
+<th>Skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本质</td>
+<td>可执行动作</td>
+<td>知识与流程</td>
+</tr>
+<tr>
+<td>例子</td>
+<td>读文件、跑命令</td>
+<td>“如何做一次代码审查”</td>
+</tr>
+<tr>
+<td>谁执行</td>
+<td>Harness</td>
+<td>Agent 阅读后按步骤做</td>
+</tr>
+<tr>
+<td>上下文</td>
+<td>schema 常驻</td>
+<td>按需加载</td>
+</tr>
+</tbody>
+</table>
+<h3 id="skill-plugin">Skill 和 Plugin 的区别</h3>
+<ul>
+<li>Skill 是知识，通常不直接提供新工具；</li>
+<li>Plugin 是运行时扩展，可以提供新工具、服务、界面；</li>
+<li>有些 Plugin 会自带 Skill。</li>
+</ul>
+<h3 id="_51">渐进披露</h3>
+<p>好的 Skill 不会一上来把几千行塞进上下文。它通常：</p>
+<ol>
+<li>先只加载名称和描述；</li>
+<li>任务匹配时，加载 <code>SKILL.md</code>；</li>
+<li>需要细节时，再读 <code>references/</code> 或运行脚本。</li>
+</ol>
+<p>这就是为什么 Skill 可以很多，但不会瞬间撑爆上下文。</p>
+<hr />
+<h2 id="66-skill">6.6 怎么用 Skill</h2>
+<p>通常有两种方式：</p>
+<ol>
+<li><strong>自动匹配</strong>：Agent 根据任务描述选择相关 Skill；</li>
+<li><strong>显式点名</strong>：你说“用 <code>xxx</code> 这个 Skill”。</li>
+</ol>
+<p>如果你知道有合适的 Skill：</p>
+<pre><code class="language-text">请使用 `code-review` 这个 Skill 来审查这次改动。
+先读它的 SKILL.md，再按步骤执行。
+</code></pre>
+<p>如果你不确定：</p>
+<pre><code class="language-text">当前有哪些 Skill 和我的任务相关？先列出来，不要直接执行。
+</code></pre>
+<h3 id="skill_1">装 Skill 的注意事项</h3>
+<ul>
+<li>只装可信来源；</li>
+<li>看它有没有脚本、会访问什么；</li>
+<li>不要把密钥写进 Skill；</li>
+<li>装太多会占用元数据上下文；</li>
+<li>版本要跟 CLI/插件对齐。</li>
+</ul>
+<hr />
+<h2 id="67-present">6.7 <code>present</code>：交付文件</h2>
+<p>当任务产出是文件时，Agent 可能调用 <code>present</code>。</p>
+<p>准确含义：</p>
+<blockquote>
+<p><strong>把已经存在的文件声明为最终交付物，让界面生成卡片，用户可以打开。</strong></p>
+</blockquote>
+<p>它不创建、不上传、不复制内容；只记录路径和说明。</p>
+<p>你可以要求：</p>
+<pre><code class="language-text">完成后用 present 交付最终文件，最多 2 个，不要把所有中间文件都 present。
+</code></pre>
+<hr />
+<h2 id="68">6.8 工具使用的常见误区</h2>
+<ul>
+<li><strong>工具越多越好</strong>：不，工具多会增加选择和上下文成本。</li>
+<li><strong>让 Agent 一次读整个目录</strong>：先搜索，再读相关文件。</li>
+<li><strong>子代理当免费劳动力</strong>：也要花 token，也可能错。</li>
+<li><strong>Skill 装一堆</strong>：只装当前需要的。</li>
+<li><strong>不看工具结果</strong>：只看总结容易漏错。</li>
+</ul>
+<hr />
+<h2 id="_52">马上试试</h2>
+<ol>
+<li>让 Agent 为一个任务写 3 步计划；</li>
+<li>让它用 todo 跟踪执行；</li>
+<li>让它只读搜索相关资料，不直接读整个目录；</li>
+<li>让它用 <code>present</code> 交付一个最终文件；</li>
+<li>问它：“你刚才用了哪些工具？哪些是只读的？”</li>
+</ol>
+<hr />
+<h2 id="_53">小结</h2>
+<ul>
+<li>工具分读、写、跑、搜、协作、计划、交付。</li>
+<li>先只读、再小步执行；看工具卡片。</li>
+<li>子代理/工作流适合拆任务，但不是免费。</li>
+<li>Skill 是知识，Tool 是动作，Plugin 是运行时扩展。</li>
+<li><code>present</code> 是交付声明，不是上传。</li>
+</ul>
+<hr />
+<h2 id="_54">第二部分练习</h2>
+<ol>
+<li>给你的测试工作区写一个 <code>AGENTS.md</code>，包含三条禁止事项。</li>
+<li>新建一个 Session，让它只读 <code>AGENTS.md</code> 和 <code>PROJECT.md</code>，复述规则。</li>
+<li>让 Agent 用 todo 完成一个三步任务，并在每步后更新。</li>
+<li>问它当前有哪些 Skill 与任务相关，只列名称，不执行。</li>
+<li>用 <code>present</code> 交付一个文件，观察卡片行为。</li>
+</ol>
+
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="ch05.html"><small>上一章</small><span>会话、上下文与记忆</span></a>
+  <a class="next" href="ch07.html"><small>下一章</small><span>模式与 Preset：同一个模型，不…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/ch06.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>

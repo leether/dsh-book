@@ -171,7 +171,7 @@ GitHub Pages 使用 `main` 分支的 `docs/` 目录，纯静态 HTML，不需要
 cat 00-front.md part1.md part2.md part3.md part4.md > dsh-book.md
 cat en/00-front.md en/part1.md en/part2.md en/part3.md en/part4.md > en/dsh-book.md
 python3 scripts/build-site.py
-git add dsh-book.md en/dsh-book.md docs/index.html docs/en/index.html
+git add dsh-book.md en/dsh-book.md docs
 git commit -m "docs: refresh site"
 git push
 ```
@@ -180,9 +180,10 @@ Pages 会在一两分钟内自动更新。
 
 ## 站点版式
 
-- **双语切换**：右上角 `English / 中文`，两套独立静态页（`/` 与 `/en/`）；
-- **封面式 Hero**：标题、副标题、阅读量、封面卡片和“开始阅读”入口；
-- **桌面侧边目录**：章节导航随页面滚动保持可见；
+- **每章独立页面**：`/ch01.html` … `/ch10.html`、`/appendix.html`；英文对应 `/en/ch01.html` …；
+- **双语切换**：右上角 `English / 中文`，切换时保留当前章节；
+- **封面式目录页**：`/` 与 `/en/` 是书籍封面 + 章节卡片 + 阅读路线；
+- **桌面侧边目录**：章节页的导航随页面滚动保持可见，并高亮当前章；
 - **移动端单列**：目录、正文、章节导航自动堆叠；
 - **阅读节奏**：每章显示预计阅读时间、字数和小节数；
 - **章节导航**：每章末尾有上一章/下一章；
@@ -208,8 +209,12 @@ Pages 会在一两分钟内自动更新。
 │   └── dsh-book.md
 ├── scripts/build-site.py # Markdown → 双语静态站点
 ├── docs/                # GitHub Pages 站点（main /docs）
-│   ├── index.html       # 中文
-│   ├── en/index.html    # English
+│   ├── index.html       # 中文封面/目录
+│   ├── ch01.html … ch10.html
+│   ├── appendix.html
+│   ├── en/index.html    # English cover/contents
+│   ├── en/ch01.html … en/appendix.html
+│   ├── style.css
 │   ├── favicon.svg
 │   └── .nojekyll
 ├── PUBLISHING.md        # 发布与 Pages 设置记录
@@ -218,7 +223,8 @@ Pages 会在一两分钟内自动更新。
 └── LICENSE              # MIT
 ```
 
-`dsh-book.md` 是 `00-front.md` + `part1.md` … `part4.md` 的合并稿。  
+`dsh-book.md` 是 `00-front.md` + `part1.md` … `part4.md` 的合并稿；英文版是 `en/` 下同名文件的合并稿。  
+英文版经过逐章英文编辑与表达审校；它不是逐字直译，仍建议母语者做最终出版审读。  
 改章节时，建议改 `part*.md`，再重新生成合并稿：
 
 ```bash

@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 7 · Modes and Presets: Same Model, Different Ways to Work · DeepSeek Harness</title>
+<meta name="description" content="Chapter 7: Modes and Presets: Same Model, Different Ways to Work — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 7 · Modes and Presets: Same Model, Different Ways to Work · DeepSeek Harness">
+<meta property="og:description" content="Chapter 7: Modes and Presets: Same Model, Different Ways to Work — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch07.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch07.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch07.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch07.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch07.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch07.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html" aria-current="page"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 7</p>
+    <section class="chapter">
+<h1 id="chapter-7-modes-and-presets-same-model-different-ways-to-work">Chapter 7 — Modes and Presets: Same Model, Different Ways to Work</h1>
+<p class="chapter-meta">4 min read · 804 words · 12 sections</p>
+<h2 id="what-you-will-learn_6">What You Will Learn</h2>
+<ul>
+<li>Understand that a Preset is neither a model nor a separate app;</li>
+<li>Distinguish Standard, Creator, PTC, and Minimal;</li>
+<li>Choose the right mode for a task;</li>
+<li>Understand how to customize a Preset;</li>
+<li>Avoid treating a mode as a security sandbox.</li>
+</ul>
+<hr />
+<h2 id="71-a-useful-metaphor-a-loadout">7.1 A Useful Metaphor: A Loadout</h2>
+<p>The same model can work in different ways:</p>
+<ul>
+<li>Everyday coding and file work;</li>
+<li>Extending DSH itself;</li>
+<li>Batch tool calls and data analysis;</li>
+<li>A minimal setup for quick questions.</li>
+</ul>
+<p>These ways of working are <strong>Presets</strong>.</p>
+<p>Think of a Preset as a character loadout:</p>
+<pre><code class="language-text">Same Agent engine
+  + different tools
+  + different prompt
+  + different Skills
+  + different policies
+= a different mode
+</code></pre>
+<p>It does <strong>not</strong> switch the model, the runtime, or the sandbox. It selects which capabilities this Agent gets.</p>
+<hr />
+<h2 id="72-standard-mode">7.2 Standard Mode</h2>
+<p>The everyday default. Good for:</p>
+<ul>
+<li>Coding;</li>
+<li>Reading and writing files;</li>
+<li>Web research;</li>
+<li>Document work;</li>
+<li>Spreadsheets;</li>
+<li>General multi-step tasks.</li>
+</ul>
+<p>It usually includes:</p>
+<ul>
+<li>File read/write;</li>
+<li>Terminal;</li>
+<li>Web search/fetch;</li>
+<li>Subagents;</li>
+<li>Plans, todos, goals;</li>
+<li>File delivery;</li>
+<li>Skills.</li>
+</ul>
+<p>If you do not know what to choose, choose Standard.</p>
+<hr />
+<h2 id="73-creator-mode">7.3 Creator Mode</h2>
+<p>Creator is not "Standard but smarter." It is the mode for <strong>extending DSH itself</strong>.</p>
+<p>It usually adds:</p>
+<ul>
+<li><strong>Runtime inspection</strong>: inspect services, Config, tools, Skills, and UI slots;</li>
+<li><strong>Plugin management</strong>: install, enable, disable, and remove plugins;</li>
+<li><strong>Authoring guidance</strong>: Cordis plugins, Bundles, and Presets.</li>
+</ul>
+<p>Use it for:</p>
+<ul>
+<li>Building a DSH plugin;</li>
+<li>Adding a tool or UI panel;</li>
+<li>Creating a custom Preset;</li>
+<li>Debugging why a plugin did not load.</li>
+</ul>
+<p>Do not use it for:</p>
+<ul>
+<li>Everyday coding;</li>
+<li>Routine file work;</li>
+<li>Tasks that do not extend DSH.</li>
+</ul>
+<p>It adds tools and permissions, which cost context and raise risk. Standard is lighter and safer for daily work.</p>
+<hr />
+<h2 id="74-ptc-mode">7.4 PTC Mode</h2>
+<p>PTC stands for <strong>Programmatic Tool Calling</strong>. It organizes tool calls through code.</p>
+<p>Good for:</p>
+<ul>
+<li>Batch tool calls;</li>
+<li>Filtering, deduplicating, and summarizing results;</li>
+<li>Loops, conditions, and composition;</li>
+<li>Data analysis.</li>
+</ul>
+<p>It is not automatically faster or cheaper. For everyday work, Standard is fine.</p>
+<hr />
+<h2 id="75-minimal-mode">7.5 Minimal Mode</h2>
+<p>Minimal keeps only a few tools. Use it for:</p>
+<ul>
+<li>Quick questions;</li>
+<li>Small reads and writes;</li>
+<li>Reducing tool and context noise.</li>
+</ul>
+<p>Its capability boundary is narrow. Switch back to Standard for complex work.</p>
+<hr />
+<h2 id="76-which-mode-should-i-use">7.6 Which Mode Should I Use?</h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Suggestion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Everyday coding and file work</td>
+<td>Standard</td>
+</tr>
+<tr>
+<td>Building DSH plugins or presets</td>
+<td>Creator</td>
+</tr>
+<tr>
+<td>Batch tool calls and data analysis</td>
+<td>PTC</td>
+</tr>
+<tr>
+<td>Quick questions and small tasks</td>
+<td>Minimal</td>
+</tr>
+<tr>
+<td>Unsure</td>
+<td>Standard</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="77-what-a-preset-actually-is">7.7 What a Preset Actually Is</h2>
+<p>In DSH, a Preset is a <strong>list of child plugins for one Agent</strong>, plus metadata such as name, description, and order.</p>
+<p>It looks roughly like:</p>
+<pre><code class="language-yaml">id: standard
+name: Standard
+order: 1
+plugins:
+  - persona
+  - tool-bash
+  - tool-fs
+  - tool-web
+  - ...
+</code></pre>
+<p>Key points:</p>
+<ul>
+<li>It is declared by the <code>@deepseek-ai/dsh-agent-preset</code> plugin;</li>
+<li>It is managed by <code>agent-preset-registry</code>;</li>
+<li>Each Session selects one Preset;</li>
+<li>Definitions activate eagerly;</li>
+<li>Edits affect newly created Agents;</li>
+<li>Running Agents keep the revision they started with;</li>
+<li>Subagents usually inherit the parent's Preset.</li>
+</ul>
+<h3 id="it-is-not_1">It is not</h3>
+<ul>
+<li>A model;</li>
+<li>A sandbox;</li>
+<li>A separate process;</li>
+<li>A "more advanced model."</li>
+</ul>
+<h3 id="it-is-not-a-security-boundary">It is not a security boundary</h3>
+<p>A Preset can isolate tools and services, but it is <strong>not a security sandbox</strong>.</p>
+<ul>
+<li>Plugin code still runs in the Host process;</li>
+<li>File permissions, approvals, and sandboxing are separate mechanisms;</li>
+<li>Do not assume switching modes removes risk.</li>
+</ul>
+<hr />
+<h2 id="78-custom-presets">7.8 Custom Presets</h2>
+<p>You can create modes such as:</p>
+<ul>
+<li>"Code review mode": read-only, report first, do not edit;</li>
+<li>"Writing mode": fixed voice and output structure;</li>
+<li>"Data mode": read data and run analysis only.</li>
+</ul>
+<p>The correct path is usually:</p>
+<ol>
+<li>Describe the mode in Creator;</li>
+<li>Have the Agent generate a Bundle patch;</li>
+<li>Install it with Plugin Manager;</li>
+<li>Select it when creating a new task.</li>
+</ol>
+<p>Avoid:</p>
+<ul>
+<li>Hand-editing the legacy <code>~/.dsh/.agent-presets/</code> directory;</li>
+<li>Editing the profile's <code>package.json</code> directly;</li>
+<li>Copying a built-in Preset and never merging updates.</li>
+</ul>
+<blockquote>
+<p>A user override replaces the entire child list. New built-in tools will not appear automatically. Review it periodically.</p>
+</blockquote>
+<hr />
+<h2 id="79-common-misconceptions">7.9 Common Misconceptions</h2>
+<ul>
+<li><strong>"Creator is smarter."</strong> No; it has extra tools and knowledge for extending DSH.</li>
+<li><strong>"Switching Preset changes the model."</strong> No; the model is configured separately.</li>
+<li><strong>"A Preset is a security sandbox."</strong> No; security comes from permissions and sandboxing.</li>
+<li><strong>"More Presets is better."</strong> No; each one costs maintenance.</li>
+<li><strong>"Custom Presets follow built-in updates automatically."</strong> No; override replaces the whole list.</li>
+</ul>
+<hr />
+<h2 id="try-it_4">Try It</h2>
+<ol>
+<li>Create a task in Standard;</li>
+<li>Ask: "Which tools do you have? Which are read-only?"</li>
+<li>Create another task in Creator;</li>
+<li>Ask the same question and compare;</li>
+<li>Do not install or modify anything yet.</li>
+</ol>
+<hr />
+<h2 id="summary_6">Summary</h2>
+<ul>
+<li>A Preset is an Agent capability composition, not a model or sandbox.</li>
+<li>Standard is the daily default; Creator is for extending DSH; PTC is for programmatic tool use; Minimal is for small tasks.</li>
+<li>Running Agents keep their starting Preset revision.</li>
+<li>Customize Presets through Bundles and Plugin Manager, not legacy directories.</li>
+<li>A Preset is not a security boundary.</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="ch06.html"><small>Previous</small><span>Tools and Skills: The Agen…</span></a>
+  <a class="next" href="ch08.html"><small>Next</small><span>Plugins, Bundles, and Prof…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch07.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

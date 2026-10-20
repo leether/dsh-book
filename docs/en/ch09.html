@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 9 · Creator Mode: From User to Extender · DeepSeek Harness</title>
+<meta name="description" content="Chapter 9: Creator Mode: From User to Extender — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 9 · Creator Mode: From User to Extender · DeepSeek Harness">
+<meta property="og:description" content="Chapter 9: Creator Mode: From User to Extender — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch09.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch09.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch09.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch09.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch09.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch09.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html" aria-current="page"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 9</p>
+    <section class="chapter">
+<h1 id="chapter-9-creator-mode-from-user-to-extender">Chapter 9 — Creator Mode: From User to Extender</h1>
+<p class="chapter-meta">4 min read · 859 words · 10 sections</p>
+<h2 id="what-you-will-learn_8">What You Will Learn</h2>
+<ul>
+<li>What Creator mode is and is not;</li>
+<li>What it adds beyond Standard;</li>
+<li>When to use it, and when not to;</li>
+<li>A complete plugin-building loop;</li>
+<li>How non-programmers can participate;</li>
+<li>How to avoid breaking DSH.</li>
+</ul>
+<hr />
+<h2 id="91-what-creator-mode-is">9.1 What Creator Mode Is</h2>
+<p>Creator mode is an <strong>Agent Preset</strong> in DSH. Its internal id is <code>cordis</code>.</p>
+<p>It is not:</p>
+<ul>
+<li>Another model;</li>
+<li>Another runtime;</li>
+<li>Another app;</li>
+<li>"Standard but smarter."</li>
+</ul>
+<p>It is:</p>
+<blockquote>
+<p><strong>A working mode that adds runtime inspection, plugin management, and plugin/Preset authoring guidance on top of the standard task tools.</strong></p>
+</blockquote>
+<p>It shares with Standard:</p>
+<ul>
+<li>The same Agent loop;</li>
+<li>The same model;</li>
+<li>The same sandbox and permission system;</li>
+<li>Most task tools.</li>
+</ul>
+<p>Only the composition differs.</p>
+<hr />
+<h2 id="92-what-it-adds">9.2 What It Adds</h2>
+<p>Usually three groups.</p>
+<h3 id="1-runtime-inspection">1. Runtime inspection</h3>
+<p>It can inspect the real, current:</p>
+<ul>
+<li>Service methods;</li>
+<li>Config schemas;</li>
+<li>Tool schemas;</li>
+<li>Skill list;</li>
+<li>UI slots and theme tokens.</li>
+</ul>
+<p>This removes guessing: you do not have to infer APIs from source code.</p>
+<h3 id="2-plugin-management">2. Plugin management</h3>
+<p>It can:</p>
+<ul>
+<li>List installed Bundles;</li>
+<li>Install, enable, disable, and remove;</li>
+<li>Change the profile's plugin selection;</li>
+<li>Read installation results and warnings.</li>
+</ul>
+<p>These changes persist in the profile, affect all Sessions, and survive restarts.</p>
+<h3 id="3-authoring-guidance">3. Authoring guidance</h3>
+<p>Creator mounts authoring Skills that explain:</p>
+<ul>
+<li>How to write a Cordis plugin;</li>
+<li>How to write a Bundle patch;</li>
+<li>How to create or override a Preset;</li>
+<li>How to verify that the plugin actually loaded.</li>
+</ul>
+<p>It provides templates and references on demand.</p>
+<hr />
+<h2 id="93-when-to-use-it">9.3 When to Use It</h2>
+<p>Use it for:</p>
+<ul>
+<li>Adding a tool to DSH;</li>
+<li>Adding a UI panel or button;</li>
+<li>Building a custom mode;</li>
+<li>Debugging why a plugin did not load;</li>
+<li>Packaging a workflow as a plugin.</li>
+</ul>
+<p>Do not use it for:</p>
+<ul>
+<li>Everyday coding;</li>
+<li>Routine file work;</li>
+<li>Just asking for research;</li>
+<li>Anything that does not extend DSH.</li>
+</ul>
+<p>Why not? The extra tools and Skills consume context, and plugin installation is a high-risk operation.</p>
+<hr />
+<h2 id="94-security-boundary-a-high-trust-mode">9.4 Security Boundary: A High-Trust Mode</h2>
+<p>Creator can do things Standard cannot because:</p>
+<ul>
+<li>Installing a plugin executes code in the Host process;</li>
+<li>Profile changes affect every Session;</li>
+<li>Plugins may read files, access the network, and run commands;</li>
+<li>That code runs outside the workspace sandbox.</li>
+</ul>
+<p>Therefore:</p>
+<ul>
+<li>Plugin management usually requires <strong>full access or per-call approval</strong>;</li>
+<li>Do not give an untrusted plugin full access;</li>
+<li>Test in a scratch profile/workspace first;</li>
+<li>Back up important configuration;</li>
+<li>Make sure you can disable or roll back.</li>
+</ul>
+<blockquote>
+<p>Creator mode is not a "safe mode." It is a high-trust extension mode.</p>
+</blockquote>
+<hr />
+<h2 id="95-a-complete-build-a-plugin-loop">9.5 A Complete "Build a Plugin" Loop</h2>
+<p>This flow does not require you to write code, but it does require you to describe the goal and verify the result.</p>
+<h3 id="step-1-describe-the-capability">Step 1: Describe the capability</h3>
+<p>Do not start with "write me a plugin." Start with:</p>
+<pre><code class="language-text">I want to add this capability to DSH:
+- What it does;
+- Where it is used (chat / button / panel / tool);
+- Inputs;
+- Outputs;
+- How to verify success;
+- What it should not do.
+</code></pre>
+<h3 id="step-2-ask-it-to-inspect-first">Step 2: Ask it to inspect first</h3>
+<pre><code class="language-text">Do not write code yet.
+Use runtime inspection to determine:
+1. Which layer this belongs to (Host plugin / Preset plugin / pure config);
+2. The available Service / Slot / Tool APIs;
+3. Whether a new Bundle is needed;
+4. Whether a template exists.
+List the conclusions and risks.
+</code></pre>
+<h3 id="step-3-build-the-smallest-version">Step 3: Build the smallest version</h3>
+<pre><code class="language-text">Build a minimal working version.
+No extra features, no variants.
+Give me the file list, installation steps, and verification steps.
+</code></pre>
+<h3 id="step-4-install-and-verify">Step 4: Install and verify</h3>
+<pre><code class="language-text">Install it into the current profile.
+After installation, tell me:
+- The installation result (applied / warnings);
+- Which tools, Skills, or UI were added;
+- How to verify;
+- How to uninstall.
+</code></pre>
+<h3 id="step-5-fix-and-iterate">Step 5: Fix and iterate</h3>
+<p>Fix only the observed problems. Do not keep adding features.</p>
+<h3 id="step-6-close-out">Step 6: Close out</h3>
+<pre><code class="language-text">Give me:
+- Plugin location;
+- Install/uninstall steps;
+- What was verified;
+- What was not verified;
+- Known limitations.
+</code></pre>
+<hr />
+<h2 id="96-how-non-programmers-can-participate">9.6 How Non-Programmers Can Participate</h2>
+<p>You do not have to write the code, but you should:</p>
+<ol>
+<li><strong>Describe the goal</strong>: user, scenario, inputs, outputs;</li>
+<li><strong>Review the result</strong>: did it do more than asked? Are permissions too broad?</li>
+<li><strong>Accept</strong>: run your scenario; give specific feedback.</li>
+</ol>
+<p>Ask for:</p>
+<pre><code class="language-text">Do not just tell me &quot;done&quot;.
+Give me:
+- Which files changed;
+- Which capabilities were added;
+- How I can verify manually;
+- How to roll back if it fails.
+</code></pre>
+<hr />
+<h2 id="97-common-misconceptions">9.7 Common Misconceptions</h2>
+<ul>
+<li><strong>"Creator is an advanced Standard."</strong> No; it is an extension mode.</li>
+<li><strong>"Installing a plugin is just config."</strong> No; it may execute code.</li>
+<li><strong>"It works immediately."</strong> Not always; a reload or restart may be needed.</li>
+<li><strong>"A Preset can be a sandbox."</strong> No.</li>
+<li><strong>"Let the Agent edit profile files directly."</strong> No; use Plugin Manager.</li>
+<li><strong>"Build everything at once."</strong> Start minimal, then iterate.</li>
+</ul>
+<hr />
+<h2 id="try-it_6">Try It</h2>
+<ol>
+<li>Create a Creator task;</li>
+<li>Do not install anything;</li>
+<li>Ask it to list the available runtime inspection capabilities;</li>
+<li>Ask: "If I want to add a read-only tool, which layer should it live in, and why?"</li>
+<li>Read the answer; do not execute.</li>
+</ol>
+<hr />
+<h2 id="summary_8">Summary</h2>
+<ul>
+<li>Creator is the <code>cordis</code> Preset, not a model or runtime.</li>
+<li>It adds runtime inspection, plugin management, and authoring guidance.</li>
+<li>Use it to extend DSH, not for daily work.</li>
+<li>Plugin code runs in the Host; have a trust and rollback plan.</li>
+<li>Start minimal, verify, then iterate.</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="ch08.html"><small>Previous</small><span>Plugins, Bundles, and Prof…</span></a>
+  <a class="next" href="ch10.html"><small>Next</small><span>Troubleshooting, Safety, a…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch09.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

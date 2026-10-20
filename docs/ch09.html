@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>第 9 章 · 创造模式：从使用者到扩展者 · DeepSeek Harness 入门</title>
+<meta name="description" content="第 9 章: 创造模式：从使用者到扩展者 — 从第一次对话到自己的插件">
+<meta property="og:title" content="第 9 章 · 创造模式：从使用者到扩展者 · DeepSeek Harness 入门">
+<meta property="og:description" content="第 9 章: 创造模式：从使用者到扩展者 — 从第一次对话到自己的插件">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/ch09.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://leether.github.io/dsh-book/ch09.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch09.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch09.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch09.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="index.html#contents">目录</a>
+      <a href="ch01.html">开始阅读</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="en/ch09.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>认识 DSH：模型、Harness、Agent</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>第一次启动：桌面、模型、工作区</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>第一次任务：把需求说清楚</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>工作区、文件与权限</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>会话、上下文与记忆</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>工具与技能：Agent 的手和脑</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>模式与 Preset：同一个模型，不同工作方式</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>插件、Bundle 与 Profile：给 DSH 装能力</span></a></li>
+        <li><a href="ch09.html" aria-current="page"><span class="num">09</span><span>创造模式：从使用者到扩展者</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>排错、安全与继续学习</span></a></li>
+        <li><a href="appendix.html"><span class="num">附</span><span>附录</span></a></li>
+      </ol>
+      <p class="sidebar-note">非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。<br>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 9 章</p>
+    <section class="chapter">
+<h1 id="9">第 9 章　创造模式：从使用者到扩展者</h1>
+<p class="chapter-meta">约 4 分钟 · 1,993 字 · 10 个小节</p>
+<h2 id="_68">本章你会学会</h2>
+<ul>
+<li>创造模式到底是什么，不是什么；</li>
+<li>它比标准模式多了哪些能力；</li>
+<li>什么时候该用，什么时候不该用；</li>
+<li>一次完整的“做插件”流程；</li>
+<li>不会编程的人怎么参与；</li>
+<li>怎么避免把 DSH 改坏。</li>
+</ul>
+<hr />
+<h2 id="91">9.1 创造模式是什么</h2>
+<p>创造模式是 DSH 的一个 <strong>Agent Preset</strong>，内部 id 是 <code>cordis</code>。</p>
+<p>它不是：</p>
+<ul>
+<li>另一个模型；</li>
+<li>另一套运行时；</li>
+<li>另一个软件；</li>
+<li>更聪明的标准模式。</li>
+</ul>
+<p>它是：</p>
+<blockquote>
+<p><strong>在标准任务工具之上，额外提供运行时检查、插件管理、以及插件/Preset 开发指引的一种工作模式。</strong></p>
+</blockquote>
+<p>它和标准模式共用：</p>
+<ul>
+<li>同一个 Agent loop；</li>
+<li>同一个模型；</li>
+<li>同一个沙箱/权限系统；</li>
+<li>绝大部分任务工具。</li>
+</ul>
+<p>差别只在“composition（插件组合）”。</p>
+<hr />
+<h2 id="92">9.2 它比标准模式多了什么</h2>
+<p>通常包括三类能力。</p>
+<h3 id="1">1. 运行时检查</h3>
+<p>可以查询 DSH 当前真实的：</p>
+<ul>
+<li>Service 方法；</li>
+<li>Config schema；</li>
+<li>Tool schema；</li>
+<li>Skill 列表；</li>
+<li>界面 Slot / theme token。</li>
+</ul>
+<p>这解决了一个大问题：<strong>不用猜 API</strong>。</p>
+<h3 id="2_1">2. 插件管理</h3>
+<p>可以：</p>
+<ul>
+<li>列出已安装的 Bundle；</li>
+<li>安装/启用/停用/卸载；</li>
+<li>修改 profile 的插件选择；</li>
+<li>查看安装结果和警告。</li>
+</ul>
+<p>这些操作会持久化到 profile，影响所有 Session，并在重启后保留。</p>
+<h3 id="3_1">3. 开发指引</h3>
+<p>创造模式会挂载一组 authoring Skill，告诉你：</p>
+<ul>
+<li>怎么写 Cordis 插件；</li>
+<li>怎么写 Bundle patch；</li>
+<li>怎么创建/覆盖 Preset；</li>
+<li>怎么验证插件真的生效。</li>
+</ul>
+<p>它还会提供模板和参考资料，按需加载。</p>
+<hr />
+<h2 id="93">9.3 什么时候该用</h2>
+<p>适合：</p>
+<ul>
+<li>想给 DSH 加一个工具；</li>
+<li>想加一个界面/按钮/面板；</li>
+<li>想做一个自定义模式；</li>
+<li>想调试“插件为什么没加载”；</li>
+<li>想把自己的工作流封装成插件。</li>
+</ul>
+<p>不适合：</p>
+<ul>
+<li>日常写代码；</li>
+<li>普通文件整理；</li>
+<li>只是想让 Agent 帮你查资料；</li>
+<li>你不需要扩展 DSH 的时候。</li>
+</ul>
+<p>原因：</p>
+<ul>
+<li>多出的工具和 Skill 会占用上下文；</li>
+<li>插件安装是高风险操作；</li>
+<li>日常任务用标准模式更轻。</li>
+</ul>
+<hr />
+<h2 id="94">9.4 安全边界：这是高信任模式</h2>
+<p>创造模式可以做很多“普通模式不能做”的事，因为：</p>
+<ul>
+<li>安装插件会在 Host 进程执行代码；</li>
+<li>修改 profile 会影响所有 Session；</li>
+<li>插件可能读写文件、访问网络、运行命令；</li>
+<li>这些代码在 workspace sandbox 之外执行。</li>
+</ul>
+<p>所以：</p>
+<ul>
+<li>插件管理通常需要 <strong>full access 或逐次审批</strong>；</li>
+<li>不要给不信任的代码 full access；</li>
+<li>先在测试 profile/工作区试；</li>
+<li>重要配置先备份；</li>
+<li>出问题要能停用/回滚。</li>
+</ul>
+<blockquote>
+<p>创造模式不是“安全模式”，它是“高信任的扩展模式”。</p>
+</blockquote>
+<hr />
+<h2 id="95">9.5 一次完整的“做插件”流程</h2>
+<p>下面是一个通用流程，不要求你会写代码，但要求你能描述目标和验收。</p>
+<h3 id="1_1">第 1 步：描述能力</h3>
+<p>不要一上来就说“帮我写个插件”。先说清楚：</p>
+<pre><code class="language-text">我想给 DSH 加一个能力：
+- 它做什么；
+- 在哪里使用（聊天/按钮/面板/工具）；
+- 输入是什么；
+- 输出是什么；
+- 怎么验证它成功；
+- 不需要做什么。
+</code></pre>
+<h3 id="2_2">第 2 步：让它先检查</h3>
+<pre><code class="language-text">先不要写代码。
+请用运行时检查工具，确认：
+1. 这个能力应该挂在哪一层（Host 插件 / Preset 插件 / 纯配置）；
+2. 可用的 Service / Slot / Tool API；
+3. 是否需要新的 Bundle；
+4. 有没有现成模板。
+把结论和风险列给我。
+</code></pre>
+<h3 id="3_2">第 3 步：做最小版本</h3>
+<pre><code class="language-text">先做一个最小可用版本。
+不要做额外功能、不要做多个变体。
+给出文件清单、安装方式、验证步骤。
+</code></pre>
+<h3 id="4_1">第 4 步：安装并验证</h3>
+<pre><code class="language-text">安装到当前 profile。
+安装后告诉我：
+- 安装结果（applied / warnings）；
+- 新增了哪些工具/Skill/界面；
+- 怎么验证；
+- 怎么卸载。
+</code></pre>
+<h3 id="5_1">第 5 步：修复与迭代</h3>
+<p>只修观察到的问题，不要无限加功能。</p>
+<h3 id="6">第 6 步：收尾</h3>
+<pre><code class="language-text">请给出：
+- 插件位置；
+- 安装/卸载方式；
+- 已验证的内容；
+- 未验证的内容；
+- 已知限制。
+</code></pre>
+<hr />
+<h2 id="96">9.6 不会编程的人怎么参与</h2>
+<p>你不需要自己写代码，但你需要做三件事：</p>
+<ol>
+<li><strong>说清楚目标</strong>：用户是谁、在什么场景、输入输出是什么；</li>
+<li><strong>审查结果</strong>：它有没有做你没要求的事？有没有权限过大？</li>
+<li><strong>验收</strong>：按你定义的场景试一遍，不通过就具体反馈。</li>
+</ol>
+<p>你可以要求：</p>
+<pre><code class="language-text">不要只告诉我“完成了”。
+请给出：
+- 改了哪些文件；
+- 新增了哪些能力；
+- 我怎么手动验证；
+- 如果失败，怎么回滚。
+</code></pre>
+<hr />
+<h2 id="97">9.7 常见误区</h2>
+<ul>
+<li><strong>“创造模式是高级版标准模式”</strong>：不是。它是扩展模式。</li>
+<li><strong>“装插件只是改配置”</strong>：不是。插件可能执行代码。</li>
+<li><strong>“装了就会自动生效”</strong>：不一定，可能需要重载/重启。</li>
+<li><strong>“Preset 可以当沙箱”</strong>：不可以。</li>
+<li><strong>“让 Agent 直接改 profile 文件”</strong>：不要，用 Plugin Manager。</li>
+<li><strong>“一次做很大”</strong>：先最小版本，再迭代。</li>
+</ul>
+<hr />
+<h2 id="_69">马上试试</h2>
+<ol>
+<li>新建一个创造模式任务；</li>
+<li>不要安装任何东西；</li>
+<li>让它列出当前可用的运行时检查能力；</li>
+<li>问它：“如果我要加一个只读工具，应该挂在哪一层？为什么？”</li>
+<li>读它的回答，不执行。</li>
+</ol>
+<hr />
+<h2 id="_70">小结</h2>
+<ul>
+<li>创造模式是 <code>cordis</code> Preset，不是模型/运行时。</li>
+<li>它多出运行时检查、插件管理、开发指引。</li>
+<li>适合扩展 DSH，不适合日常任务。</li>
+<li>插件代码在 Host 执行，必须有信任和回滚方案。</li>
+<li>先最小版本，再验证、再迭代。</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="ch08.html"><small>上一章</small><span>插件、Bundle 与 Profil…</span></a>
+  <a class="next" href="ch10.html"><small>下一章</small><span>排错、安全与继续学习</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/ch09.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>

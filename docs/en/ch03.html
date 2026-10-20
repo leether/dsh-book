@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 3 · Your First Task: Say What You Mean · DeepSeek Harness</title>
+<meta name="description" content="Chapter 3: Your First Task: Say What You Mean — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 3 · Your First Task: Say What You Mean · DeepSeek Harness">
+<meta property="og:description" content="Chapter 3: Your First Task: Say What You Mean — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch03.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch03.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch03.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch03.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch03.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch03.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html" aria-current="page"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 3</p>
+    <section class="chapter">
+<h1 id="chapter-3-your-first-task-say-what-you-mean">Chapter 3 — Your First Task: Say What You Mean</h1>
+<p class="chapter-meta">4 min read · 780 words · 11 sections</p>
+<h2 id="what-you-will-learn_2">What You Will Learn</h2>
+<ul>
+<li>Describe a task with four elements: goal, input, constraints, acceptance;</li>
+<li>Ask for a plan before execution;</li>
+<li>Inspect tool calls and file changes;</li>
+<li>Give useful feedback;</li>
+<li>Use <code>present</code> to deliver a file.</li>
+</ul>
+<hr />
+<h2 id="31-four-elements-of-a-good-task">3.1 Four Elements of a Good Task</h2>
+<p>Most "the Agent is bad at this" experiences come from vague requests.</p>
+<p>A good task contains:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Question it answers</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Goal</strong></td>
+<td>What should exist at the end?</td>
+<td>A <code>summary.md</code> file</td>
+</tr>
+<tr>
+<td><strong>Input</strong></td>
+<td>Where does the material come from?</td>
+<td>Three files under <code>notes/</code></td>
+</tr>
+<tr>
+<td><strong>Constraints</strong></td>
+<td>What must not happen?</td>
+<td>Do not modify originals; Chinese; keep links</td>
+</tr>
+<tr>
+<td><strong>Acceptance</strong></td>
+<td>How do we know it is done?</td>
+<td>All three titles; 3–5 sentences each; opens correctly</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bad">Bad</h3>
+<pre><code class="language-text">Organize my notes.
+</code></pre>
+<h3 id="better">Better</h3>
+<pre><code class="language-text">Read the three Markdown files under notes/ and combine them into notes/summary.md.
+Requirements:
+1. Keep each original title and source link;
+2. Write 3–5 sentences per article;
+3. Do not modify the original files;
+4. Give me a plan first, then wait for my confirmation;
+5. After writing, verify that summary.md exists and tell me which files you read.
+</code></pre>
+<p>The difference is not length. It is <strong>completeness</strong>.</p>
+<hr />
+<h2 id="32-plan-before-you-execute">3.2 Plan Before You Execute</h2>
+<p>For anything beyond a trivial task, ask for a plan:</p>
+<pre><code class="language-text">Do not change files yet. Give me a 3–5 step plan:
+what you will read, what you will write, and how you will verify the result.
+</code></pre>
+<p>Check whether the plan:</p>
+<ul>
+<li>Covers every input;</li>
+<li>States the output location;</li>
+<li>Includes verification;</li>
+<li>Does not quietly expand the scope.</li>
+</ul>
+<p>If the plan is wrong, fix the plan first.</p>
+<hr />
+<h2 id="33-watch-the-tool-calls">3.3 Watch the Tool Calls</h2>
+<p>While the Agent works, inspect the tool cards:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What to check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read file</td>
+<td>Is it the right file?</td>
+</tr>
+<tr>
+<td>Write file</td>
+<td>Where did it write? Did it overwrite?</td>
+</tr>
+<tr>
+<td>Run command</td>
+<td>Is it destructive?</td>
+</tr>
+<tr>
+<td>Web search</td>
+<td>Are the sources credible?</td>
+</tr>
+<tr>
+<td>Subagent</td>
+<td>What was delegated?</td>
+</tr>
+</tbody>
+</table>
+<p>A useful habit:</p>
+<blockquote>
+<p><strong>When you see write, delete, overwrite, reset, push, or upload, pause.</strong></p>
+</blockquote>
+<hr />
+<h2 id="34-iterate-with-specific-feedback">3.4 Iterate with Specific Feedback</h2>
+<p>First drafts are rarely perfect. Good feedback is specific.</p>
+<h3 id="vague">Vague</h3>
+<pre><code class="language-text">Not good. Rewrite it.
+</code></pre>
+<h3 id="specific">Specific</h3>
+<pre><code class="language-text">The second paragraph is too long. Cut it to three sentences.
+Keep the three subheadings.
+Move each source link to the end of its paragraph.
+Do not change the other paragraphs.
+</code></pre>
+<p>Specific feedback = location + problem + standard.</p>
+<hr />
+<h2 id="35-verify-do-not-trust-done">3.5 Verify — Do Not Trust "done"</h2>
+<p>"Done" is not the same as "correct." Check:</p>
+<ul>
+<li>Does the file exist?</li>
+<li>Does the content meet the requirements?</li>
+<li>Were the originals modified?</li>
+<li>Do the links work?</li>
+<li>Was any input missed?</li>
+<li>Did it invent facts?</li>
+</ul>
+<p>Ask for evidence:</p>
+<pre><code class="language-text">List the files you actually read, the files you wrote, and the checks you ran.
+Do not just say &quot;done&quot;.
+</code></pre>
+<hr />
+<h2 id="36-delivering-a-file-what-present-means">3.6 Delivering a File: What <code>present</code> Means</h2>
+<p>When the output is a file, the Agent may call <code>present</code>.</p>
+<p><code>present</code> means:</p>
+<blockquote>
+<p><strong>Declare an existing file as a final deliverable so the interface can show a file card that opens the current file.</strong></p>
+</blockquote>
+<p>It does not:</p>
+<ul>
+<li>Create the file;</li>
+<li>Upload the file;</li>
+<li>Copy the file contents;</li>
+<li>Put the contents into the model context.</li>
+</ul>
+<p>It records paths and optional descriptions.</p>
+<hr />
+<h2 id="37-a-complete-first-task">3.7 A Complete First Task</h2>
+<h3 id="prepare">Prepare</h3>
+<p>Create:</p>
+<pre><code class="language-text">notes/
+  a.md
+  b.md
+  c.md
+</code></pre>
+<h3 id="ask">Ask</h3>
+<pre><code class="language-text">Read the three articles under notes/ and combine them into notes/summary.md.
+Requirements:
+1. Keep each title and source link;
+2. Write 3–5 sentences per article;
+3. Do not modify the originals;
+4. Give me a plan first;
+5. After writing, verify that summary.md exists and tell me which files you read.
+</code></pre>
+<h3 id="review-the-plan">Review the plan</h3>
+<p>Make sure it covers all three inputs and does not modify originals.</p>
+<h3 id="approve-and-watch">Approve and watch</h3>
+<p>You should see three reads and one write.</p>
+<h3 id="verify">Verify</h3>
+<p>Open <code>summary.md</code>; check titles, links, and length.</p>
+<h3 id="iterate">Iterate</h3>
+<p>If the second summary is too short:</p>
+<pre><code class="language-text">Expand the second summary to four sentences, keep its link, and leave everything else unchanged.
+</code></pre>
+<hr />
+<h2 id="common-pitfalls_2">Common Pitfalls</h2>
+<ul>
+<li><strong>Task too large</strong>: do one verifiable thing at a time.</li>
+<li><strong>No acceptance criteria</strong>: the Agent cannot know what "good" means.</li>
+<li><strong>Ignoring tool calls</strong>: it may edit the wrong file.</li>
+<li><strong>Saying only "rewrite"</strong>: give location and standard.</li>
+<li><strong>Treating "done" as "correct"</strong>: ask for evidence.</li>
+</ul>
+<hr />
+<h2 id="summary_2">Summary</h2>
+<ul>
+<li>A good task = goal + input + constraints + acceptance.</li>
+<li>Plan before executing.</li>
+<li>Watch write, delete, and command calls.</li>
+<li>Feedback must be specific; verification must be evidence-based.</li>
+<li><code>present</code> is a delivery declaration, not an upload.</li>
+</ul>
+<hr />
+<h2 id="part-i-exercises">Part I Exercises</h2>
+<ol>
+<li>Rewrite a recent request using goal + input + constraints + acceptance.</li>
+<li>In a test folder, ask the Agent to list files read-only and report the tools it used.</li>
+<li>Ask it to produce <code>summary.md</code>, then check whether the originals changed.</li>
+<li>Give one specific revision instruction instead of "redo it".</li>
+</ol>
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="ch02.html"><small>Previous</small><span>First Launch: Desktop, Mod…</span></a>
+  <a class="next" href="ch04.html"><small>Next</small><span>Workspaces, Files, and Per…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch03.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

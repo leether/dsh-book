@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>第 5 章 · 会话、上下文与记忆 · DeepSeek Harness 入门</title>
+<meta name="description" content="第 5 章: 会话、上下文与记忆 — 从第一次对话到自己的插件">
+<meta property="og:title" content="第 5 章 · 会话、上下文与记忆 · DeepSeek Harness 入门">
+<meta property="og:description" content="第 5 章: 会话、上下文与记忆 — 从第一次对话到自己的插件">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/ch05.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://leether.github.io/dsh-book/ch05.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch05.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch05.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch05.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="index.html#contents">目录</a>
+      <a href="ch01.html">开始阅读</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="en/ch05.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>认识 DSH：模型、Harness、Agent</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>第一次启动：桌面、模型、工作区</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>第一次任务：把需求说清楚</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>工作区、文件与权限</span></a></li>
+        <li><a href="ch05.html" aria-current="page"><span class="num">05</span><span>会话、上下文与记忆</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>工具与技能：Agent 的手和脑</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>模式与 Preset：同一个模型，不同工作方式</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>插件、Bundle 与 Profile：给 DSH 装能力</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>创造模式：从使用者到扩展者</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>排错、安全与继续学习</span></a></li>
+        <li><a href="appendix.html"><span class="num">附</span><span>附录</span></a></li>
+      </ol>
+      <p class="sidebar-note">非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。<br>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 5 章</p>
+    <section class="chapter">
+<h1 id="5">第 5 章　会话、上下文与记忆</h1>
+<p class="chapter-meta">约 4 分钟 · 1,921 字 · 11 个小节</p>
+<h2 id="_38">本章你会学会</h2>
+<ul>
+<li>理解 Session 和 Context Window；</li>
+<li>知道 Agent 为什么会“忘事”；</li>
+<li>区分“会话内记忆”和“跨会话记忆”；</li>
+<li>用文件、<code>AGENTS.md</code>、Skill 做长期记忆；</li>
+<li>管理上下文，避免越聊越慢、越聊越贵。</li>
+</ul>
+<hr />
+<h2 id="51-session">5.1 Session 是什么</h2>
+<p>Session 是一次连续对话。</p>
+<p>在同一个 Session 里：</p>
+<ul>
+<li>你说过的话、Agent 的回复、工具结果，会形成历史；</li>
+<li>Agent 能引用前面的内容；</li>
+<li>但历史不是无限的。</li>
+</ul>
+<p>新建 Session：</p>
+<ul>
+<li>通常不会自动继承上一个 Session 的完整聊天记录；</li>
+<li>它会重新读取工作区、<code>AGENTS.md</code>、可用 Skill 等；</li>
+<li>适合开始一个新任务。</li>
+</ul>
+<p>你可以把 Session 理解成“一次会议”。会议结束，新的会议不会自动记得上一次的每句话，除非你留下会议纪要。</p>
+<hr />
+<h2 id="52-context-windowagent">5.2 Context Window：Agent 的“工作内存”</h2>
+<p>模型一次能处理的文本量是有限的，这个上限叫 <strong>Context Window（上下文窗口）</strong>。</p>
+<p>进入上下文的东西包括：</p>
+<ul>
+<li>系统提示词；</li>
+<li>工具定义；</li>
+<li>Skill 内容；</li>
+<li>你的消息；</li>
+<li>Agent 的历史回复；</li>
+<li>工具返回结果；</li>
+<li>读进来的文件内容。</li>
+</ul>
+<h3 id="_39">上下文满了会怎样</h3>
+<ul>
+<li>变慢；</li>
+<li>变贵；</li>
+<li>开始忘掉早期内容；</li>
+<li>可能触发压缩（compaction）或截断；</li>
+<li>严重时，它会“自信地”用错误信息继续。</li>
+</ul>
+<h3 id="_40">常见信号</h3>
+<ul>
+<li>它开始重复问已经说过的事；</li>
+<li>它引用了错误的文件名；</li>
+<li>它忘记了你前面定的规则；</li>
+<li>回复越来越长、越来越散。</li>
+</ul>
+<hr />
+<h2 id="53-dsh">5.3 DSH 不会自动记住一切</h2>
+<p>这是新手最大的误解。</p>
+<p>DSH 有 Session 日志，但<strong>不等于跨会话的长期记忆</strong>。</p>
+<ul>
+<li>同一个 Session：它记得聊天历史；</li>
+<li>新建 Session：它通常不会自动记得上一个 Session 的每句话；</li>
+<li>它可能读取工作区文件、<code>AGENTS.md</code>、Skill；</li>
+<li>如果你装了记忆插件，才可能有额外的跨会话记忆。</li>
+</ul>
+<p>所以，重要信息要<strong>落到文件里</strong>：</p>
+<ul>
+<li>项目背景 → <code>PROJECT.md</code>；</li>
+<li>约定 → <code>AGENTS.md</code>；</li>
+<li>进度 → <code>TODO.md</code> 或任务列表；</li>
+<li>决策 → <code>DECISIONS.md</code>；</li>
+<li>交付物 → 输出文件。</li>
+</ul>
+<blockquote>
+<p><strong>能被文件记住的，不要指望聊天记住。</strong></p>
+</blockquote>
+<hr />
+<h2 id="54-vs">5.4 新会话 vs 继续会话</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始一个全新任务</td>
+<td>新建 Session</td>
+</tr>
+<tr>
+<td>同一任务继续做</td>
+<td>继续当前 Session</td>
+</tr>
+<tr>
+<td>当前 Session 太长、开始混乱</td>
+<td>让它先写总结，再新建</td>
+</tr>
+<tr>
+<td>换了一个完全不同的项目</td>
+<td>换工作区 + 新建 Session</td>
+</tr>
+<tr>
+<td>只想问一个独立问题</td>
+<td>新建 Session，避免污染上下文</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_41">长任务的做法</h3>
+<ol>
+<li>让 Agent 把当前进度写到 <code>PROGRESS.md</code>；</li>
+<li>让它列出“已完成 / 未完成 / 下一步”；</li>
+<li>新建 Session；</li>
+<li>第一句话让它读 <code>PROGRESS.md</code> 和 <code>AGENTS.md</code>。</li>
+</ol>
+<p>这比无限延长一个 Session 更稳。</p>
+<hr />
+<h2 id="55">5.5 用文件做“长期记忆”</h2>
+<p>一个简单可复用的结构：</p>
+<pre><code class="language-text">project/
+  AGENTS.md        # 规则
+  PROJECT.md       # 项目背景
+  DECISIONS.md     # 关键决策
+  PROGRESS.md      # 进度
+  TODO.md          # 待办
+  notes/           # 资料
+  output/          # 交付物
+</code></pre>
+<p>每次新 Session，先让它读：</p>
+<pre><code class="language-text">请先读 AGENTS.md、PROJECT.md、PROGRESS.md，然后用三句话复述当前状态。
+在复述之前不要改任何文件。
+</code></pre>
+<p>这样它不需要“记住”所有聊天，也能快速恢复上下文。</p>
+<hr />
+<h2 id="56-context">5.6 Context 卫生</h2>
+<ul>
+<li>不要一次读入大量无关文件；</li>
+<li>让 Agent 先搜索、再读需要的部分；</li>
+<li>长文档分段读；</li>
+<li>工具输出很大时，要求摘要或只取关键段；</li>
+<li>任务完成后，把结论写进文件，而不是留在聊天里；</li>
+<li>不要在一个 Session 里混很多不相关任务。</li>
+</ul>
+<h3 id="_42">一个实用提示词</h3>
+<pre><code class="language-text">请只读取与当前任务最相关的 3 个文件。
+如果需要更多，先告诉我为什么。
+不要一次性把整个目录读进来。
+</code></pre>
+<hr />
+<h2 id="57">5.7 记忆插件与记忆文件</h2>
+<p>有些插件提供“跨会话记忆”：</p>
+<ul>
+<li>自动提取事实；</li>
+<li>存储到本地或云端；</li>
+<li>下次对话时召回。</li>
+</ul>
+<p>它们有用，但不是魔法：</p>
+<ul>
+<li>可能召回错误；</li>
+<li>可能把旧信息当新信息；</li>
+<li>可能增加上下文和成本；</li>
+<li>需要隐私和权限评估。</li>
+</ul>
+<p>对 0 基础用户，建议先用<strong>文件 + <code>AGENTS.md</code></strong> 这种可控方式。等你有明确需求，再考虑记忆插件。</p>
+<hr />
+<h2 id="_43">马上试试</h2>
+<ol>
+<li>让 Agent 写一个 <code>PROJECT.md</code>，记录当前任务目标和约束；</li>
+<li>新建 Session；</li>
+<li>第一句话让它读 <code>PROJECT.md</code>，复述目标；</li>
+<li>观察它是否能在没有旧聊天记录的情况下继续工作。</li>
+</ol>
+<hr />
+<h2 id="_44">常见坑</h2>
+<ul>
+<li><strong>以为新 Session 会记得旧 Session</strong>：不会自动记得。</li>
+<li><strong>把所有资料一次性塞进上下文</strong>：又慢又贵。</li>
+<li><strong>长 Session 里反复改需求</strong>：上下文污染。</li>
+<li><strong>只让 Agent “记住”而不落文件</strong>：下次就没了。</li>
+<li><strong>记忆插件当真相</strong>：召回可能错。</li>
+</ul>
+<hr />
+<h2 id="_45">小结</h2>
+<ul>
+<li>Session 是一次对话；Context Window 是工作内存。</li>
+<li>上下文会满，满了会忘、会慢、会贵。</li>
+<li>DSH 不自动跨 Session 记住一切。</li>
+<li>重要信息落文件；长任务先总结再换 Session。</li>
+<li>记忆插件是补充，不是替代。</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="ch04.html"><small>上一章</small><span>工作区、文件与权限</span></a>
+  <a class="next" href="ch06.html"><small>下一章</small><span>工具与技能：Agent 的手和脑</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/ch05.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>

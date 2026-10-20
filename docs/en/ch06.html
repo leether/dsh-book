@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>Chapter 6 · Tools and Skills: The Agent&#x27;s Hands and Mind · DeepSeek Harness</title>
+<meta name="description" content="Chapter 6: Tools and Skills: The Agent&#x27;s Hands and Mind — A Beginner&#x27;s Guide">
+<meta property="og:title" content="Chapter 6 · Tools and Skills: The Agent&#x27;s Hands and Mind · DeepSeek Harness">
+<meta property="og:description" content="Chapter 6: Tools and Skills: The Agent&#x27;s Hands and Mind — A Beginner&#x27;s Guide">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/en/ch06.html">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://leether.github.io/dsh-book/en/ch06.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch06.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch06.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch06.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>Guide</span></a>
+    <nav class="topbar-links" aria-label="Quick navigation">
+      <a href="index.html#contents">Contents</a>
+      <a href="ch01.html">Start reading</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="../ch06.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>Book map</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>Meet DSH: Models, Harnesses, and Agents</span></a></li>
+        <li><a href="ch02.html"><span class="num">02</span><span>First Launch: Desktop, Model, Workspace</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>Your First Task: Say What You Mean</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>Workspaces, Files, and Permissions</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>Sessions, Context, and Memory</span></a></li>
+        <li><a href="ch06.html" aria-current="page"><span class="num">06</span><span>Tools and Skills: The Agent&#x27;s Hands and Mind</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>Modes and Presets: Same Model, Different Ways to Work</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>Plugins, Bundles, and Profiles: Giving DSH New Powers</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>Creator Mode: From User to Extender</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>Troubleshooting, Safety, and Next Steps</span></a></li>
+        <li><a href="appendix.html"><span class="num">A</span><span>Appendix</span></a></li>
+      </ol>
+      <p class="sidebar-note">An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.<br>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">Contents</a> / Chapter 6</p>
+    <section class="chapter">
+<h1 id="chapter-6-tools-and-skills-the-agents-hands-and-mind">Chapter 6 — Tools and Skills: The Agent's Hands and Mind</h1>
+<p class="chapter-meta">4 min read · 917 words · 12 sections</p>
+<h2 id="what-you-will-learn_5">What You Will Learn</h2>
+<ul>
+<li>Recognize the main tool categories;</li>
+<li>Read tool cards and approvals;</li>
+<li>Use planning, todos, subagents, and workflows;</li>
+<li>Understand what a Skill is, and how it differs from a Tool or Plugin;</li>
+<li>Use <code>present</code> correctly;</li>
+<li>Avoid tool overload and skill sprawl.</li>
+</ul>
+<hr />
+<h2 id="61-tool-categories">6.1 Tool Categories</h2>
+<p>You do not need to memorize every tool name. Know the categories.</p>
+<table>
+<thead>
+<tr>
+<th>You want to</th>
+<th>Tool type</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inspect files</td>
+<td>Read</td>
+<td>Read file, list directory, search contents</td>
+</tr>
+<tr>
+<td>Change files</td>
+<td>Write</td>
+<td>Create, overwrite, edit</td>
+</tr>
+<tr>
+<td>Run programs</td>
+<td>Execute</td>
+<td>Terminal, tests, builds</td>
+</tr>
+<tr>
+<td>Find information</td>
+<td>Search</td>
+<td>Web search, fetch pages</td>
+</tr>
+<tr>
+<td>Split work</td>
+<td>Collaboration</td>
+<td>Subagents, workflows</td>
+</tr>
+<tr>
+<td>Track work</td>
+<td>Planning</td>
+<td>Plan mode, todos, goals</td>
+</tr>
+<tr>
+<td>Deliver</td>
+<td>Delivery</td>
+<td><code>present</code></td>
+</tr>
+<tr>
+<td>Ask you</td>
+<td>Interaction</td>
+<td>Questions, confirmations</td>
+</tr>
+</tbody>
+</table>
+<p>One principle:</p>
+<blockquote>
+<p><strong>If read-only is enough, start read-only. If a small step is enough, do not take a big one.</strong></p>
+</blockquote>
+<hr />
+<h2 id="62-tool-cards-and-approvals">6.2 Tool Cards and Approvals</h2>
+<p>A tool call usually shows:</p>
+<ul>
+<li>Tool name;</li>
+<li>Parameters (path, command);</li>
+<li>Result (success, failure, output);</li>
+<li>Sometimes an approval prompt.</li>
+</ul>
+<p>Check:</p>
+<ul>
+<li>Is the path correct?</li>
+<li>Is the command destructive?</li>
+<li>Does the output look wrong?</li>
+<li>Did it ignore a constraint?</li>
+</ul>
+<h3 id="denial-is-a-skill">Denial is a skill</h3>
+<p>If it tries something you did not allow:</p>
+<pre><code class="language-text">Stop. Do not run that step.
+Explain why you need it, and whether a read-only alternative exists.
+</code></pre>
+<hr />
+<h2 id="63-plans-and-todos">6.3 Plans and Todos</h2>
+<p>For complex tasks, ask for a plan first:</p>
+<pre><code class="language-text">Enter plan mode. Give me a plan of at most five steps:
+what to read/write, and how to verify each step.
+Wait for my confirmation.
+</code></pre>
+<p>During execution, ask for a todo list:</p>
+<pre><code class="language-text">Break the task into todos and update them as you go.
+Do not start everything at once.
+</code></pre>
+<p>Benefits:</p>
+<ul>
+<li>You can see progress;</li>
+<li>Steps are less likely to be skipped;</li>
+<li>Long tasks are easier to resume.</li>
+</ul>
+<hr />
+<h2 id="64-subagents-and-workflows">6.4 Subagents and Workflows</h2>
+<h3 id="subagents">Subagents</h3>
+<p>A subagent is a separate Agent with its own context. Use it for:</p>
+<ul>
+<li>Independent research;</li>
+<li>Parallel information gathering;</li>
+<li>Keeping large intermediate results out of the main context.</li>
+</ul>
+<pre><code class="language-text">Send a subagent to research these three links and return only key points and sources.
+Continue the local file work in the main task.
+</code></pre>
+<p>Remember:</p>
+<ul>
+<li>Subagents consume model calls too;</li>
+<li>Their results can be wrong;</li>
+<li>The parent Agent must verify.</li>
+</ul>
+<h3 id="workflows">Workflows</h3>
+<p>Workflows orchestrate multiple subagents with a script. They are useful for batch, parallel, or multi-stage work.</p>
+<p>Beginners can skip workflows until subagents feel comfortable.</p>
+<hr />
+<h2 id="65-what-a-skill-is">6.5 What a Skill Is</h2>
+<p>A Skill is an instruction manual, usually a folder with <code>SKILL.md</code>.</p>
+<p>It tells the Agent:</p>
+<ul>
+<li>When to use the skill;</li>
+<li>What steps to follow;</li>
+<li>What pitfalls exist;</li>
+<li>Which references to read;</li>
+<li>Which scripts can be run.</li>
+</ul>
+<h3 id="skill-vs-tool">Skill vs. Tool</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Tool</th>
+<th>Skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nature</td>
+<td>Executable action</td>
+<td>Knowledge and procedure</td>
+</tr>
+<tr>
+<td>Example</td>
+<td>Read file, run command</td>
+<td>"How to do a code review"</td>
+</tr>
+<tr>
+<td>Executed by</td>
+<td>Harness</td>
+<td>Agent reads and follows</td>
+</tr>
+<tr>
+<td>Context</td>
+<td>Schema is loaded</td>
+<td>Loaded on demand</td>
+</tr>
+</tbody>
+</table>
+<h3 id="skill-vs-plugin">Skill vs. Plugin</h3>
+<ul>
+<li>A Skill is knowledge; it usually does not add new tools;</li>
+<li>A Plugin is a runtime extension; it can add tools, services, or UI;</li>
+<li>Some plugins ship with Skills.</li>
+</ul>
+<h3 id="progressive-disclosure">Progressive disclosure</h3>
+<p>A good Skill does not dump thousands of lines into context. It:</p>
+<ol>
+<li>Loads only name and description first;</li>
+<li>Loads <code>SKILL.md</code> when the task matches;</li>
+<li>Reads references or runs scripts only when needed.</li>
+</ol>
+<p>That is why you can have many Skills without instantly filling the context.</p>
+<hr />
+<h2 id="66-using-skills">6.6 Using Skills</h2>
+<p>Two common ways:</p>
+<ol>
+<li><strong>Automatic</strong>: the Agent chooses a relevant Skill from the task description;</li>
+<li><strong>Explicit</strong>: you name the Skill.</li>
+</ol>
+<p>If you know the Skill:</p>
+<pre><code class="language-text">Use the `code-review` Skill for this change.
+Read its SKILL.md, then follow the steps.
+</code></pre>
+<p>If you are unsure:</p>
+<pre><code class="language-text">Which Skills are relevant to this task? List them first; do not execute yet.
+</code></pre>
+<h3 id="installing-skills">Installing Skills</h3>
+<ul>
+<li>Only install from trusted sources;</li>
+<li>Inspect scripts and network access;</li>
+<li>Do not put secrets in a Skill;</li>
+<li>Too many Skills consume metadata context;</li>
+<li>Keep versions aligned with the CLI/plugins.</li>
+</ul>
+<hr />
+<h2 id="67-present-delivering-files">6.7 <code>present</code>: Delivering Files</h2>
+<p>When the output is a file, the Agent may call <code>present</code>.</p>
+<p>It means:</p>
+<blockquote>
+<p><strong>Declare an existing file as a final deliverable so the UI can show a card that opens the current file.</strong></p>
+</blockquote>
+<p>It does not create, upload, or copy content. It records paths and descriptions.</p>
+<p>Ask for it when needed:</p>
+<pre><code class="language-text">When done, use present for the final file. At most two files; do not present every intermediate artifact.
+</code></pre>
+<hr />
+<h2 id="68-common-tool-mistakes">6.8 Common Tool Mistakes</h2>
+<ul>
+<li><strong>More tools is better</strong>: no; more tools add choice and context cost.</li>
+<li><strong>Read the whole directory</strong>: search first, read what matters.</li>
+<li><strong>Treat subagents as free labor</strong>: they cost tokens and can be wrong.</li>
+<li><strong>Install every Skill</strong>: install only what you need.</li>
+<li><strong>Ignore tool results</strong>: summaries can hide errors.</li>
+</ul>
+<hr />
+<h2 id="try-it_3">Try It</h2>
+<ol>
+<li>Ask the Agent for a three-step plan;</li>
+<li>Ask it to track execution with todos;</li>
+<li>Ask it to search first instead of reading a whole directory;</li>
+<li>Ask it to deliver one final file with <code>present</code>;</li>
+<li>Ask: "Which tools did you use? Which were read-only?"</li>
+</ol>
+<hr />
+<h2 id="summary_5">Summary</h2>
+<ul>
+<li>Tools cover read, write, execute, search, collaboration, planning, and delivery.</li>
+<li>Read-only first; small steps; watch tool cards.</li>
+<li>Subagents and workflows split work but are not free.</li>
+<li>Skill = knowledge; Tool = action; Plugin = runtime extension.</li>
+<li><code>present</code> is a delivery declaration, not an upload.</li>
+</ul>
+<hr />
+<h2 id="part-ii-exercises">Part II Exercises</h2>
+<ol>
+<li>Write an <code>AGENTS.md</code> for your test workspace with three forbidden actions.</li>
+<li>Start a new Session, read <code>AGENTS.md</code> and <code>PROJECT.md</code>, and restate the rules.</li>
+<li>Use todos to complete a three-step task, updating after each step.</li>
+<li>Ask which Skills are relevant, without executing them.</li>
+<li>Deliver one file with <code>present</code> and observe the card.</li>
+</ol>
+
+<nav class="pager" aria-label="Chapter navigation">
+  <a class="prev" href="ch05.html"><small>Previous</small><span>Sessions, Context, and Mem…</span></a>
+  <a class="next" href="ch07.html"><small>Next</small><span>Modes and Presets: Same Mo…</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>An unofficial guide. Not affiliated with DeepSeek. DSH / DeepSeek names and trademarks belong to their owners.</p>
+  <p>Based on DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · No JavaScript / cookies / third-party requests</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/en/ch06.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

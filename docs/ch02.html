@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
+<title>第 2 章 · 第一次启动：桌面、模型、工作区 · DeepSeek Harness 入门</title>
+<meta name="description" content="第 2 章: 第一次启动：桌面、模型、工作区 — 从第一次对话到自己的插件">
+<meta property="og:title" content="第 2 章 · 第一次启动：桌面、模型、工作区 · DeepSeek Harness 入门">
+<meta property="og:description" content="第 2 章: 第一次启动：桌面、模型、工作区 — 从第一次对话到自己的插件">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leether.github.io/dsh-book/ch02.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://leether.github.io/dsh-book/ch02.html">
+<link rel="alternate" hreflang="zh-CN" href="https://leether.github.io/dsh-book/ch02.html">
+<link rel="alternate" hreflang="en" href="https://leether.github.io/dsh-book/en/ch02.html">
+<link rel="alternate" hreflang="x-default" href="https://leether.github.io/dsh-book/ch02.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="index.html#contents">目录</a>
+      <a href="ch01.html">开始阅读</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+      <a class="lang-switch" href="en/ch02.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
+        <li><a href="ch01.html"><span class="num">01</span><span>认识 DSH：模型、Harness、Agent</span></a></li>
+        <li><a href="ch02.html" aria-current="page"><span class="num">02</span><span>第一次启动：桌面、模型、工作区</span></a></li>
+        <li><a href="ch03.html"><span class="num">03</span><span>第一次任务：把需求说清楚</span></a></li>
+        <li><a href="ch04.html"><span class="num">04</span><span>工作区、文件与权限</span></a></li>
+        <li><a href="ch05.html"><span class="num">05</span><span>会话、上下文与记忆</span></a></li>
+        <li><a href="ch06.html"><span class="num">06</span><span>工具与技能：Agent 的手和脑</span></a></li>
+        <li><a href="ch07.html"><span class="num">07</span><span>模式与 Preset：同一个模型，不同工作方式</span></a></li>
+        <li><a href="ch08.html"><span class="num">08</span><span>插件、Bundle 与 Profile：给 DSH 装能力</span></a></li>
+        <li><a href="ch09.html"><span class="num">09</span><span>创造模式：从使用者到扩展者</span></a></li>
+        <li><a href="ch10.html"><span class="num">10</span><span>排错、安全与继续学习</span></a></li>
+        <li><a href="appendix.html"><span class="num">附</span><span>附录</span></a></li>
+      </ol>
+      <p class="sidebar-note">非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。<br>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
+  <article class="book">
+    <p class="breadcrumb"><a href="index.html#contents">目录</a> / 第 2 章</p>
+    <section class="chapter">
+<h1 id="2">第 2 章　第一次启动：桌面、模型、工作区</h1>
+<p class="chapter-meta">约 4 分钟 · 1,913 字 · 11 个小节</p>
+<h2 id="_7">本章你会学会</h2>
+<ul>
+<li>打开 DSH Desktop；</li>
+<li>连接一个模型；</li>
+<li>选一个安全的工作区；</li>
+<li>用标准模式完成第一次只读对话；</li>
+<li>看懂界面上的工具卡片和审批提示。</li>
+</ul>
+<hr />
+<h2 id="21-desktop">2.1 打开 Desktop</h2>
+<p>安装完成后，打开 <strong>DeepSeek Harness</strong>。</p>
+<p>第一次打开时，你可能会看到：</p>
+<ul>
+<li>欢迎页；</li>
+<li>模型/账号设置；</li>
+<li>工作区选择；</li>
+<li>新建任务输入框。</li>
+</ul>
+<p>不同版本界面会略有差异，但顺序基本是：</p>
+<pre><code class="language-text">打开应用 → 连接模型 → 选择工作区 → 新建任务 → 开始对话
+</code></pre>
+<p>如果你还没有模型服务，先看下一节。</p>
+<hr />
+<h2 id="22">2.2 连接模型</h2>
+<p>DSH 需要一个模型来“思考”。通常有两种方式：</p>
+<ol>
+<li><strong>DeepSeek 官方账号/API</strong>：在设置里登录或填入 API Key；</li>
+<li><strong>兼容 OpenAI 接口的提供方</strong>：填入 Base URL、API Key、模型名。</li>
+</ol>
+<h3 id="_8">操作路径</h3>
+<p>通常在：</p>
+<pre><code class="language-text">设置（Settings） → 模型（Models） → 添加/选择提供方
+</code></pre>
+<p>你需要准备：</p>
+<ul>
+<li>Provider（提供方）；</li>
+<li>API Key；</li>
+<li>模型名称（例如 <code>deepseek-chat</code> / <code>deepseek-flash</code>，以实际提供方为准）；</li>
+<li>可选的 Base URL。</li>
+</ul>
+<h3 id="_9">怎么判断成功</h3>
+<ul>
+<li>设置页显示模型已连接；</li>
+<li>新建任务后，Agent 能正常回复；</li>
+<li>没有 <code>401</code>、<code>Invalid API key</code> 之类的错误。</li>
+</ul>
+<h3 id="401">常见错误：401</h3>
+<p><code>401</code> 基本只有一个意思：<strong>Key 不对，或者没有生效</strong>。</p>
+<p>检查：</p>
+<ul>
+<li>Key 是否复制完整；</li>
+<li>是否有多余空格；</li>
+<li>提供方和 Base URL 是否匹配；</li>
+<li>账号是否有余额/权限；</li>
+<li>是否把别的服务的 Key 填到了这里。</li>
+</ul>
+<blockquote>
+<p><strong>不要把 API Key 贴进对话里让 Agent 帮你检查。</strong> 在设置页里改。</p>
+</blockquote>
+<hr />
+<h2 id="23">2.3 选择工作区</h2>
+<p>工作区就是 Agent 工作的文件夹。</p>
+<p>第一次使用，建议这样做：</p>
+<ol>
+<li>在桌面或文档目录新建一个空文件夹，例如 <code>dsh-test</code>；</li>
+<li>在里面放一两个<strong>不重要</strong>的文本文件；</li>
+<li>在 DSH 里选择这个文件夹作为工作区。</li>
+</ol>
+<p>为什么不用整个用户目录？</p>
+<ul>
+<li>Agent 能看到的东西太多，容易误操作；</li>
+<li>上下文会变复杂；</li>
+<li>出问题不好回滚。</li>
+</ul>
+<p>工作区选好后，Agent 的“当前目录”通常就是这个文件夹。它读写相对路径时，默认以这里为基准。</p>
+<hr />
+<h2 id="24">2.4 选择标准模式</h2>
+<p>新建任务时，通常会让你选一个 <strong>Agent Preset</strong>（模式）。</p>
+<p>第一次使用，选 <strong>标准模式（Standard）</strong>。</p>
+<p>标准模式有完整的日常工具：读写文件、运行命令、搜索、子代理、计划、待办、交付文件。</p>
+<p>不要一上来选 <strong>创造模式（Creator）</strong>。创造模式是给“扩展 DSH 本身”用的，会多出插件管理、运行时检查等能力，也会带来更高的权限风险。第 7 章会详细讲。</p>
+<hr />
+<h2 id="25">2.5 界面地图</h2>
+<p>你不需要记住每个按钮，但要知道四类信息在哪里：</p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>你会看到什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>对话区</strong></td>
+<td>你输入任务，Agent 回复、解释、提问</td>
+</tr>
+<tr>
+<td><strong>工具卡片</strong></td>
+<td>Agent 调用工具的过程，例如“读取文件”“运行命令”“写入文件”</td>
+</tr>
+<tr>
+<td><strong>审批/权限提示</strong></td>
+<td>某些操作需要你点“允许”或“拒绝”</td>
+</tr>
+<tr>
+<td><strong>侧边栏/设置</strong></td>
+<td>会话列表、工作区、模型、插件、技能、模式</td>
+</tr>
+</tbody>
+</table>
+<p>最重要的习惯：</p>
+<blockquote>
+<p><strong>不要只看 Agent 的最后一段话，要看它中间做了什么。</strong></p>
+</blockquote>
+<p>工具卡片会告诉你它读了哪些文件、跑了什么命令、改了什么东西。</p>
+<hr />
+<h2 id="26">2.6 第一次对话：只读、可观察</h2>
+<p>第一次不要让它改文件。先做两个只读练习。</p>
+<h3 id="_10">练习一：自我介绍</h3>
+<p>输入：</p>
+<pre><code class="language-text">你好。请用三句话介绍你能做什么、不能做什么。
+先不要读取或修改任何文件。
+</code></pre>
+<p>观察它是否：</p>
+<ul>
+<li>说明自己是 Agent；</li>
+<li>说明需要工作区/权限；</li>
+<li>没有擅自调用工具。</li>
+</ul>
+<h3 id="_11">练习二：只读盘点</h3>
+<p>输入：</p>
+<pre><code class="language-text">请只读当前工作区的文件，按类型分组列出来。
+不要修改任何文件，也不要运行会改变文件的命令。
+最后告诉我你用了哪些工具。
+</code></pre>
+<p>你会看到类似这样的工具卡片：</p>
+<pre><code class="language-text">读取目录
+读取文件
+</code></pre>
+<p>如果它想写文件，你可以拒绝，并提醒：</p>
+<pre><code class="language-text">这一步只需要只读，请不要写入。
+</code></pre>
+<hr />
+<h2 id="27">2.7 第一次对话的目标</h2>
+<p>不是“让它做一件大事”，而是让你熟悉三件事：</p>
+<ol>
+<li><strong>它会在哪里工作</strong>：工作区；</li>
+<li><strong>它怎么做事</strong>：工具调用；</li>
+<li><strong>你怎么控制它</strong>：审批、拒绝、补充要求。</li>
+</ol>
+<hr />
+<h2 id="web-headless">换一种入口：Web / Headless</h2>
+<ul>
+<li><strong>Web</strong>：通常用 <code>dsh --profile web</code> 启动，浏览器打开带 token 的地址。界面与 Desktop 类似，适合远程服务器。</li>
+<li><strong>Headless</strong>：用 <code>dsh --profile headless "你的任务"</code> 一次性执行，没有图形界面，适合脚本/自动化。</li>
+<li><strong>Desktop</strong>：由桌面应用管理 <code>desktop</code> profile，不建议手动改它的配置文件。</li>
+</ul>
+<p>本书后续仍以 Desktop 为主。</p>
+<hr />
+<h2 id="_12">常见坑</h2>
+<ul>
+<li><strong>没连模型就开始任务</strong>：只会得到错误或空回复。</li>
+<li><strong>工作区选得太大</strong>：先小后大。</li>
+<li><strong>一上来就选创造模式</strong>：日常任务用标准模式。</li>
+<li><strong>把 Key 贴在聊天里</strong>：在设置里填。</li>
+<li><strong>只看最后一段话</strong>：中间的工具调用才是它真正做的事。</li>
+</ul>
+<hr />
+<h2 id="_13">小结</h2>
+<ul>
+<li>启动顺序：打开应用 → 连模型 → 选工作区 → 选标准模式 → 开始对话。</li>
+<li><code>401</code> 先查 Key。</li>
+<li>工作区要小、要可回滚。</li>
+<li>第一次对话以只读为主，观察工具卡片。</li>
+<li>标准模式是日常默认；创造模式是另一件事。</li>
+</ul>
+<hr />
+
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="ch01.html"><small>上一章</small><span>认识 DSH：模型、Harness、…</span></a>
+  <a class="next" href="ch03.html"><small>下一章</small><span>第一次任务：把需求说清楚</span></a>
+</nav>
+    </section>
+  </article>
+</main>
+<footer>
+  <p>非官方学习材料，不代表 DeepSeek 官方；DSH / DeepSeek 名称与商标归其权利人。</p>
+  <p>基于 DeepSeek Harness Desktop 0.2.1-rc.2 · MIT License · 无 JavaScript / 无 Cookie / 无第三方请求</p>
+  <p><a href="https://github.com/leether/dsh-book">GitHub</a> · <a href="https://leether.github.io/dsh-book/ch02.html">GitHub Pages</a></p>
+</footer>
+<a class="top-link" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>

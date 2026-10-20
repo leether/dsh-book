@@ -278,7 +278,7 @@ A Profile is an installation environment:
 
 - `desktop`: the desktop app;
 - `web`: the browser;
-- `headless`: one-shot command line.
+- `headless`: a one-shot command-line run.
 
 It contains:
 
@@ -286,7 +286,7 @@ It contains:
 - Its own `cordis.patch.yml`;
 - Third-party plugin dependencies.
 
-Profile decides "what this environment installed"; Bundle decides "what is inside the installation"; Plugin decides "what actually runs."
+The Profile decides what this environment installs; the Bundle decides what the installation contains; the Plugin decides what actually runs.
 
 ---
 
