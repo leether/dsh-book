@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
 <title>DeepSeek Harness 入门 · 从第一次对话到自己的插件</title>
 <meta name="description" content="给 0 基础用户的 DeepSeek Harness 使用指南：模型、工作区、权限、会话、工具、技能、Preset、插件与创造模式。">
 <meta property="og:title" content="DeepSeek Harness 入门">
@@ -11,123 +12,389 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leether.github.io/dsh-book/">
 <meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 :root {
-  --bg: #fbfaf7;
-  --paper: #ffffff;
-  --ink: #1f2328;
-  --muted: #667085;
-  --line: #e5e1d8;
+  --bg: #f7f4ed;
+  --paper: #fffefa;
+  --ink: #20211f;
+  --muted: #6b6a63;
+  --line: #e3ded2;
   --accent: #b45309;
-  --accent-soft: #fff4e5;
-  --code: #f4f1ea;
-  --max: 920px;
+  --accent-2: #0f766e;
+  --accent-soft: #fff3e0;
+  --code: #f2eee5;
+  --shadow: 0 24px 60px rgba(60, 40, 20, .12);
+  --max: 1120px;
+  --prose: 760px;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #151515;
-    --paper: #1d1d1f;
-    --ink: #ececec;
-    --muted: #a3a3a3;
-    --line: #333333;
-    --accent: #f0a35e;
-    --accent-soft: #2b2118;
-    --code: #262626;
+    --bg: #111214;
+    --paper: #1a1b1e;
+    --ink: #f1efe9;
+    --muted: #a7a49b;
+    --line: #303136;
+    --accent: #f2a35e;
+    --accent-2: #5eead4;
+    --accent-soft: #2a2118;
+    --code: #24252a;
+    --shadow: 0 24px 60px rgba(0, 0, 0, .35);
   }
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+html, body { max-width: 100%; overflow-x: hidden; }
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(900px 520px at 8% -8%, rgba(180, 83, 9, .10), transparent 62%),
+    radial-gradient(800px 520px at 100% 0%, rgba(15, 118, 110, .08), transparent 62%),
+    var(--bg);
   color: var(--ink);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
   font-size: 17px;
-  line-height: 1.8;
+  line-height: 1.85;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 a { color: var(--accent); text-underline-offset: 3px; }
 a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--accent); color: #fff; }
+
+.progress {
+  display: none;
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 100;
+  background: linear-gradient(90deg, var(--accent), #f59e0b, var(--accent-2));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+@supports (animation-timeline: scroll()) {
+  .progress {
+    display: block;
+    animation: reading-progress linear;
+    animation-timeline: scroll(root block);
+  }
+}
+@keyframes reading-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+@supports (background: color-mix(in srgb, #fff 80%, transparent)) {
+  .topbar {
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+.topbar-inner {
+  max-width: var(--max);
+  flex-wrap: wrap;
+  margin: 0 auto;
+  padding: 13px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 9px;
+  letter-spacing: .08em;
+}
+.topbar-links { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; min-width: 0; font-size: 14px; }
+.topbar-links a { color: var(--muted); text-decoration: none; }
+.topbar-links a:hover { color: var(--accent); }
+
 .hero {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 72px 24px 32px;
-  border-bottom: 1px solid var(--line);
+  padding: 82px 24px 54px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(260px, .88fr);
+  gap: 56px;
+  align-items: center;
 }
+.hero-copy { min-width: 0; }
 .badge {
   display: inline-block;
-  margin: 0 0 14px;
-  padding: 4px 10px;
+  margin: 0 0 18px;
+  padding: 5px 11px;
   border: 1px solid var(--line);
   border-radius: 999px;
+  background: var(--paper);
   color: var(--muted);
-  font-size: 13px;
-  letter-spacing: .04em;
+  font-size: 12px;
+  letter-spacing: .06em;
 }
 .hero h1 {
   margin: 0;
-  font-size: clamp(34px, 6vw, 56px);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-size: clamp(42px, 6.4vw, 76px);
+  line-height: 1.04;
+  letter-spacing: -.045em;
+  font-weight: 800;
+  text-wrap: balance;
 }
 .subtitle {
-  margin: 12px 0 0;
+  margin: 16px 0 0;
   color: var(--muted);
-  font-size: clamp(18px, 2.4vw, 24px);
+  font-size: clamp(20px, 2.3vw, 28px);
+  line-height: 1.35;
 }
-.meta {
-  margin: 18px 0 0;
+.lede {
+  max-width: 34em;
+  margin: 20px 0 0;
   color: var(--muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+.chips {
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.chips li {
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.actions { max-width: 100%; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink);
   font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform .16s ease, border-color .16s ease;
 }
-.links { margin: 18px 0 0; font-size: 15px; }
-.links a { margin-right: 16px; }
-main {
+.button:hover { transform: translateY(-1px); border-color: var(--accent); }
+.button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.button.primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.hero-cover { display: flex; justify-content: center; }
+.cover {
+  position: relative;
+  width: min(100%, 330px);
+  aspect-ratio: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 28px 26px 36px;
+  border-radius: 5px 18px 18px 5px;
+  background:
+    radial-gradient(300px 240px at 100% 0%, rgba(242, 163, 94, .20), transparent 65%),
+    linear-gradient(148deg, #2b241d 0%, #151310 58%, #0b0a09 100%);
+  color: #f8f1e7;
+  box-shadow: var(--shadow), 0 2px 0 rgba(255,255,255,.18) inset;
+  transform: rotate(2.4deg);
+  overflow: hidden;
+}
+.cover::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, .16);
+}
+.cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 27px, rgba(255,255,255,.035) 28px),
+    radial-gradient(240px 200px at 85% 85%, rgba(15, 118, 110, .22), transparent 70%);
+  pointer-events: none;
+}
+.cover-label {
+  position: relative;
+  z-index: 1;
+  color: #d9a66e;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.cover-title {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  font-size: clamp(34px, 4.3vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -.035em;
+  font-weight: 800;
+}
+.cover-title em { color: #f0b47b; font-style: normal; }
+.cover-sub {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+  color: #c9b8a6;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.cover-foot {
+  position: relative;
+  z-index: 1;
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  color: #a99988;
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.layout {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 8px 24px 64px;
+  padding: 18px 24px 72px;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 58px;
+  align-items: start;
 }
-.toc {
-  margin: 36px 0 8px;
-  padding: 22px 24px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+.sidebar {
+  position: sticky;
+  top: 84px;
+  min-width: 0;
 }
-.toc h2 { margin: 0 0 12px; font-size: 18px; }
-.toc ol {
-  margin: 0;
-  padding-left: 1.3em;
-  columns: 2;
-  column-gap: 36px;
+.sidebar-inner {
+  max-height: calc(100vh - 108px);
+  overflow: auto;
+  padding: 4px 16px 18px 0;
+  border-right: 1px solid var(--line);
+  scrollbar-width: thin;
 }
-.toc li { break-inside: avoid; margin: 4px 0; }
-.book { padding-top: 12px; }
-.book h1 {
-  margin: 3.4rem 0 1rem;
-  padding-top: 1.6rem;
+.sidebar-kicker {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.sidebar h2 {
+  margin: 0 0 14px;
+  font-size: 17px;
+  letter-spacing: -.01em;
+}
+.chapter-list { margin: 0; padding: 0; list-style: none; }
+.chapter-list li { margin: 2px 0; }
+.chapter-list a {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 6px 8px;
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+  text-decoration: none;
+}
+.chapter-list a:hover { background: var(--accent-soft); color: var(--ink); }
+.chapter-list .num {
+  flex: 0 0 1.7em;
+  color: var(--accent);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+}
+.sidebar-note {
+  margin: 18px 0 0;
+  padding-top: 14px;
   border-top: 1px solid var(--line);
-  font-size: clamp(26px, 4vw, 34px);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.book {
+  min-width: 0;
+  max-width: var(--prose);
+  font-size: 17.5px;
+  line-height: 1.92;
+}
+.book h1 {
+  position: relative;
+  margin: 4.2rem 0 1rem;
+  padding: 1.5rem 0 0 20px;
+  border-top: 1px solid var(--line);
+  font-size: clamp(28px, 3.8vw, 38px);
   line-height: 1.3;
-  scroll-margin-top: 24px;
+  letter-spacing: -.025em;
+  scroll-margin-top: 96px;
 }
-.book h1:first-child { border-top: 0; padding-top: 0; margin-top: 1.4rem; }
+.book h1::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1.55rem;
+  bottom: .2rem;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.book h1:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.book h1:first-child::before { top: .2rem; }
 .book h2 {
-  margin: 2.2rem 0 .8rem;
-  font-size: clamp(21px, 3vw, 25px);
+  margin: 2.6rem 0 .8rem;
+  font-size: clamp(22px, 2.6vw, 27px);
   line-height: 1.35;
-  scroll-margin-top: 24px;
+  letter-spacing: -.015em;
+  scroll-margin-top: 96px;
 }
-.book h3 { margin: 1.7rem 0 .6rem; font-size: 19px; }
-.book p { margin: .8rem 0; }
-.book ul, .book ol { padding-left: 1.6em; }
+.book h3 { margin: 1.8rem 0 .6rem; font-size: 19px; line-height: 1.45; }
+.book p { margin: .9rem 0; }
+.book ul, .book ol { padding-left: 1.55em; }
 .book li { margin: .35rem 0; }
+.book strong { font-weight: 700; }
 .book blockquote {
-  margin: 1.2rem 0;
-  padding: 10px 16px;
+  margin: 1.3rem 0;
+  padding: 12px 18px;
   border-left: 4px solid var(--accent);
+  border-radius: 0 9px 9px 0;
   background: var(--accent-soft);
-  border-radius: 0 8px 8px 0;
 }
 .book blockquote p { margin: .3rem 0; }
 .book code {
@@ -135,35 +402,86 @@ main {
   border-radius: 5px;
   background: var(--code);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: .9em;
+  font-size: .88em;
 }
 .book pre {
-  margin: 1.1rem 0;
-  padding: 16px;
+  margin: 1.15rem 0;
+  padding: 17px 18px;
   overflow-x: auto;
   background: var(--code);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 11px;
   line-height: 1.55;
 }
-.book pre code { padding: 0; background: transparent; font-size: 14px; }
+.book pre code { padding: 0; background: transparent; font-size: 13.5px; }
+.book pre, .book table { max-width: 100%; }
 .book table {
   display: block;
   width: 100%;
-  margin: 1.2rem 0;
+  margin: 1.25rem 0;
   overflow-x: auto;
   border-collapse: collapse;
-  font-size: 15px;
+  font-size: 14.5px;
+  line-height: 1.65;
 }
 .book th, .book td {
-  padding: 8px 10px;
+  padding: 9px 11px;
   border: 1px solid var(--line);
   text-align: left;
   vertical-align: top;
 }
-.book th { background: var(--code); white-space: nowrap; }
-.book hr { margin: 2.6rem 0; border: 0; border-top: 1px solid var(--line); }
-.book img { max-width: 100%; height: auto; }
+.book th { background: var(--code); white-space: nowrap; font-weight: 600; }
+.book tr:nth-child(even) td { background: color-mix(in srgb, var(--code) 42%, transparent); }
+.book hr { margin: 2.8rem 0; border: 0; border-top: 1px solid var(--line); }
+.book img { max-width: 100%; height: auto; border-radius: 8px; }
+.chapter-meta {
+  margin: 8px 0 1.5rem 20px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .03em;
+}
+.chapter { margin-bottom: 1.8rem; }
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 40px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.pager a {
+  display: block;
+  min-width: 0;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.45;
+  transition: border-color .16s ease, transform .16s ease;
+}
+.pager a:hover { border-color: var(--accent); transform: translateY(-1px); }
+.pager small { display: block; margin-bottom: 3px; color: var(--muted); font-size: 10px; letter-spacing: .08em; }
+.pager .next { text-align: right; grid-column: 2; }
+.pager .next span { display: block; }
+.pager .prev span { display: block; }
+.chapter-list a span:last-child { min-width: 0; overflow-wrap: anywhere; }
+
+footer {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 28px 24px 56px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+footer p { margin: .35rem 0; }
+footer a { color: var(--muted); }
+footer a:hover { color: var(--accent); }
+
 .top-link {
   position: fixed;
   right: 18px;
@@ -177,68 +495,134 @@ main {
   background: var(--paper);
   color: var(--ink);
   text-decoration: none;
-  font-size: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  font-size: 19px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+  z-index: 60;
 }
-footer {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 28px 24px 56px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 14px;
+.top-link:hover { border-color: var(--accent); color: var(--accent); }
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 56px; }
+  .hero-cover { display: none; }
+  .layout { grid-template-columns: 1fr; gap: 34px; }
+  .sidebar { position: static; }
+  .sidebar-inner {
+    max-height: none;
+    overflow: visible;
+    padding: 0 0 18px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .chapter-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px 14px;
+  }
+  .sidebar-note { display: none; }
 }
-footer p { margin: .35rem 0; }
-@media (max-width: 680px) {
+@media (max-width: 620px) {
   body { font-size: 16px; }
-  .hero { padding-top: 48px; }
-  .toc ol { columns: 1; }
-  main { padding-left: 18px; padding-right: 18px; }
-  .book table { font-size: 14px; }
-  .top-link { right: 12px; bottom: 12px; }
+  .topbar-inner { padding: 11px 16px; }
+  .topbar-links { gap: 12px; }
+  .topbar-links a:nth-child(2) { display: none; }
+  .hero { padding: 40px 16px 38px; }
+  .hero h1 { font-size: clamp(36px, 11vw, 54px); }
+  .layout { padding: 8px 16px 48px; }
+  .book { font-size: 16.5px; }
+  .chapter-list { grid-template-columns: 1fr; }
+  .book table { font-size: 13.5px; }
+  .pager { grid-template-columns: 1fr; }
+  .pager .next { grid-column: auto; }
+  .top-link { right: 12px; bottom: 12px; width: 38px; height: 38px; }
+  footer { padding-left: 16px; padding-right: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .progress { display: none; }
 }
 @media print {
-  :root { --bg: #fff; --paper: #fff; --ink: #000; --muted: #444; --line: #ccc; --code: #f2f2f2; }
-  body { font-size: 11pt; }
-  .hero { padding-top: 0; }
-  .toc, .top-link { display: none; }
+  :root {
+    --bg: #fff; --paper: #fff; --ink: #000; --muted: #444;
+    --line: #ccc; --code: #f2f2f2; --accent: #000;
+  }
+  body { background: #fff; font-size: 11pt; }
+  .topbar, .progress, .sidebar, .hero-cover, .top-link, .pager { display: none; }
+  .hero { display: block; padding: 0 0 12mm; }
+  .hero h1 { font-size: 28pt; }
+  .layout { display: block; padding: 0; }
+  .book { max-width: none; font-size: 11pt; }
   .book h1 { break-before: page; }
   .book h1:first-child { break-before: auto; }
-  a { color: #000; text-decoration: none; }
+  .book h1::before { display: none; }
+  .book a { color: #000; text-decoration: none; }
+  .book pre, .book table { break-inside: avoid; }
 }
 </style>
 </head>
 <body id="top">
-<header class="hero">
-  <p class="badge">非官方指南 · 无 Cookie · 无统计</p>
-  <h1>DeepSeek Harness 入门</h1>
-  <p class="subtitle">从第一次对话到自己的插件</p>
-  <p class="meta">给 0 基础用户的实用指南 · 2026-10 · 基于 DSH Desktop 0.2.1-rc.2</p>
-  <p class="links">
-    <a href="https://github.com/leether/dsh-book">GitHub 仓库</a>
-    <a href="#toc">目录</a>
-    <a href="https://github.com/leether/dsh-book/issues">反馈</a>
-  </p>
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="#toc">目录</a>
+      <a href="#start">开始阅读</a>
+      <a href="https://github.com/leether/dsh-book">GitHub</a>
+    </nav>
+  </div>
 </header>
-<main>
-  <nav class="toc" id="toc" aria-label="目录">
-    <h2>目录</h2>
-    <ol>
-      <li><a href="#1-dshharnessagent">第 1 章　认识 DSH：模型、Harness、Agent</a></li>
-      <li><a href="#2">第 2 章　第一次启动：桌面、模型、工作区</a></li>
-      <li><a href="#3">第 3 章　第一次任务：把需求说清楚</a></li>
-      <li><a href="#4">第 4 章　工作区、文件与权限</a></li>
-      <li><a href="#5">第 5 章　会话、上下文与记忆</a></li>
-      <li><a href="#6-agent">第 6 章　工具与技能：Agent 的手和脑</a></li>
-      <li><a href="#7-preset">第 7 章　模式与 Preset：同一个模型，不同工作方式</a></li>
-      <li><a href="#8-bundle-profile-dsh">第 8 章　插件、Bundle 与 Profile：给 DSH 装能力</a></li>
-      <li><a href="#9">第 9 章　创造模式：从使用者到扩展者</a></li>
-      <li><a href="#10">第 10 章　排错、安全与继续学习</a></li>
-      <li><a href="#_79">附录</a></li>
-    </ol>
-  </nav>
+<header class="hero">
+  <div class="hero-copy">
+    <p class="badge">非官方指南 · 无 Cookie · 无统计</p>
+    <h1>DeepSeek Harness 入门</h1>
+    <p class="subtitle">从第一次对话到自己的插件</p>
+    <p class="lede">给 0 基础用户的实用指南。先学会用，再理解原理，最后扩展它。</p>
+    <ul class="chips">
+      <li>10 章 + 附录</li>
+      <li>约 2.2 万字</li>
+      <li>约 44 分钟</li>
+      <li>DSH Desktop 0.2.1-rc.2</li>
+    </ul>
+    <div class="actions">
+      <a class="button primary" href="#start">开始阅读</a>
+      <a class="button" href="https://github.com/leether/dsh-book">GitHub 仓库</a>
+    </div>
+  </div>
+  <div class="hero-cover" aria-hidden="true">
+    <div class="cover">
+      <span class="cover-label">DSH Field Guide</span>
+      <span class="cover-title">DeepSeek<br>Harness<br><em>入门</em></span>
+      <span class="cover-sub">从第一次对话<br>到自己的插件</span>
+      <span class="cover-foot">0 基础 · 10 章 + 附录</span>
+    </div>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
+        <li><a href="#1-dshharnessagent"><span class="num">01</span><span>认识 DSH：模型、Harness、Agent</span></a></li>
+        <li><a href="#2"><span class="num">02</span><span>第一次启动：桌面、模型、工作区</span></a></li>
+        <li><a href="#3"><span class="num">03</span><span>第一次任务：把需求说清楚</span></a></li>
+        <li><a href="#4"><span class="num">04</span><span>工作区、文件与权限</span></a></li>
+        <li><a href="#5"><span class="num">05</span><span>会话、上下文与记忆</span></a></li>
+        <li><a href="#6-agent"><span class="num">06</span><span>工具与技能：Agent 的手和脑</span></a></li>
+        <li><a href="#7-preset"><span class="num">07</span><span>模式与 Preset：同一个模型，不同工作方式</span></a></li>
+        <li><a href="#8-bundle-profile-dsh"><span class="num">08</span><span>插件、Bundle 与 Profile：给 DSH 装能力</span></a></li>
+        <li><a href="#9"><span class="num">09</span><span>创造模式：从使用者到扩展者</span></a></li>
+        <li><a href="#10"><span class="num">10</span><span>排错、安全与继续学习</span></a></li>
+        <li><a href="#_79"><span class="num">附</span><span>附录</span></a></li>
+      </ol>
+      <p class="sidebar-note">非官方学习材料 · MIT License<br>无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
   <article class="book">
+<section class="chapter">
 <h1 id="1-dshharnessagent">第 1 章　认识 DSH：模型、Harness、Agent</h1>
+<p class="chapter-meta">约 5 分钟 · 2,301 字 · 10 个小节</p>
 <h2 id="_1">本章你会学会</h2>
 <ul>
 <li>用一句话解释 DSH 是什么；</li>
@@ -435,7 +819,14 @@ footer p { margin: .35rem 0; }
 <li>Desktop 最适合入门；Web 和 Headless 是不同入口，不是不同产品。</li>
 </ul>
 <hr />
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#toc"><small>返回</small><span>目录</span></a>
+  <a class="next" href="#2"><small>下一章</small><span>第一次启动：桌面、模型、工作区</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="2">第 2 章　第一次启动：桌面、模型、工作区</h1>
+<p class="chapter-meta">约 4 分钟 · 1,913 字 · 11 个小节</p>
 <h2 id="_7">本章你会学会</h2>
 <ul>
 <li>打开 DSH Desktop；</li>
@@ -613,7 +1004,14 @@ footer p { margin: .35rem 0; }
 <li>标准模式是日常默认；创造模式是另一件事。</li>
 </ul>
 <hr />
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#1-dshharnessagent"><small>上一章</small><span>认识 DSH：模型、Harness、…</span></a>
+  <a class="next" href="#3"><small>下一章</small><span>第一次任务：把需求说清楚</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="3">第 3 章　第一次任务：把需求说清楚</h1>
+<p class="chapter-meta">约 4 分钟 · 1,789 字 · 11 个小节</p>
 <h2 id="_14">本章你会学会</h2>
 <ul>
 <li>用“目标 + 输入 + 约束 + 验收”描述任务；</li>
@@ -825,7 +1223,14 @@ footer p { margin: .35rem 0; }
 <li>让它生成一个 <code>summary.md</code>，然后检查原文件是否被改动。</li>
 <li>用一句具体反馈让它修改摘要，而不是说“重做”。</li>
 </ol>
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#2"><small>上一章</small><span>第一次启动：桌面、模型、工作区</span></a>
+  <a class="next" href="#4"><small>下一章</small><span>工作区、文件与权限</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="4">第 4 章　工作区、文件与权限</h1>
+<p class="chapter-meta">约 4 分钟 · 2,054 字 · 11 个小节</p>
 <h2 id="_28">本章你会学会</h2>
 <ul>
 <li>理解工作区为什么是“安全边界”；</li>
@@ -1037,7 +1442,14 @@ git restore .
 <li><code>AGENTS.md</code> 用来立规矩，但不能替代权限控制。</li>
 </ul>
 <hr />
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#3"><small>上一章</small><span>第一次任务：把需求说清楚</span></a>
+  <a class="next" href="#5"><small>下一章</small><span>会话、上下文与记忆</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="5">第 5 章　会话、上下文与记忆</h1>
+<p class="chapter-meta">约 4 分钟 · 1,921 字 · 11 个小节</p>
 <h2 id="_38">本章你会学会</h2>
 <ul>
 <li>理解 Session 和 Context Window；</li>
@@ -1226,7 +1638,14 @@ git restore .
 <li>记忆插件是补充，不是替代。</li>
 </ul>
 <hr />
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#4"><small>上一章</small><span>工作区、文件与权限</span></a>
+  <a class="next" href="#6-agent"><small>下一章</small><span>工具与技能：Agent 的手和脑</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="6-agent">第 6 章　工具与技能：Agent 的手和脑</h1>
+<p class="chapter-meta">约 4 分钟 · 2,086 字 · 12 个小节</p>
 <h2 id="_46">本章你会学会</h2>
 <ul>
 <li>认识 Agent 常用工具的分类；</li>
@@ -1482,7 +1901,14 @@ git restore .
 <li>问它当前有哪些 Skill 与任务相关，只列名称，不执行。</li>
 <li>用 <code>present</code> 交付一个文件，观察卡片行为。</li>
 </ol>
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#5"><small>上一章</small><span>会话、上下文与记忆</span></a>
+  <a class="next" href="#7-preset"><small>下一章</small><span>模式与 Preset：同一个模型，不…</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="7-preset">第 7 章　模式与 Preset：同一个模型，不同工作方式</h1>
+<p class="chapter-meta">约 4 分钟 · 2,167 字 · 12 个小节</p>
 <h2 id="_55">本章你会学会</h2>
 <ul>
 <li>理解 Preset 不是模型，也不是另一个软件；</li>
@@ -1698,7 +2124,14 @@ plugins:
 <li>Preset 不等于安全隔离。</li>
 </ul>
 <hr />
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#6-agent"><small>上一章</small><span>工具与技能：Agent 的手和脑</span></a>
+  <a class="next" href="#8-bundle-profile-dsh"><small>下一章</small><span>插件、Bundle 与 Profil…</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="8-bundle-profile-dsh">第 8 章　插件、Bundle 与 Profile：给 DSH 装能力</h1>
+<p class="chapter-meta">约 5 分钟 · 2,482 字 · 12 个小节</p>
 <h2 id="_60">本章你会学会</h2>
 <ul>
 <li>分清 Plugin、Bundle、Profile 三个词；</li>
@@ -1960,7 +2393,14 @@ Preset（standard / creator）
 <li>解释为什么“Preset 不是安全沙箱”。</li>
 <li>写下一个“插件装坏了怎么回滚”的步骤清单。</li>
 </ol>
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#7-preset"><small>上一章</small><span>模式与 Preset：同一个模型，不…</span></a>
+  <a class="next" href="#9"><small>下一章</small><span>创造模式：从使用者到扩展者</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="9">第 9 章　创造模式：从使用者到扩展者</h1>
+<p class="chapter-meta">约 4 分钟 · 1,993 字 · 10 个小节</p>
 <h2 id="_68">本章你会学会</h2>
 <ul>
 <li>创造模式到底是什么，不是什么；</li>
@@ -2156,7 +2596,14 @@ Preset（standard / creator）
 <li>先最小版本，再验证、再迭代。</li>
 </ul>
 <hr />
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#8-bundle-profile-dsh"><small>上一章</small><span>插件、Bundle 与 Profil…</span></a>
+  <a class="next" href="#10"><small>下一章</small><span>排错、安全与继续学习</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="10">第 10 章　排错、安全与继续学习</h1>
+<p class="chapter-meta">约 3 分钟 · 1,638 字 · 8 个小节</p>
 <h2 id="_71">本章你会学会</h2>
 <ul>
 <li>用一张表定位常见问题；</li>
@@ -2372,7 +2819,14 @@ Preset  = 单 Agent 的能力组合
 <li>先会用，再扩展；不要一上来做很大的插件。</li>
 </ul>
 <hr />
+<nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#9"><small>上一章</small><span>创造模式：从使用者到扩展者</span></a>
+  <a class="next" href="#_79"><small>下一章</small><span>附录</span></a>
+</nav>
+</section>
+<section class="chapter">
 <h1 id="_79">附录</h1>
+<p class="chapter-meta">约 3 分钟 · 1,355 字 · 5 个小节</p>
 <h2 id="a">A. 术语表</h2>
 <table>
 <thead>
@@ -2545,7 +2999,11 @@ Preset  = 单 Agent 的能力组合
 <li><strong>先小步，再扩大。</strong></li>
 <li><strong>密钥不进对话，破坏性操作先备份。</strong></li>
 </ol>
-<p>当你熟悉了这些，再去碰 Preset、Plugin、Bundle、Creator。那时你看到的不再是一堆名词，而是一套可以按需组合的工作台。</p>
+<p>当你熟悉了这些，再去碰 Preset、Plugin、Bundle、Creator。那时你看到的不再是一堆名词，而是一套可以按需组合的工作台。</p><nav class="pager" aria-label="章节导航">
+  <a class="prev" href="#10"><small>上一章</small><span>排错、安全与继续学习</span></a>
+  <a class="next" href="#top"><small>结束</small><span>回到顶部</span></a>
+</nav>
+</section>
   </article>
 </main>
 <a class="top-link" href="#top" aria-label="回到顶部">↑</a>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the static GitHub Pages site from dsh-book.md.
 
-The site is intentionally one self-contained HTML file:
+The site is intentionally static and self-contained:
 - no JavaScript
 - no cookies or analytics
 - no external fonts, styles, images, or CDNs
@@ -27,6 +27,7 @@ TEMPLATE = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#b45309">
 <title>DeepSeek Harness 入门 · 从第一次对话到自己的插件</title>
 <meta name="description" content="给 0 基础用户的 DeepSeek Harness 使用指南：模型、工作区、权限、会话、工具、技能、Preset、插件与创造模式。">
 <meta property="og:title" content="DeepSeek Harness 入门">
@@ -34,123 +35,389 @@ TEMPLATE = """<!doctype html>
 <meta property="og:type" content="website">
 <meta property="og:url" content="{site_url}">
 <meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 :root {
-  --bg: #fbfaf7;
-  --paper: #ffffff;
-  --ink: #1f2328;
-  --muted: #667085;
-  --line: #e5e1d8;
+  --bg: #f7f4ed;
+  --paper: #fffefa;
+  --ink: #20211f;
+  --muted: #6b6a63;
+  --line: #e3ded2;
   --accent: #b45309;
-  --accent-soft: #fff4e5;
-  --code: #f4f1ea;
-  --max: 920px;
+  --accent-2: #0f766e;
+  --accent-soft: #fff3e0;
+  --code: #f2eee5;
+  --shadow: 0 24px 60px rgba(60, 40, 20, .12);
+  --max: 1120px;
+  --prose: 760px;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #151515;
-    --paper: #1d1d1f;
-    --ink: #ececec;
-    --muted: #a3a3a3;
-    --line: #333333;
-    --accent: #f0a35e;
-    --accent-soft: #2b2118;
-    --code: #262626;
+    --bg: #111214;
+    --paper: #1a1b1e;
+    --ink: #f1efe9;
+    --muted: #a7a49b;
+    --line: #303136;
+    --accent: #f2a35e;
+    --accent-2: #5eead4;
+    --accent-soft: #2a2118;
+    --code: #24252a;
+    --shadow: 0 24px 60px rgba(0, 0, 0, .35);
   }
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+html, body { max-width: 100%; overflow-x: hidden; }
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(900px 520px at 8% -8%, rgba(180, 83, 9, .10), transparent 62%),
+    radial-gradient(800px 520px at 100% 0%, rgba(15, 118, 110, .08), transparent 62%),
+    var(--bg);
   color: var(--ink);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
   font-size: 17px;
-  line-height: 1.8;
+  line-height: 1.85;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 a { color: var(--accent); text-underline-offset: 3px; }
 a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--accent); color: #fff; }
+
+.progress {
+  display: none;
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 100;
+  background: linear-gradient(90deg, var(--accent), #f59e0b, var(--accent-2));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+@supports (animation-timeline: scroll()) {
+  .progress {
+    display: block;
+    animation: reading-progress linear;
+    animation-timeline: scroll(root block);
+  }
+}
+@keyframes reading-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+@supports (background: color-mix(in srgb, #fff 80%, transparent)) {
+  .topbar {
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+.topbar-inner {
+  max-width: var(--max);
+  flex-wrap: wrap;
+  margin: 0 auto;
+  padding: 13px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 9px;
+  letter-spacing: .08em;
+}
+.topbar-links { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; min-width: 0; font-size: 14px; }
+.topbar-links a { color: var(--muted); text-decoration: none; }
+.topbar-links a:hover { color: var(--accent); }
+
 .hero {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 72px 24px 32px;
-  border-bottom: 1px solid var(--line);
+  padding: 82px 24px 54px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(260px, .88fr);
+  gap: 56px;
+  align-items: center;
 }
+.hero-copy { min-width: 0; }
 .badge {
   display: inline-block;
-  margin: 0 0 14px;
-  padding: 4px 10px;
+  margin: 0 0 18px;
+  padding: 5px 11px;
   border: 1px solid var(--line);
   border-radius: 999px;
+  background: var(--paper);
   color: var(--muted);
-  font-size: 13px;
-  letter-spacing: .04em;
+  font-size: 12px;
+  letter-spacing: .06em;
 }
 .hero h1 {
   margin: 0;
-  font-size: clamp(34px, 6vw, 56px);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-size: clamp(42px, 6.4vw, 76px);
+  line-height: 1.04;
+  letter-spacing: -.045em;
+  font-weight: 800;
+  text-wrap: balance;
 }
 .subtitle {
-  margin: 12px 0 0;
+  margin: 16px 0 0;
   color: var(--muted);
-  font-size: clamp(18px, 2.4vw, 24px);
+  font-size: clamp(20px, 2.3vw, 28px);
+  line-height: 1.35;
 }
-.meta {
-  margin: 18px 0 0;
+.lede {
+  max-width: 34em;
+  margin: 20px 0 0;
   color: var(--muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+.chips {
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.chips li {
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.actions { max-width: 100%; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink);
   font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform .16s ease, border-color .16s ease;
 }
-.links { margin: 18px 0 0; font-size: 15px; }
-.links a { margin-right: 16px; }
-main {
+.button:hover { transform: translateY(-1px); border-color: var(--accent); }
+.button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.button.primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.hero-cover { display: flex; justify-content: center; }
+.cover {
+  position: relative;
+  width: min(100%, 330px);
+  aspect-ratio: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 28px 26px 36px;
+  border-radius: 5px 18px 18px 5px;
+  background:
+    radial-gradient(300px 240px at 100% 0%, rgba(242, 163, 94, .20), transparent 65%),
+    linear-gradient(148deg, #2b241d 0%, #151310 58%, #0b0a09 100%);
+  color: #f8f1e7;
+  box-shadow: var(--shadow), 0 2px 0 rgba(255,255,255,.18) inset;
+  transform: rotate(2.4deg);
+  overflow: hidden;
+}
+.cover::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, .16);
+}
+.cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 27px, rgba(255,255,255,.035) 28px),
+    radial-gradient(240px 200px at 85% 85%, rgba(15, 118, 110, .22), transparent 70%);
+  pointer-events: none;
+}
+.cover-label {
+  position: relative;
+  z-index: 1;
+  color: #d9a66e;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.cover-title {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  font-size: clamp(34px, 4.3vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -.035em;
+  font-weight: 800;
+}
+.cover-title em { color: #f0b47b; font-style: normal; }
+.cover-sub {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+  color: #c9b8a6;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.cover-foot {
+  position: relative;
+  z-index: 1;
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  color: #a99988;
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.layout {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 8px 24px 64px;
+  padding: 18px 24px 72px;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 58px;
+  align-items: start;
 }
-.toc {
-  margin: 36px 0 8px;
-  padding: 22px 24px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+.sidebar {
+  position: sticky;
+  top: 84px;
+  min-width: 0;
 }
-.toc h2 { margin: 0 0 12px; font-size: 18px; }
-.toc ol {
-  margin: 0;
-  padding-left: 1.3em;
-  columns: 2;
-  column-gap: 36px;
+.sidebar-inner {
+  max-height: calc(100vh - 108px);
+  overflow: auto;
+  padding: 4px 16px 18px 0;
+  border-right: 1px solid var(--line);
+  scrollbar-width: thin;
 }
-.toc li { break-inside: avoid; margin: 4px 0; }
-.book { padding-top: 12px; }
-.book h1 {
-  margin: 3.4rem 0 1rem;
-  padding-top: 1.6rem;
+.sidebar-kicker {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.sidebar h2 {
+  margin: 0 0 14px;
+  font-size: 17px;
+  letter-spacing: -.01em;
+}
+.chapter-list { margin: 0; padding: 0; list-style: none; }
+.chapter-list li { margin: 2px 0; }
+.chapter-list a {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 6px 8px;
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+  text-decoration: none;
+}
+.chapter-list a:hover { background: var(--accent-soft); color: var(--ink); }
+.chapter-list .num {
+  flex: 0 0 1.7em;
+  color: var(--accent);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+}
+.sidebar-note {
+  margin: 18px 0 0;
+  padding-top: 14px;
   border-top: 1px solid var(--line);
-  font-size: clamp(26px, 4vw, 34px);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.book {
+  min-width: 0;
+  max-width: var(--prose);
+  font-size: 17.5px;
+  line-height: 1.92;
+}
+.book h1 {
+  position: relative;
+  margin: 4.2rem 0 1rem;
+  padding: 1.5rem 0 0 20px;
+  border-top: 1px solid var(--line);
+  font-size: clamp(28px, 3.8vw, 38px);
   line-height: 1.3;
-  scroll-margin-top: 24px;
+  letter-spacing: -.025em;
+  scroll-margin-top: 96px;
 }
-.book h1:first-child { border-top: 0; padding-top: 0; margin-top: 1.4rem; }
+.book h1::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1.55rem;
+  bottom: .2rem;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.book h1:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.book h1:first-child::before { top: .2rem; }
 .book h2 {
-  margin: 2.2rem 0 .8rem;
-  font-size: clamp(21px, 3vw, 25px);
+  margin: 2.6rem 0 .8rem;
+  font-size: clamp(22px, 2.6vw, 27px);
   line-height: 1.35;
-  scroll-margin-top: 24px;
+  letter-spacing: -.015em;
+  scroll-margin-top: 96px;
 }
-.book h3 { margin: 1.7rem 0 .6rem; font-size: 19px; }
-.book p { margin: .8rem 0; }
-.book ul, .book ol { padding-left: 1.6em; }
+.book h3 { margin: 1.8rem 0 .6rem; font-size: 19px; line-height: 1.45; }
+.book p { margin: .9rem 0; }
+.book ul, .book ol { padding-left: 1.55em; }
 .book li { margin: .35rem 0; }
+.book strong { font-weight: 700; }
 .book blockquote {
-  margin: 1.2rem 0;
-  padding: 10px 16px;
+  margin: 1.3rem 0;
+  padding: 12px 18px;
   border-left: 4px solid var(--accent);
+  border-radius: 0 9px 9px 0;
   background: var(--accent-soft);
-  border-radius: 0 8px 8px 0;
 }
 .book blockquote p { margin: .3rem 0; }
 .book code {
@@ -158,35 +425,86 @@ main {
   border-radius: 5px;
   background: var(--code);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: .9em;
+  font-size: .88em;
 }
 .book pre {
-  margin: 1.1rem 0;
-  padding: 16px;
+  margin: 1.15rem 0;
+  padding: 17px 18px;
   overflow-x: auto;
   background: var(--code);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 11px;
   line-height: 1.55;
 }
-.book pre code { padding: 0; background: transparent; font-size: 14px; }
+.book pre code { padding: 0; background: transparent; font-size: 13.5px; }
+.book pre, .book table { max-width: 100%; }
 .book table {
   display: block;
   width: 100%;
-  margin: 1.2rem 0;
+  margin: 1.25rem 0;
   overflow-x: auto;
   border-collapse: collapse;
-  font-size: 15px;
+  font-size: 14.5px;
+  line-height: 1.65;
 }
 .book th, .book td {
-  padding: 8px 10px;
+  padding: 9px 11px;
   border: 1px solid var(--line);
   text-align: left;
   vertical-align: top;
 }
-.book th { background: var(--code); white-space: nowrap; }
-.book hr { margin: 2.6rem 0; border: 0; border-top: 1px solid var(--line); }
-.book img { max-width: 100%; height: auto; }
+.book th { background: var(--code); white-space: nowrap; font-weight: 600; }
+.book tr:nth-child(even) td { background: color-mix(in srgb, var(--code) 42%, transparent); }
+.book hr { margin: 2.8rem 0; border: 0; border-top: 1px solid var(--line); }
+.book img { max-width: 100%; height: auto; border-radius: 8px; }
+.chapter-meta {
+  margin: 8px 0 1.5rem 20px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .03em;
+}
+.chapter { margin-bottom: 1.8rem; }
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 40px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.pager a {
+  display: block;
+  min-width: 0;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.45;
+  transition: border-color .16s ease, transform .16s ease;
+}
+.pager a:hover { border-color: var(--accent); transform: translateY(-1px); }
+.pager small { display: block; margin-bottom: 3px; color: var(--muted); font-size: 10px; letter-spacing: .08em; }
+.pager .next { text-align: right; grid-column: 2; }
+.pager .next span { display: block; }
+.pager .prev span { display: block; }
+.chapter-list a span:last-child { min-width: 0; overflow-wrap: anywhere; }
+
+footer {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 28px 24px 56px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+footer p { margin: .35rem 0; }
+footer a { color: var(--muted); }
+footer a:hover { color: var(--accent); }
+
 .top-link {
   position: fixed;
   right: 18px;
@@ -200,56 +518,120 @@ main {
   background: var(--paper);
   color: var(--ink);
   text-decoration: none;
-  font-size: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  font-size: 19px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+  z-index: 60;
 }
-footer {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 28px 24px 56px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 14px;
+.top-link:hover { border-color: var(--accent); color: var(--accent); }
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 56px; }
+  .hero-cover { display: none; }
+  .layout { grid-template-columns: 1fr; gap: 34px; }
+  .sidebar { position: static; }
+  .sidebar-inner {
+    max-height: none;
+    overflow: visible;
+    padding: 0 0 18px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .chapter-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px 14px;
+  }
+  .sidebar-note { display: none; }
 }
-footer p { margin: .35rem 0; }
-@media (max-width: 680px) {
+@media (max-width: 620px) {
   body { font-size: 16px; }
-  .hero { padding-top: 48px; }
-  .toc ol { columns: 1; }
-  main { padding-left: 18px; padding-right: 18px; }
-  .book table { font-size: 14px; }
-  .top-link { right: 12px; bottom: 12px; }
+  .topbar-inner { padding: 11px 16px; }
+  .topbar-links { gap: 12px; }
+  .topbar-links a:nth-child(2) { display: none; }
+  .hero { padding: 40px 16px 38px; }
+  .hero h1 { font-size: clamp(36px, 11vw, 54px); }
+  .layout { padding: 8px 16px 48px; }
+  .book { font-size: 16.5px; }
+  .chapter-list { grid-template-columns: 1fr; }
+  .book table { font-size: 13.5px; }
+  .pager { grid-template-columns: 1fr; }
+  .pager .next { grid-column: auto; }
+  .top-link { right: 12px; bottom: 12px; width: 38px; height: 38px; }
+  footer { padding-left: 16px; padding-right: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .progress { display: none; }
 }
 @media print {
-  :root { --bg: #fff; --paper: #fff; --ink: #000; --muted: #444; --line: #ccc; --code: #f2f2f2; }
-  body { font-size: 11pt; }
-  .hero { padding-top: 0; }
-  .toc, .top-link { display: none; }
+  :root {
+    --bg: #fff; --paper: #fff; --ink: #000; --muted: #444;
+    --line: #ccc; --code: #f2f2f2; --accent: #000;
+  }
+  body { background: #fff; font-size: 11pt; }
+  .topbar, .progress, .sidebar, .hero-cover, .top-link, .pager { display: none; }
+  .hero { display: block; padding: 0 0 12mm; }
+  .hero h1 { font-size: 28pt; }
+  .layout { display: block; padding: 0; }
+  .book { max-width: none; font-size: 11pt; }
   .book h1 { break-before: page; }
   .book h1:first-child { break-before: auto; }
-  a { color: #000; text-decoration: none; }
+  .book h1::before { display: none; }
+  .book a { color: #000; text-decoration: none; }
+  .book pre, .book table { break-inside: avoid; }
 }
 </style>
 </head>
 <body id="top">
-<header class="hero">
-  <p class="badge">非官方指南 · 无 Cookie · 无统计</p>
-  <h1>DeepSeek Harness 入门</h1>
-  <p class="subtitle">从第一次对话到自己的插件</p>
-  <p class="meta">给 0 基础用户的实用指南 · 2026-10 · 基于 DSH Desktop 0.2.1-rc.2</p>
-  <p class="links">
-    <a href="{repo_url}">GitHub 仓库</a>
-    <a href="#toc">目录</a>
-    <a href="{repo_url}/issues">反馈</a>
-  </p>
+<div class="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top"><span class="brand-mark">DSH</span><span>入门</span></a>
+    <nav class="topbar-links" aria-label="快速导航">
+      <a href="#toc">目录</a>
+      <a href="#start">开始阅读</a>
+      <a href="{repo_url}">GitHub</a>
+    </nav>
+  </div>
 </header>
-<main>
-  <nav class="toc" id="toc" aria-label="目录">
-    <h2>目录</h2>
-    <ol>
+<header class="hero">
+  <div class="hero-copy">
+    <p class="badge">非官方指南 · 无 Cookie · 无统计</p>
+    <h1>DeepSeek Harness 入门</h1>
+    <p class="subtitle">从第一次对话到自己的插件</p>
+    <p class="lede">给 0 基础用户的实用指南。先学会用，再理解原理，最后扩展它。</p>
+    <ul class="chips">
+      <li>{chapter_count} 章 + 附录</li>
+      <li>约 {total_words} 万字</li>
+      <li>约 {total_minutes} 分钟</li>
+      <li>DSH Desktop 0.2.1-rc.2</li>
+    </ul>
+    <div class="actions">
+      <a class="button primary" href="#start">开始阅读</a>
+      <a class="button" href="{repo_url}">GitHub 仓库</a>
+    </div>
+  </div>
+  <div class="hero-cover" aria-hidden="true">
+    <div class="cover">
+      <span class="cover-label">DSH Field Guide</span>
+      <span class="cover-title">DeepSeek<br>Harness<br><em>入门</em></span>
+      <span class="cover-sub">从第一次对话<br>到自己的插件</span>
+      <span class="cover-foot">0 基础 · {chapter_count} 章 + 附录</span>
+    </div>
+  </div>
+</header>
+<main class="layout" id="start">
+  <aside class="sidebar">
+    <div class="sidebar-inner" id="toc">
+      <p class="sidebar-kicker">Contents</p>
+      <h2>本书地图</h2>
+      <ol class="chapter-list">
 {toc}
-    </ol>
-  </nav>
+      </ol>
+      <p class="sidebar-note">非官方学习材料 · MIT License<br>无 JavaScript / 无 Cookie / 无第三方请求</p>
+    </div>
+  </aside>
   <article class="book">
 {body}
   </article>
@@ -269,6 +651,11 @@ def strip_tags(value: str) -> str:
     return html.unescape(re.sub(r"<[^>]+>", "", value)).strip()
 
 
+def short_title(value: str, limit: int = 18) -> str:
+    value = value.strip()
+    return value if len(value) <= limit else value[:limit].rstrip() + "…"
+
+
 def main() -> None:
     text = SOURCE.read_text(encoding="utf-8")
     start = text.find("# 第 1 章")
@@ -282,19 +669,83 @@ def main() -> None:
     )
     body_html = parser.convert(body_md)
 
-    chapters = re.findall(r'<h1 id="([^"]+)">(.*?)</h1>', body_html, flags=re.S)
-    if not chapters:
+    matches = list(re.finditer(r'<h1 id="([^"]+)">(.*?)</h1>', body_html, flags=re.S))
+    if not matches:
         raise SystemExit("no chapter headings found in generated HTML")
+
+    chapters = []
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(body_html)
+        chunk = body_html[match.start():end]
+        raw_title = strip_tags(match.group(2))
+        title = re.sub(r"^第\s*\d+\s*章\s*[　\s]*", "", raw_title).strip() or raw_title
+        plain = re.sub(r"\s+", "", strip_tags(chunk))
+        chars = len(plain)
+        sections = len(re.findall(r"<h2\b", chunk))
+        minutes = max(1, round(chars / 500))
+        is_appendix = title.startswith("附录")
+        number = "附" if is_appendix else f"{index + 1:02d}"
+        chapters.append({
+            "anchor": match.group(1),
+            "title": title,
+            "number": number,
+            "chars": chars,
+            "minutes": minutes,
+            "sections": sections,
+            "html": chunk,
+            "is_appendix": is_appendix,
+        })
+
+    body_parts = []
+    for index, chapter in enumerate(chapters):
+        meta = (
+            f'<p class="chapter-meta">约 {chapter["minutes"]} 分钟 · '
+            f'{chapter["chars"]:,} 字 · {chapter["sections"]} 个小节</p>'
+        )
+        chunk = chapter["html"].replace("</h1>", "</h1>\n" + meta, 1)
+
+        if index == 0:
+            prev_href, prev_small, prev_label = "#toc", "返回", "目录"
+        else:
+            previous = chapters[index - 1]
+            prev_href = f'#{previous["anchor"]}'
+            prev_small, prev_label = "上一章", short_title(previous["title"])
+
+        if index + 1 < len(chapters):
+            following = chapters[index + 1]
+            next_href = f'#{following["anchor"]}'
+            next_small, next_label = "下一章", short_title(following["title"])
+        else:
+            next_href, next_small, next_label = "#top", "结束", "回到顶部"
+
+        pager = (
+            '<nav class="pager" aria-label="章节导航">\n'
+            f'  <a class="prev" href="{prev_href}"><small>{prev_small}</small><span>{html.escape(prev_label)}</span></a>\n'
+            f'  <a class="next" href="{next_href}"><small>{next_small}</small><span>{html.escape(next_label)}</span></a>\n'
+            "</nav>"
+        )
+        body_parts.append(f'<section class="chapter">\n{chunk}{pager}\n</section>')
+
     toc = "\n".join(
-        f'      <li><a href="#{html.escape(anchor)}">{html.escape(strip_tags(title))}</a></li>'
-        for anchor, title in chapters
+        f'        <li><a href="#{html.escape(chapter["anchor"])}">'
+        f'<span class="num">{chapter["number"]}</span>'
+        f'<span>{html.escape(chapter["title"])}</span></a></li>'
+        for chapter in chapters
     )
+
+    total_chars = sum(chapter["chars"] for chapter in chapters)
+    total_minutes = sum(chapter["minutes"] for chapter in chapters)
+    main_chapters = sum(1 for chapter in chapters if not chapter["is_appendix"])
 
     page = (
         TEMPLATE.replace("{site_url}", SITE_URL)
         .replace("{repo_url}", REPO_URL)
+        .replace("{chapter_count}", str(main_chapters))
+        .replace("{total_chars}", f"{total_chars:,}")
+        .replace("{total_words}", f"{total_chars / 10000:.1f}")
+        .replace("{total_minutes}", str(total_minutes))
         .replace("{toc}", toc)
-        .replace("{body}", body_html)
+        .replace("{body}", "\n".join(body_parts))
     )
 
     # Privacy guard: the Pages build must stay static and self-contained.
@@ -306,7 +757,10 @@ def main() -> None:
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(page, encoding="utf-8")
-    print(f"wrote {OUTPUT.relative_to(ROOT)} ({len(page):,} chars, {len(chapters)} chapters)")
+    print(
+        f"wrote {OUTPUT.relative_to(ROOT)} "
+        f"({len(page):,} chars, {len(chapters)} chapters, {total_chars:,} chars of text)"
+    )
 
 
 if __name__ == "__main__":
