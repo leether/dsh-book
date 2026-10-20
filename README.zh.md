@@ -217,6 +217,7 @@ Pages 会在一两分钟内自动更新。
 .
 ├── README.md            # English README（默认显示）
 ├── README.zh.md         # 中文 README（本文件）
+├── AGENTS.md            # Agent 工作约束
 ├── dsh-book.md          # 中文完整正文（10 章 + 附录）
 ├── cognition.zh.md      # 中文认知篇源文件
 ├── 00-front.md          # 中文标题页与目录

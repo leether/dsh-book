@@ -224,6 +224,7 @@ No JavaScript, cookies, analytics, external fonts, or third-party asset requests
 .
 ├── README.md              # this English README (default)
 ├── README.zh.md           # Chinese README
+├── AGENTS.md              # Agent working rules
 ├── dsh-book.md            # Chinese full text
 ├── cognition.zh.md        # Chinese cognition article source
 ├── 00-front.md            # Chinese title page
