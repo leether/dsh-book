@@ -13,6 +13,7 @@ The site is intentionally static and self-contained:
 
 from __future__ import annotations
 
+import hashlib
 import html
 import re
 from pathlib import Path
@@ -23,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE_URL = "https://leether.github.io/dsh-book/"
 REPO_URL = "https://github.com/leether/dsh-book"
 STYLE_FILE = "style.css"
+STYLE_VERSION = hashlib.sha256((ROOT / "docs" / STYLE_FILE).read_bytes()).hexdigest()[:8]
 
 LANGUAGES = [
     {
@@ -262,7 +264,7 @@ def head(lang: dict, title: str, description: str, slug: str) -> str:
 <meta name="twitter:image" content="https://leether.github.io/dsh-book/cover.jpg">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
 <link rel="icon" href="{lang['asset_prefix']}favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="{lang['asset_prefix']}{STYLE_FILE}">
+<link rel="stylesheet" href="{lang['asset_prefix']}{STYLE_FILE}?v={STYLE_VERSION}">
 </head>
 <body id="top">
 <div class="progress" aria-hidden="true"></div>
