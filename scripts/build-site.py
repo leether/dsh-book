@@ -254,7 +254,12 @@ def head(lang: dict, title: str, description: str, slug: str) -> str:
 <link rel="alternate" hreflang="zh-CN" href="{zh_url}">
 <link rel="alternate" hreflang="en" href="{en_url}">
 <link rel="alternate" hreflang="x-default" href="{zh_url}">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://leether.github.io/dsh-book/cover.jpg">
+<meta property="og:image:width" content="900">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:alt" content="A brass armillary sphere holding a glowing amber orb on a dark field.">
+<meta name="twitter:image" content="https://leether.github.io/dsh-book/cover.jpg">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
 <link rel="icon" href="{lang['asset_prefix']}favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="{lang['asset_prefix']}{STYLE_FILE}">

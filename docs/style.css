@@ -208,10 +208,12 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
   padding: 30px 28px 26px 36px;
   border-radius: 5px 18px 18px 5px;
   background:
-    radial-gradient(300px 240px at 100% 0%, rgba(242, 163, 94, .20), transparent 65%),
-    linear-gradient(148deg, #2b241d 0%, #151310 58%, #0b0a09 100%);
+    linear-gradient(180deg, rgba(8, 9, 9, .08) 0%, rgba(8, 9, 9, .04) 36%, rgba(8, 9, 9, .40) 58%, rgba(8, 9, 9, .93) 84%, #080909 100%),
+    url("cover.webp") center / cover no-repeat,
+    #080909;
   color: #f8f1e7;
-  box-shadow: var(--shadow), 0 2px 0 rgba(255,255,255,.18) inset;
+  border: 1px solid rgba(235, 184, 122, .18);
+  box-shadow: var(--shadow), 0 2px 0 rgba(255,255,255,.16) inset;
   transform: rotate(2.4deg);
   overflow: hidden;
 }
@@ -229,8 +231,8 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
   position: absolute;
   inset: 0;
   background:
-    repeating-linear-gradient(0deg, transparent 0 27px, rgba(255,255,255,.035) 28px),
-    radial-gradient(240px 200px at 85% 85%, rgba(15, 118, 110, .22), transparent 70%);
+    repeating-linear-gradient(0deg, transparent 0 27px, rgba(255,255,255,.022) 28px),
+    radial-gradient(240px 220px at 82% 20%, rgba(240, 169, 94, .10), transparent 70%);
   pointer-events: none;
 }
 .cover-label {
@@ -249,15 +251,17 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
   line-height: 1.05;
   letter-spacing: -.035em;
   font-weight: 800;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .55);
 }
 .cover-title em { color: #f0b47b; font-style: normal; }
 .cover-sub {
   position: relative;
   z-index: 1;
   margin-top: 16px;
-  color: #c9b8a6;
+  color: #d6c4af;
   font-size: 12px;
   line-height: 1.7;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, .7);
 }
 .cover-foot {
   position: relative;
@@ -487,7 +491,8 @@ footer a:hover { color: var(--accent); }
 
 @media (max-width: 980px) {
   .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 56px; }
-  .hero-cover { display: none; }
+  .hero-cover { display: flex; order: 2; margin-top: 4px; }
+  .cover { width: min(72vw, 300px); transform: rotate(1.4deg); }
   .layout { grid-template-columns: 1fr; gap: 34px; }
   .sidebar { position: static; }
   .sidebar-inner {
@@ -655,6 +660,8 @@ footer a:hover { color: var(--accent); }
 }
 @media (max-width: 620px) {
   .landing { padding: 8px 16px 48px; }
+  .hero-cover { margin-top: 0; }
+  .cover { width: min(70vw, 280px); }
   .landing-section { margin-top: 38px; }
   .section-heading { display: block; }
   .section-heading p { margin-top: 6px; }

@@ -4,6 +4,8 @@
 
 ## 从第一次对话到自己的插件
 
+<p align="center"><img src="docs/cover.webp" alt="《DeepSeek Harness 入门》封面" width="280"></p>
+
 **给 0 基础用户的实用指南**
 
 > **在线阅读（中文）**：<https://leether.github.io/dsh-book/>  
@@ -13,7 +15,8 @@
 版本：2026-10  
 参考环境：DeepSeek Harness Desktop 0.2.1-rc.2  
 正文：[dsh-book.md](dsh-book.md) · [English edition](en/dsh-book.md) · 站点构建脚本：[scripts/build-site.py](scripts/build-site.py)  
-书中案例插件：[GetNote Toolbox](https://github.com/leether/getnote-toolbox)
+书中案例插件：[GetNote Toolbox](https://github.com/leether/getnote-toolbox)  
+封面视觉：由即梦（Dreamina）生成，本地存放为 `docs/cover.webp`。
 
 ---
 

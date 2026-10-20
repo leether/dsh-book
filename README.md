@@ -4,6 +4,8 @@
 
 ## From Your First Conversation to Your Own Plugin
 
+<p align="center"><img src="docs/cover.webp" alt="DeepSeek Harness: A Beginner&#39;s Guide cover" width="280"></p>
+
 **A practical guide for complete beginners**
 
 > **Read online (English)**: <https://leether.github.io/dsh-book/en/>  
@@ -13,7 +15,8 @@
 Version: 2026-10  
 Reference environment: DeepSeek Harness Desktop 0.2.1-rc.2  
 Full text: [English edition](en/dsh-book.md) · [Chinese edition](dsh-book.md) · Site builder: [scripts/build-site.py](scripts/build-site.py)  
-Case-study plugin: [GetNote Toolbox](https://github.com/leether/getnote-toolbox)
+Case-study plugin: [GetNote Toolbox](https://github.com/leether/getnote-toolbox)  
+Cover artwork: generated with Dreamina (即梦), stored locally in `docs/cover.webp`.
 
 ---
 
